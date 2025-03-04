@@ -1,0 +1,438 @@
+/* INICIO LOGIN */
+
+:root {
+  --primary-color: #063aca; /* Azul */
+  --primary-hover-color: #020c8f; /* Azul más oscuro */
+  --form-background: rgb(151, 166, 250); /* Fondo del formulario con transparencia */
+  --border-color: #ccc; /* Color de borde gris claro */
+  --error-color: #f44336; /* Color rojo para errores */
+  --text-color: #333; /* Color de texto */
+  --label-color: #000000; /* Color de texto de las etiquetas */
+}
+
+html, body {
+  margin: 0; /* Eliminar márgenes del body */
+  padding: 0; /* Eliminar padding del body */
+  height: 100%; /* Hacer que el body ocupe toda la altura de la ventana */
+  overflow: hidden; /* Evitar el desplazamiento */
+  box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
+}
+
+* {
+  box-sizing: inherit; /* Aplicar box-sizing a todos los elementos */
+}
+
+body {
+  background: linear-gradient(to bottom, #1a1a1a, #4d4d4d); /* Degradado oscuro */
+  font-size: 16px; /* Tamaño de fuente base normal */
+  font-family: "Arial", sans-serif; /* Fuente moderna */
+  display: flex; /* Usar flexbox para centrar el contenido */
+  flex-direction: column; /* Alinear los elementos en columna */
+  justify-content: center; /* Centrar verticalmente */
+  align-items: center; /* Centrar horizontalmente */
+  height: 100vh; /* Hacer que el body ocupe toda la altura de la ventana */
+}
+
+h2 {
+  color: var(--text-color); /* Color del título */
+  margin-bottom: 20px; /* Espaciado inferior normal */
+  font-size: 28px; /* Tamaño de fuente del título normal */
+  font-weight: bold; /* Negrita para el título */
+}
+
+.login-container {
+  position: relative; /* Hacer que el contenedor sea relativo */
+  display: flex; /* Usar flexbox para centrar el contenido */
+  flex-direction: column; /* Alinear los elementos en columna */
+  justify-content: center; /* Centrar verticalmente */
+  align-items: center; /* Centrar horizontalmente */
+  height: 100%; /* Hacer que el contenedor ocupe toda la altura disponible */
+  text-align: center;
+  padding: 20px; /* Espaciado interno normal */
+}
+
+.top-left-image,
+.top-right-image {
+  position: absolute; /* Posicionar la imagen de forma absoluta */
+  top: 0; /* Alinear al borde superior */
+  width: 20%; /* Ajusta el tamaño según sea necesario */
+  height: auto; /* Mantener la proporción de la imagen */
+  border-radius: 10px; /* Bordes redondeados */
+  border: 5px solid #063aca; /* Borde del color azul */
+}
+
+.top-left-image {
+  left: -5%; /* Alinear al borde izquierdo */
+}
+
+.top-right-image {
+  right: -5%; /* Alinear al borde derecho */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--form-background); /* Fondo del formulario */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+  padding: 30px; /* Espaciado interno normal */
+  max-width: 400px; /* Ancho máximo del formulario normal */
+  width: 100%; /* Hacer que el formulario ocupe el 100% del ancho en pantallas pequeñas */
+}
+
+.input-group {
+  display: flex; /* Usar flexbox para alinear etiqueta y input */
+  flex-direction: column; /* Cambiar a columna para un diseño más limpio */
+  margin: 15px 0; /* Espaciado entre grupos de input normal */
+}
+
+label {
+  color: var(--label-color); /* Color del texto del label */
+  margin-bottom: 6px; /* Espaciado inferior del label normal */
+  text-align: left; /* Alinear el texto a la izquierda */
+  font-size: 18px; /* Tamaño de fuente de las etiquetas normal */
+}
+
+.input-container {
+  position: relative; /* Posicionar el contenedor relativo */
+}
+
+.icon {
+  position: absolute; /* Posicionar el ícono de forma absoluta */
+  left: 10px; /* Espaciado desde la izquierda normal */
+  top: 50%; /* Centrar verticalmente */
+  transform: translateY(-50%); /* Ajustar el ícono al centro */
+  color: #888; /* Color del ícono */
+}
+
+input {
+  padding: 12px 12px 12px 40px; /* Aumentar el padding a la izquierda para el ícono */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 4px; /* Bordes redondeados */
+  width: 100%; /* Hacer que el input ocupe el 100% del ancho del grupo */
+  box-sizing: border-box; /* Incluir el padding y el borde en el ancho total */
+  font-size: 16px; /* Tamaño de fuente de los inputs normal */
+}
+
+input:focus {
+  border-color: var(--primary-color); /* Cambiar el color del borde al enfocar */
+  outline: none; /* Quitar el contorno predeterminado */
+  box-shadow: 0 0 5px rgba(233, 210, 5, 0.74); /* Sombra al enfocar */
+}
+
+button {
+  padding: 12px 20px; /* Espaciado normal */
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Transición suave para el fondo */
+  margin-top: 10px; /* Espaciado superior para el botón normal */
+  width: 100%; /* Hacer que el botón ocupe el 100% del ancho del formulario */
+  font-size: 18px; /* Tamaño de fuente del botón normal */
+}
+
+button:hover {
+  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
+  transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+}
+
+.error {
+  color: var(--error-color); /* Color del mensaje de error */
+  margin-top: 10px; /* Espaciado superior normal */
+  font-size: 16px; /* Tamaño de fuente del mensaje de error normal */
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px; /* Tamaño de fuente base más pequeño en pantallas pequeñas */
+  }
+
+  h2 {
+    font-size: 22px; /* Tamaño de fuente del título más pequeño en pantallas pequeñas */
+  }
+
+  label {
+    font-size: 16px; /* Tamaño de fuente de las etiquetas más pequeño */
+  }
+
+  input {
+    font-size: 14px; /* Tamaño de fuente de los inputs más pequeño */
+  }
+
+  button {
+    font-size: 16px; /* Tamaño de fuente del botón más pequeño */
+  }
+
+  form {
+    padding: 20px; /* Reducir el espaciado interno del formulario */
+  }
+
+  .top-left-image,
+  .top-right-image {
+    width: 30%; /* Ajustar el tamaño de las imágenes en pantallas pequeñas */
+    left: -10%; /* Ajustar la posición de la imagen izquierda */
+    right: -10%; /* Ajustar la posición de la imagen derecha */
+  }
+}
+
+/* TERMINA LOGIN */
+
+/* INICIA HEADER */
+
+.header {
+  background-color: #000149; /* Color de fondo */
+  color: rgb(255, 255, 255); /* Color del texto */
+  padding: 10px 0; /* Espaciado vertical normal, sin padding horizontal */
+  width: 100vw; /* Abarcar todo el ancho de la pantalla */
+  position: fixed; /* Fijar al top */
+  top: 0; /* Alinear al top */
+  left: 0; /* Alinear a la izquierda */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+  display: flex; /* Usar flexbox para alinear elementos */
+  justify-content: space-between; /* Espacio entre el título y los íconos */
+  align-items: center; /* Centrar verticalmente */
+  margin: 0; /* Asegurarse de que no haya margen */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+}
+
+.header h1 {
+  margin: 0; /* Sin margen */
+  font-size: 24px; /* Tamaño de fuente normal */
+  font-weight: bold; /* Negrita para el título */
+}
+
+.header-icons {
+  display: flex; /* Usar flexbox para los íconos */
+  align-items: center; /* Centrar verticalmente */
+}
+
+.header-icons .notification-icon,
+.header-icons .profile {
+  display: flex; /* Usar flexbox para centrar el ícono */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  margin-left: 15px; /* Espaciado entre íconos normal */
+  cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+  font-size: 20px; /* Tamaño de los íconos normal */
+  transition: color 0.3s, transform 0.3s; /* Transición suave para el hover */
+}
+
+.header-icons .notification-icon:hover,
+.header-icons .profile:hover {
+  color: #ffcc00; /* Color al pasar el mouse */
+  transform: scale(1.1); /* Efecto de aumento al pasar el mouse */
+}
+
+.profile-icon {
+  width: 40px; /* Ancho del círculo normal */
+  height: 40px; /* Alto del círculo normal */
+  border-radius: 50%; /* Bordes redondeados para hacer un círculo */
+  background-color: white; /* Color de fondo del círculo */
+  color: #000149; /* Color del ícono */
+  display: flex; /* Usar flexbox para centrar el ícono */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  transition: background-color 0.3s, transform 0.3s; /* Transición suave para el hover */
+}
+
+.profile-icon:hover {
+  background-color: #f0f0f0; /* Color de fondo al pasar el mouse */
+  transform: scale(1.1); /* Efecto de aumento al pasar el mouse */
+}
+
+/* TERMINA HEADER */
+
+/* INICIA MENU */
+.dropdown-menu {
+  position: absolute; /* Posicionar el menú desplegable */
+  right: 0; /* Alinear a la derecha */
+  top: 50px; /* Ajustar la posición para que esté justo debajo del ícono */
+  background-color: white; /* Color de fondo del menú */
+  color: black; /* Color del texto */
+  border: 1px solid #ccc; /* Borde del menú */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  width: 200px; /* Ancho fijo del menú normal */
+}
+
+.dropdown-menu ul {
+  list-style-type: none; /* Sin viñetas */
+  padding: 10px; /* Espaciado interno normal */
+  margin: 0; /* Sin margen */
+}
+
+.dropdown-menu li {
+  margin: 5px 0; /* Espaciado entre elementos normal */
+}
+
+.dropdown-menu a {
+  text-decoration: none; /* Sin subrayado */
+  color: black; /* Color del texto */
+  padding: 10px 15px; /* Espaciado interno consistente normal */
+  display: block; /* Hacer que el área clickeable sea más grande */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+  font-size: 16px; /* Tamaño de fuente normal */
+}
+
+.dropdown-menu a:hover {
+  background-color: #000000; /* Color de fondo al pasar el mouse */
+  border-radius: 3px; /* Bordes redondeados */
+}
+
+/* Estilo para el menú */
+.menu {
+  background-color: #020c8f; /* Color de fondo */
+  width: 220px; /* Ancho fijo para el menú */
+  height: 100vh; /* Altura completa de la pantalla */
+  position: fixed; /* Fijar el menú en la parte izquierda */
+  top: 0; /* Alinear al top */
+  left: 0; /* Alinear a la izquierda */
+  padding-top: 50px; /* Espaciado superior normal para evitar el botón */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Sombra a la derecha */
+  transition: transform 0.3s ease; /* Transición suave para mostrar/ocultar */
+}
+
+/* Estilo general para el botón de menú */
+.menu-toggle {
+  position: fixed; /* Posicionar el botón de forma fija */
+  background: transparent; /* Fondo transparente para el botón */
+  top: 10px; /* Espaciado desde la parte superior */
+  left: 10px; /* Espaciado desde la izquierda */
+  background-color: #464646; /* Color de fondo del botón */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 5px; /* Espaciado interno reducido */
+  cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+  z-index: 1100; /* Asegurarse de que esté por encima del menú */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para el botón */
+  width: 40px; /* Ancho del botón igual al tamaño del ícono */
+  height: 40px; /* Alto del botón igual al tamaño del ícono */
+  display: flex; /* Usar flexbox para centrar el ícono */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  transition: transform 0.3s ease; /* Asegurar que la transición sea suave */
+}
+
+.menu-container {
+  position: relative; /* Asegurar que el menú se posicione correctamente */
+}
+
+.menu.hidden {
+  transform: translateX(-100%); /* Ocultar el menú moviéndolo fuera de la vista */
+}
+
+.menu.visible {
+  transform: translateX(0); /* Mostrar el menú */
+}
+
+.menu ul {
+  list-style-type: none; /* Sin viñetas */
+  padding: 0; /* Sin padding */
+  margin: 0; /* Sin margen */
+}
+
+.menu li {
+  margin: 10px 0; /* Espaciado entre elementos normal */
+}
+
+.menu a {
+  color: rgb(0, 0, 0); /* Color del texto */
+  text-decoration: none; /* Sin subrayado */
+  padding: 10px 15px; /* Espaciado interno para los enlaces normal */
+  display: block; /* Hacer que el área clickeable sea más grande */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+.menu a:hover {
+  background-color: #ffffff; /* Color de fondo al pasar el mouse */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+/* En pantallas pequeñas, mantener el tamaño del dashboard */
+@media (max-width: 599px) {
+  .dashboard-content {
+    width: 100%; /* Mantener el ancho completo */
+    position: relative; /* Cambiar a posición relativa */
+    z-index: 1; /* Asegurarse de que esté detrás del menú */
+  }
+}
+
+/* INICIO DASHBOARD */
+.dashboard-container {
+  display: flex; /* Usar flexbox para alinear elementos */
+  height: calc(100vh - 50px); /* Altura completa menos la altura del header */
+  width: 100vw; /* Ancho completo de la ventana */
+  background-color: #b4b4b4; /* Color de fondo para el dashboard */
+  margin: 0; /* Eliminar márgenes */
+  padding: 0; /* Eliminar padding */
+}
+
+/* Estilo para el contenido del dashboard */
+.dashboard-content {
+  flex: 1; /* Permitir que el contenido ocupe el espacio restante */
+  display: flex; /* Usar flexbox para alinear elementos dentro del contenido */
+  flex-direction: column; /* Alinear elementos en columna */
+  justify-content: flex-start; /* Alinear elementos al inicio */
+  padding: 15px; /* Espaciado interno para el contenido */
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con un poco de transparencia */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para el contenido */
+  margin-left: 220px; /* Dejar espacio para el menú */
+  transition: margin-left 0.3s ease; /* Transición suave para el margen */
+}
+
+/* En pantallas grandes, mover el dashboard cuando el menú está visible */
+@media (min-width: 600px) {
+  .dashboard-content {
+    width: calc(100% - 220px); /* Ajustar el ancho del dashboard al 100% menos el ancho del menú */
+  }
+
+  .dashboard-content.menu-visible {
+    transform: translateX(0); /* No mover el dashboard cuando el menú está visible */
+  }
+}
+
+/* En pantallas pequeñas, mantener el tamaño del dashboard */
+@media (max-width: 599px) {
+  .dashboard-content {
+    width: 100%; /* Mantener el ancho completo */
+  }
+}
+
+/* Cuando el menú está oculto */
+.menu-hidden .dashboard-content {
+  margin-left: 0; /* Sin margen izquierdo cuando el menú está oculto */
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+  .dashboard-content {
+    margin-left: 0; /* Sin margen izquierdo en pantallas pequeñas */
+    width: 100%; /* Mantener el ancho completo */
+  }
+}
+/* TERMINA DASHBOARD */
+
+/* INICIA FOOTER */
+
+.footer {
+  background-color: #000149; /* Color de fondo */
+  color: white; /* Color del texto */
+  text-align: center; /* Centrar texto */
+  padding: 20px 0; /* Aumentar espaciado normal */
+  position: fixed; /* Fijar al fondo */
+  bottom: 0; /* Fijar al fondo */
+  left: 0; /* Alinear a la izquierda */
+  right: 0; /* Alinear a la derecha */
+  width: 100%; /* Ancho completo */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  font-size: 14px; /* Tamaño de fuente normal */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Sombra superior */
+}
+
+/*TERMINA FOOTER */
