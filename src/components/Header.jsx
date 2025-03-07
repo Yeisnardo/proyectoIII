@@ -1,11 +1,13 @@
-// src/components/Header.js
 import React, { useState, useEffect, useRef } from "react";
-import { FaBell, FaUser  } from "react-icons/fa"; // Importa los íconos necesarios
+import { FaBell, FaUser , FaLock, FaSignOutAlt } from "react-icons/fa"; // Importa los íconos necesarios
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import "../assets/styles/App.css";
 
 const Header = () => {
+  const navigate = useNavigate(); // Inicializa useNavigate
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false); // Nuevo estado para el modal de cierre de sesión
   const dropdownRef = useRef(null); // Referencia para el menú desplegable
 
   // Ejemplo de notificaciones
@@ -40,6 +42,18 @@ const Header = () => {
     };
   }, []);
 
+  const handleLogout = () => {
+    setLogoutModalOpen(true); // Abre el modal de confirmación de cierre de sesión
+  };
+
+  const confirmLogout = () => {
+    // Aquí puedes agregar la lógica para cerrar sesión
+    console.log("Cerrando sesión...");
+    setLogoutModalOpen(false);
+    // Redirigir al usuario a la página de inicio de sesión
+    navigate("/"); // Cambia "/login" a la ruta que desees
+  };
+
   return (
     <header className="header">
       <div className="header-icons">
@@ -61,17 +75,33 @@ const Header = () => {
           </div>
           <div className={`dropdown-menu ${isDropdownOpen ? "visible" : ""}`}>
             <div className="arrow" />
-            <ul>
-              <li>
+            <ul className="menu-list">
+              <li className="menu-list-item">
+                <FaLock className="menu-icon" />
                 <a href="/change-password">Cambiar Contraseña</a>
               </li>
-              <li>
-                <a href="/">Cerrar Sesión</a>
+              <li className="menu-list-item" onClick={handleLogout}>
+                <FaSignOutAlt className="menu-icon" />
+                <span>Cerrar Sesión</span>
               </li>
             </ul>
           </div>
         </div>
       </div>
+
+      {/* Modal de confirmación de cierre de sesión */}
+      {isLogoutModalOpen && (
+        <div className="logout-modal">
+          <div className="modal-content">
+            <h2>Confirmar Cierre de Sesión</h2>
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+            <div className="modal-actions">
+              <button onClick={confirmLogout}>Sí, cerrar sesión</button>
+              <button onClick={() => setLogoutModalOpen(false)}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

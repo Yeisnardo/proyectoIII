@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
@@ -30,14 +30,26 @@ const Persona = () => {
     },
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false); // Nuevo estado para el modal de confirmación de eliminación
   const [newRecord, setNewRecord] = useState({
     identityCard: "",
     firstName: "",
     lastName: "",
     email: "",
     type: "Natural",
+    gender: "",
+    birthDate: "",
+    phone: "",
   });
+
+  const [viewRecord, setViewRecord] = useState(null);
+  const [recordToDelete, setRecordToDelete] = useState(null);
+  const [limit, setLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,16 +57,32 @@ const Persona = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Evitar el comportamiento por defecto del formulario
-    setRecords([...records, newRecord]); // Agregar el nuevo registro
+    e.preventDefault();
+    setRecords([...records, newRecord]);
+    resetForm();
+    setIsModalOpen(false);
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    setRecords(records.map(record => 
+      record.identityCard === newRecord.identityCard ? newRecord : record
+    ));
+    resetForm();
+    setIsEditModalOpen(false);
+  };
+
+  const resetForm = () => {
     setNewRecord({
       identityCard: "",
       firstName: "",
       lastName: "",
       email: "",
       type: "Natural",
-    }); // Reiniciar el formulario
-    setIsModalOpen(false); // Cerrar el modal después de agregar el registro
+      gender: "",
+      birthDate: "",
+      phone: "",
+    });
   };
 
   const toggleMenu = () => {
@@ -69,6 +97,10 @@ const Persona = () => {
         record.identityCard.includes(searchTerm)
       );
     });
+
+    const totalPages = Math.ceil(filteredRecords.length / limit);
+    const startIndex = (currentPage - 1) * limit;
+    const currentRecords = filteredRecords.slice(startIndex, startIndex + limit);
 
     return (
       <div className="records-table">
@@ -93,6 +125,25 @@ const Persona = () => {
             <FaPlus />
           </button>
         </div>
+
+        <div className="limit-container">
+          <label htmlFor="limit">Mostrar registros:</label>
+          <select
+            id="limit"
+            value={limit}
+            onChange={(e) => {
+              setLimit(Number(e.target.value));
+              setCurrentPage(1); // Reiniciar a la primera página al cambiar el límite
+            }}
+            className="limit-select"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+
         <table className="table">
           <thead>
             <tr>
@@ -103,8 +154,8 @@ const Persona = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRecords.length > 0 ? (
-              filteredRecords.map((record) => (
+            {currentRecords.length > 0 ? (
+              currentRecords.map((record) => (
                 <tr key={record.identityCard}>
                   <td>{record.identityCard}</td>
                   <td>{`${record.firstName} ${record.lastName}`}</td>
@@ -140,9 +191,30 @@ const Persona = () => {
             )}
           </tbody>
         </table>
+
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-button"
+          >
+            <FaChevronLeft />
+          </button>
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <h2>Datos Personales</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="modal-form">
             <div className="form-row">
               <div className="form-group input-col-12">
                 <label>Cédula de Identidad:</label>
@@ -156,7 +228,7 @@ const Persona = () => {
                 />
               </div>
               <div className="form-group input-col-6">
-                <label>Nombre / Apellido:</label>
+                <label>Nombre:</label>
                 <input
                   type="text"
                   name="firstName"
@@ -166,10 +238,10 @@ const Persona = () => {
                   required
                 />
               </div>
-              <div className="form-group input-col-2">
-                <label>Edad</label>
+              <div className="form-group input-col-6">
+                <label>Apellido:</label>
                 <input
-                  type="number"
+                  type="text"
                   name="lastName"
                   value={newRecord.lastName}
                   onChange={handleInputChange}
@@ -177,11 +249,11 @@ const Persona = () => {
                   required
                 />
               </div>
-              <div className="form-group input-col-4">
+              <div className="form-group input-col-6">
                 <label>Sexo:</label>
                 <select
-                  name="type"
-                  value={newRecord.type}
+                  name="gender"
+                  value={newRecord.gender}
                   onChange={handleInputChange}
                   className="form-control"
                   required
@@ -191,23 +263,23 @@ const Persona = () => {
                   <option value="M">M</option>
                 </select>
               </div>
-              <div className="form-group input-col-12">
+              <div className="form-group input-col-6">
                 <label>Fecha de Nacimiento:</label>
                 <input
                   type="date"
-                  name="email"
-                  value={newRecord.email}
+                  name="birthDate"
+                  value={newRecord.birthDate}
                   onChange={handleInputChange}
                   className="form-control"
                   required
                 />
               </div>
               <div className="form-group input-col-6">
-                <label>Telefono:</label>
+                <label>Teléfono:</label>
                 <input
                   type="text"
-                  name="email"
-                  value={newRecord.email}
+                  name="phone"
+                  value={newRecord.phone}
                   onChange={handleInputChange}
                   className="form-control"
                   required
@@ -234,40 +306,193 @@ const Persona = () => {
                   required
                 >
                   <option value="">Seleccionar...</option>
-                  <option value="Administrador(a)">Administrador(a)</option>
-                  <option value="Asistente">Asistente</option>
-                  <option value="Coordinador(a)">Coordinador(a)</option>
+                  <option value="Natural">Natural</option>
+                  <option value="Jurídica">Jurídica</option>
                 </select>
               </div>
             </div>
             <button type="submit">Guardar</button>
           </form>
         </Modal>
+
+        {/* Modal para ver datos */}
+        <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
+          <h2>Detalles de Persona</h2>
+          {viewRecord && (
+            <div className="view-record-details">
+              <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
+              <p><strong>Nombre:</strong> {viewRecord.firstName}</p>
+              <p><strong>Apellido:</strong> {viewRecord.lastName}</p>
+              <p><strong>Sexo:</strong> {viewRecord.gender}</p>
+              <p><strong>Fecha de Nacimiento:</strong> {viewRecord.birthDate}</p>
+              <p><strong>Teléfono:</strong> {viewRecord.phone}</p>
+              <p><strong>Correo Electrónico:</strong> {viewRecord.email}</p>
+              <p><strong>Tipo de Persona:</strong> {viewRecord.type}</p>
+            </div>
+          )}
+        </Modal>
+
+        {/* Modal para editar datos */}
+        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+          <h2>Actualizar Datos Personales</h2>
+          <form onSubmit={handleUpdate} className="modal-form">
+            <div className="form-row">
+              <div className="form-group input-col-12">
+                <label>Cédula de Identidad:</label>
+                <input
+                  type="text"
+                  name="identityCard"
+                  value={newRecord.identityCard}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group input-col-6">
+                <label>Nombre:</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={newRecord.firstName}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group input-col-6">
+                <label>Apellido:</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={newRecord.lastName}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group input-col-6">
+                <label>Sexo:</label>
+                <select
+                  name="gender"
+                  value={newRecord.gender}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                >
+                  <option value="">Seleccionar...</option>
+                  <option value="F">F</option>
+                  <option value="M">M</option>
+                </select>
+              </div>
+              <div className="form-group input-col-6">
+                <label>Fecha de Nacimiento:</label>
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={newRecord.birthDate}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group input-col-6">
+                <label>Teléfono:</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={newRecord.phone}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group input-col-6">
+                <label>Correo Electrónico:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={newRecord.email}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group input-col-12">
+                <label>Tipo de Persona:</label>
+                <select
+                  name="type"
+                  value={newRecord.type}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                >
+                  <option value="">Seleccionar...</option>
+                  <option value="Natural">Natural</option>
+                  <option value="Jurídica">Jurídica</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit">Actualizar</button>
+          </form>
+        </Modal>
+
+        {/* Modal para confirmar eliminación */}
+        <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+          <h2>Confirmar Eliminación</h2>
+          <p>¿Estás seguro de que deseas eliminar este registro?</p>
+          <p><strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}</p>
+          <p><strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}</p>
+          <div className="modal-actions">
+            <button onClick={confirmDelete}>Eliminar</button>
+            <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
+          </div>
+        </Modal>
+
+        {/* Modal para mostrar que el registro ha sido eliminado */}
+        <Modal isOpen={isDeletedModalOpen} onClose={() => setIsDeletedModalOpen(false)}>
+          <h2>Registro Eliminado</h2>
+          <div className="deleted-message">
+            <FaCheckCircle className="deleted-icon" />
+            <p>El registro ha sido eliminado con éxito.</p>
+          </div>
+        </Modal>
       </div>
     );
   };
 
-  const handleView = (id) => {
-    console.log("Ver datos de:", id);
+  const handleView = ( id) => {
+    const recordToView = records.find((record) => record.identityCard === id);
+    if (recordToView) {
+      setViewRecord(recordToView);
+      setIsViewModalOpen(true);
+    }
   };
 
   const handleEdit = (id) => {
     const recordToEdit = records.find((record) => record.identityCard === id);
     if (recordToEdit) {
       setNewRecord(recordToEdit);
-      setIsModalOpen(true);
+      setIsEditModalOpen(true);
     }
   };
 
   const handleDelete = (id) => {
-    console.log("Eliminar datos de:", id);
-    setRecords(records.filter((record) => record.identityCard !== id)); // Eliminar el registro
+    const recordToDelete = records.find((record) => record.identityCard === id);
+    if (recordToDelete) {
+      setRecordToDelete(recordToDelete);
+      setIsDeleteModalOpen(true);
+    }
+  };
+
+  const confirmDelete = () => {
+    setRecords(records.filter((record) => record.identityCard !== recordToDelete.identityCard));
+    setRecordToDelete(null);
+    setIsDeleteModalOpen(false);
+    setIsDeletedModalOpen(true); // Abrir el modal de confirmación de eliminación
   };
 
   return (
-    <div
-      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
-    >
+    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">

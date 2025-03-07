@@ -650,6 +650,12 @@ input:focus {
   width: 100%; /* Asegúrate de que ocupe el 100% del contenedor */
 }
 
+.form-group input {
+  width: 100%; /* El input ocupará el 100% del ancho del contenedor */
+  padding: 15px; /* Espaciado interno del input */
+  box-sizing: border-box; /* Asegúrate de que el padding se incluya en el ancho total */
+}
+
 /* Estilos para inputs con diferentes tamaños */
 .input-col-1 { width: 8.33%; }
 .input-col-2 { width: 16.67%; }
@@ -899,10 +905,12 @@ input:focus {
 
 .modal-content {
   background: white;
-  padding: 20px;
+  padding: 20px; /* Asegúrate de que haya suficiente espacio alrededor del contenido */
   border-radius: 5px;
   width: 100%; /* Cambiar a 100% para que ocupe todo el ancho disponible */
-  max-width: 500px; /* Ancho máximo del modal */
+  max-width: 700px; /* Ancho máximo del modal */
+  max-height: 70vh; /* Altura máxima del modal */
+  overflow-y: auto; /* Habilita el desplazamiento vertical si el contenido excede la altura máxima */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative; /* Para posicionar el botón de cerrar */
 }
@@ -961,4 +969,152 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #08449e; /* Color de fondo al pasar el mouse */
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra la paginación */
+  margin: 20px 0; /* Espaciado superior e inferior */
+}
+
+.pagination-button {
+  background-color: #007bff; /* Color de fondo del botón */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 10px 15px; /* Espaciado interno */
+  margin: 0 5px; /* Espaciado entre botones */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  transition: background-color 0.3s; /* Transición suave para el color de fondo */
+}
+
+.pagination-button:hover {
+  background-color: #0056b3; /* Color de fondo al pasar el mouse */
+}
+
+.pagination span {
+  margin: 0 10px; /* Espaciado entre el texto y los botones */
+  font-weight: bold; /* Texto en negrita */
+}
+
+/* Estilo para deshabilitar el botón */
+.pagination-button:disabled {
+  background-color: #ccc; /* Color de fondo para el botón deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor para indicar que no se puede hacer clic */
+}
+
+.limit-container {
+  display: flex; /* Usar flexbox para alinear elementos */
+  align-items: center; /* Centrar verticalmente */
+  margin: 20px 0; /* Espaciado superior e inferior */
+}
+
+.limit-container label {
+  margin-right: 10px; /* Espaciado a la derecha del label */
+  font-weight: bold; /* Texto en negrita */
+}
+
+.limit-select {
+  padding: 10px; /* Espaciado interno */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 4px; /* Bordes redondeados */
+  font-size: 16px; /* Tamaño de fuente */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  transition: border-color 0.3s; /* Transición suave para el color del borde */
+}
+
+.limit-select:focus {
+  border-color: #007bff; /* Color del borde al enfocar */
+  outline: none; /* Quitar el contorno predeterminado */
+}
+
+.limit-select option {
+  padding: 10px; /* Espaciado interno para las opciones */
+}
+
+.deleted-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.deleted-icon {
+  font-size: 50px; /* Tamaño del icono */
+  color: green; /* Color del icono */
+  animation: bounce 1s infinite; /* Aplicar la animación */
+}
+
+/* Definición de la animación */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0); /* Posición inicial */
+  }
+  40% {
+    transform: translateY(-20px); /* Subir 20px */
+  }
+  60% {
+    transform: translateY(-10px); /* Subir 10px */
+  }
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-list-item {
+  display: flex;
+  align-items: center; /* Alinear verticalmente el icono y el texto */
+  padding: 10px;
+}
+
+.menu-icon {
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+  color: #003366;
+}
+
+.logout-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.modal-actions {
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-actions button:first-child {
+  background-color: #f44336; /* Color rojo para el botón de cerrar sesión */
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background-color: #e0e0e0; /* Color gris para el botón de cancelar */
 }
