@@ -1,207 +1,169 @@
 /* INICIO LOGIN */
-
 :root {
-  --primary-color: #063aca; /* Azul */
-  --primary-hover-color: #020c8f; /* Azul más oscuro */
-  --form-background: rgb(151, 166, 250); /* Fondo del formulario con transparencia */
+  --primary-color: #003366; /* Azul oscuro */
+  --primary-hover-color: #002244; /* Azul más oscuro */
+  --form-background: #ffffff; /* Fondo blanco */
   --border-color: #ccc; /* Color de borde gris claro */
-  --error-color: #f44336; /* Color rojo para errores */
+  --error-color: #e74c3c; /* Color rojo para errores */
   --text-color: #333; /* Color de texto */
-  --label-color: #000000; /* Color de texto de las etiquetas */
+  --label-color: #555; /* Color de texto de las etiquetas */
 }
 
-html, body {
-  margin: 0; /* Eliminar márgenes del body */
-  padding: 0; /* Eliminar padding del body */
-  height: 100%; /* Hacer que el body ocupe toda la altura de la ventana */
-  overflow: hidden; /* Evitar el desplazamiento */
-  box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 * {
-  box-sizing: inherit; /* Aplicar box-sizing a todos los elementos */
+  box-sizing: inherit;
 }
 
 body {
-  background: linear-gradient(to bottom, #1a1a1a, #4d4d4d); /* Degradado oscuro */
-  font-size: 16px; /* Tamaño de fuente base normal */
-  font-family: "Arial", sans-serif; /* Fuente moderna */
-  display: flex; /* Usar flexbox para centrar el contenido */
-  flex-direction: column; /* Alinear los elementos en columna */
-  justify-content: center; /* Centrar verticalmente */
-  align-items: center; /* Centrar horizontalmente */
-  height: 100vh; /* Hacer que el body ocupe toda la altura de la ventana */
+  background: linear-gradient(to right, var(--primary-color), #006699); /* Degradado azul oscuro */
+  font-size: 16px;
+  font-family: "Arial", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 h2 {
-  color: var(--text-color); /* Color del título */
-  margin-bottom: 20px; /* Espaciado inferior normal */
-  font-size: 28px; /* Tamaño de fuente del título normal */
-  font-weight: bold; /* Negrita para el título */
+  color: var(--text-color);
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: bold;
 }
 
-.login-container {
-  position: relative; /* Hacer que el contenedor sea relativo */
-  display: flex; /* Usar flexbox para centrar el contenido */
-  flex-direction: column; /* Alinear los elementos en columna */
-  justify-content: center; /* Centrar verticalmente */
-  align-items: center; /* Centrar horizontalmente */
-  height: 100%; /* Hacer que el contenedor ocupe toda la altura disponible */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   text-align: center;
-  padding: 20px; /* Espaciado interno normal */
 }
 
-.top-left-image,
-.top-right-image {
-  position: absolute; /* Posicionar la imagen de forma absoluta */
-  top: 0; /* Alinear al borde superior */
-  width: 20%; /* Ajusta el tamaño según sea necesario */
-  height: auto; /* Mantener la proporción de la imagen */
-  border-radius: 10px; /* Bordes redondeados */
-  border: 5px solid #063aca; /* Borde del color azul */
-}
-
-.top-left-image {
-  left: -5%; /* Alinear al borde izquierdo */
-}
-
-.top-right-image {
-  right: -5%; /* Alinear al borde derecho */
-}
-
-form {
+.auth-form {
   display: flex;
   flex-direction: column;
-  background-color: var(--form-background); /* Fondo del formulario */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
-  padding: 30px; /* Espaciado interno normal */
-  max-width: 400px; /* Ancho máximo del formulario normal */
-  width: 100%; /* Hacer que el formulario ocupe el 100% del ancho en pantallas pequeñas */
+  background-color: var(--form-background);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 400px;
+  width: 100%;
 }
 
 .input-group {
-  display: flex; /* Usar flexbox para alinear etiqueta y input */
-  flex-direction: column; /* Cambiar a columna para un diseño más limpio */
-  margin: 15px 0; /* Espaciado entre grupos de input normal */
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
 }
 
 label {
-  color: var(--label-color); /* Color del texto del label */
-  margin-bottom: 6px; /* Espaciado inferior del label normal */
-  text-align: left; /* Alinear el texto a la izquierda */
-  font-size: 18px; /* Tamaño de fuente de las etiquetas normal */
+  color: var(--label-color);
+  margin-bottom: 5px;
+  text-align: left;
+  font-size: 16px;
 }
 
-.input-container {
-  position: relative; /* Posicionar el contenedor relativo */
+.input-wrapper {
+  position: relative;
 }
 
 .icon {
-  position: absolute; /* Posicionar el ícono de forma absoluta */
-  left: 10px; /* Espaciado desde la izquierda normal */
-  top: 50%; /* Centrar verticalmente */
-  transform: translateY(-50%); /* Ajustar el ícono al centro */
-  color: #888; /* Color del ícono */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
 }
 
 input {
-  padding: 12px 12px 12px 40px; /* Aumentar el padding a la izquierda para el ícono */
-  border: 1px solid #ccc; /* Borde gris claro */
-  border-radius: 4px; /* Bordes redondeados */
-  width: 100%; /* Hacer que el input ocupe el 100% del ancho del grupo */
-  box-sizing: border-box; /* Incluir el padding y el borde en el ancho total */
-  font-size: 16px; /* Tamaño de fuente de los inputs normal */
+  padding: 12px 12px 12px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  width: 100%;
+  font-size: 16px;
 }
 
 input:focus {
-  border-color: var(--primary-color); /* Cambiar el color del borde al enfocar */
-  outline: none; /* Quitar el contorno predeterminado */
-  box-shadow: 0 0 5px rgba(233, 210, 5, 0.74); /* Sombra al enfocar */
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 51, 102, 0.5);
 }
 
-button {
-  padding: 12px 20px; /* Espaciado normal */
+.submit-button {
+  padding: 12px 20px;
   background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 4px; /* Bordes redondeados */
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s; /* Transición suave para el fondo */
-  margin-top: 10px; /* Espaciado superior para el botón normal */
-  width: 100%; /* Hacer que el botón ocupe el 100% del ancho del formulario */
-  font-size: 18px; /* Tamaño de fuente del botón normal */
+  transition: background-color 0.3s, transform 0.2s;
+  margin-top: 10px;
+  width: 100%;
+  font-size: 16px;
 }
 
-button:hover {
-  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
-  transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+.submit-button:hover {
+  background-color: var(--primary-hover-color);
+  transform: scale(1.05);
 }
 
-.error {
-  color: var(--error-color); /* Color del mensaje de error */
-  margin-top: 10px; /* Espaciado superior normal */
-  font-size: 16px; /* Tamaño de fuente del mensaje de error normal */
+.error-message {
+  color: var(--error-color);
+  margin-top: 10px;
+  font-size: 14px;
 }
 
 /* Media Queries */
 @media (max-width: 600px) {
   body {
-    font-size: 14px; /* Tamaño de fuente base más pequeño en pantallas pequeñas */
+    font-size: 14px;
   }
 
   h2 {
-    font-size: 22px; /* Tamaño de fuente del título más pequeño en pantallas pequeñas */
+    font-size: 22px;
   }
 
   label {
-    font-size: 16px; /* Tamaño de fuente de las etiquetas más pequeño */
+    font-size: 14px;
   }
 
   input {
-    font-size: 14px; /* Tamaño de fuente de los inputs más pequeño */
+    font-size: 14px;
   }
 
-  button {
-    font-size: 16px; /* Tamaño de fuente del botón más pequeño */
+  .submit-button {
+    font-size: 14px;
   }
 
-  form {
-    padding: 20px; /* Reducir el espaciado interno del formulario */
-  }
-
-  .top-left-image,
-  .top-right-image {
-    width: 30%; /* Ajustar el tamaño de las imágenes en pantallas pequeñas */
-    left: -10%; /* Ajustar la posición de la imagen izquierda */
-    right: -10%; /* Ajustar la posición de la imagen derecha */
+  .auth-form {
+    padding: 20px;
   }
 }
-
 /* TERMINA LOGIN */
 
 /* INICIA HEADER */
-
 .header {
-  background-color: #000149; /* Color de fondo */
-  color: rgb(255, 255, 255); /* Color del texto */
-  padding: 10px 0; /* Espaciado vertical normal, sin padding horizontal */
+  background: linear-gradient(to right, var(--primary-color), #006699); /* Degradado azul oscuro */
+  color: rgb(252, 252, 252); /* Color del texto */
+  padding: 10px 20px; /* Espaciado vertical y horizontal */
   width: 100vw; /* Abarcar todo el ancho de la pantalla */
   position: fixed; /* Fijar al top */
   top: 0; /* Alinear al top */
   left: 0; /* Alinear a la izquierda */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
   display: flex; /* Usar flexbox para alinear elementos */
-  justify-content: space-between; /* Espacio entre el título y los íconos */
+  justify-content: flex-end; /* Alinear los íconos a la derecha */
   align-items: center; /* Centrar verticalmente */
   margin: 0; /* Asegurarse de que no haya margen */
   z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
-}
-
-.header h1 {
-  margin: 0; /* Sin margen */
-  font-size: 24px; /* Tamaño de fuente normal */
-  font-weight: bold; /* Negrita para el título */
 }
 
 .header-icons {
@@ -209,12 +171,16 @@ button:hover {
   align-items: center; /* Centrar verticalmente */
 }
 
+.header-icons .notification-icon {
+  position: relative; /* Asegura que el badge se posicione relativo a este contenedor */
+}
+
 .header-icons .notification-icon,
 .header-icons .profile {
   display: flex; /* Usar flexbox para centrar el ícono */
   justify-content: center; /* Centrar horizontalmente */
   align-items: center; /* Centrar verticalmente */
-  margin-left: 15px; /* Espaciado entre íconos normal */
+  margin-left: 20px; /* Espaciado entre íconos normal */
   cursor: pointer; /* Cambiar el cursor al pasar el mouse */
   font-size: 20px; /* Tamaño de los íconos normal */
   transition: color 0.3s, transform 0.3s; /* Transición suave para el hover */
@@ -222,7 +188,7 @@ button:hover {
 
 .header-icons .notification-icon:hover,
 .header-icons .profile:hover {
-  color: #ffcc00; /* Color al pasar el mouse */
+  color: #fdaf06; /* Color al pasar el mouse */
   transform: scale(1.1); /* Efecto de aumento al pasar el mouse */
 }
 
@@ -231,7 +197,7 @@ button:hover {
   height: 40px; /* Alto del círculo normal */
   border-radius: 50%; /* Bordes redondeados para hacer un círculo */
   background-color: white; /* Color de fondo del círculo */
-  color: #000149; /* Color del ícono */
+  color: var(--primary-color); /* Color del ícono */
   display: flex; /* Usar flexbox para centrar el ícono */
   justify-content: center; /* Centrar horizontalmente */
   align-items: center; /* Centrar verticalmente */
@@ -243,20 +209,105 @@ button:hover {
   transform: scale(1.1); /* Efecto de aumento al pasar el mouse */
 }
 
-/* TERMINA HEADER */
-
-/* INICIA MENU */
-.dropdown-menu {
-  position: absolute; /* Posicionar el menú desplegable */
+.notification-menu {
+  display: none; /* Ocultar por defecto */
+  position: absolute; /* Posicionar el menú de notificaciones */
   right: 0; /* Alinear a la derecha */
   top: 50px; /* Ajustar la posición para que esté justo debajo del ícono */
-  background-color: white; /* Color de fondo del menú */
-  color: black; /* Color del texto */
-  border: 1px solid #ccc; /* Borde del menú */
+  background-color: #ffffff; /* Color de fondo del menú */
+  color: #333; /* Color del texto */
+  border: 1px solid var(--border-color); /* Borde del menú */
   border-radius: 5px; /* Bordes redondeados */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
   z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
   width: 200px; /* Ancho fijo del menú normal */
+  opacity: 0; /* Inicialmente oculto */
+  transform: translateY(-10px); /* Desplazamiento inicial */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+}
+
+/* Estilo para el badge de notificaciones */
+.notification-badge {
+  position: absolute; /* Posicionar el badge */
+  top: -5px; /* Ajusta según sea necesario para alinearlo con el ícono */
+  right: -10px; /* Ajusta según sea necesario para alinearlo con el ícono */
+  background-color: red; /* Color de fondo del badge */
+  color: white; /* Color del texto */
+  border-radius: 50%; /* Hacerlo circular */
+  padding: 2px 6px; /* Espaciado interno */
+  font-size: 12px; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita */
+  display: flex; /* Usar flexbox para centrar el texto */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+}
+
+.notification-menu.visible {
+  display: block; /* Mostrar el menú cuando sea visible */
+  opacity: 1; /* Hacer visible el menú */
+  transform: translateY(0); /* Restablecer el desplazamiento */
+}
+
+.notification-menu ul {
+  list-style-type: none; /* Sin viñetas */
+  padding: 10px; /* Espaciado interno normal */
+  margin: 0; /* Sin margen */
+}
+
+.notification-menu li {
+  margin: 5px 0; /* Espaciado entre elementos normal */
+}
+
+.notification-menu a {
+  text-decoration: none; /* Sin subrayado */
+  color: black; /* Color del texto */
+  padding: 10px 15px; /* Espaciado interno consistente normal */
+  display: block; /* Hacer que el área clickeable sea más grande */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+  font-size: 16px; /* Tamaño de fuente */
+}
+
+.notification-menu a:hover {
+  background-color: #f0f0f0; /* Color de fondo al pasar el mouse */
+}
+
+/* Flecha para el menú de notificaciones */
+.notification-arrow {
+  position: absolute; /* Posicionar la flecha de forma absoluta */
+  right: 10px; /* Ajustar la posición a la derecha del menú */
+  top: -10px; /* Ajustar la posición hacia arriba del menú */
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent; /* Parte izquierda de la flecha */
+  border-right: 10px solid transparent; /* Parte derecha de la flecha */
+  border-bottom: 10px solid #ffffff; /* Parte inferior de la flecha (color de fondo del menú) */
+  z-index: 1001; /* Asegurarse de que esté por encima del menú */
+}
+
+.dropdown {
+  position: relative; /* Asegúrate de que el contenedor sea relativo */
+}
+.dropdown-menu {
+  position: absolute; /* Posicionar el menú desplegable */
+  right: 0; /* Alinear a la derecha del contenedor del perfil */
+  top: 50px; /* Ajustar la posición para que esté justo debajo del ícono */
+  background-color: #ffffff; /* Color de fondo del menú */
+  color: #333; /* Color del texto */
+  border: 1px solid var(--border-color); /* Borde del menú */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  width: 200px; /* Ancho fijo del menú normal */
+  display: none; /* Ocultar por defecto */
+  opacity: 0; /* Inicialmente oculto */
+  transform: translateY(-10px); /* Desplazamiento inicial */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+}
+
+.dropdown-menu.visible {
+  display: block; /* Mostrar el menú cuando sea visible */
+  opacity: 1; /* Hacer visible el menú */
+  transform: translateY(0); /* Restablecer el desplazamiento */
 }
 
 .dropdown-menu ul {
@@ -275,17 +326,108 @@ button:hover {
   padding: 10px 15px; /* Espaciado interno consistente normal */
   display: block; /* Hacer que el área clickeable sea más grande */
   transition: background-color 0.3s; /* Transición suave para el hover */
-  font-size: 16px; /* Tamaño de fuente normal */
+  font-size: 16px; /* Tamaño de fuente */
 }
 
 .dropdown-menu a:hover {
-  background-color: #000000; /* Color de fondo al pasar el mouse */
+  background-color: #f0f0f0; /* Color de fondo al pasar el mouse */
+}
+/* TERMINA HEADER */
+
+/* INICIA MENU */
+
+/* ========================= */
+/* Estilos para el encabezado del menú */
+/* ========================= */
+.menu-header {
+  display: flex; /* Usar flexbox para alinear la imagen */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  padding: 10px 20px; /* Espaciado alrededor del contenido */
+  background-color: var(--primary-color); /* Color de fondo del encabezado */
+  border-bottom: 2px solid var(--primary-color); /* Borde inferior para separar el encabezado del resto del menú */
+}
+
+/* ========================= */
+/* Estilos para el logo del menú */
+/* ========================= */
+.menu-logo {
+  width: 80px; /* Aumentar el tamaño de la imagen según sea necesario */
+  height: 80px; /* Aumentar el tamaño de la imagen según sea necesario */
+  border-radius: 50%; /* Hacer la imagen circular */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para la imagen */
+}
+
+/* ========================= */
+/* Estilos para los iconos del menú */
+/* ========================= */
+.menu-icon {
+  color: white; /* Color del icono */
+  font-size: 20px; /* Tamaño del icono */
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+  transition: color 0.3s; /* Transición suave para el color */
+}
+
+.menu-icon:hover {
+  color: #56a8fa; /* Color del icono al pasar el ratón */
+}
+
+/* ========================= */
+/* Estilo para el elemento activo del menú */
+/* ========================= */
+.menu a.active {
+  background-color: var(--primary-color); /* Color de fondo para el elemento activo */
+  color: white; /* Color del texto para el elemento activo */
+}
+
+/* ========================= */
+/* Estilos para el menú desplegable */
+/* ========================= */
+.dropdown-menu {
+  position: absolute; /* Posicionar el menú desplegable */
+  right: 0; /* Alinear a la derecha */
+  top: 50px; /* Ajustar la posición para que esté justo debajo del ícono */
+  background-color: #ffffff; /* Color de fondo del menú */
+  color: #a50000; /* Color del texto */
+  border: 20px solid var(--border-color); /* Borde del menú */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  width: 220px; /* Ancho fijo del menú normal */
+  opacity: 0; /* Inicialmente oculto */
+  transform: translateY(-10px); /* Desplazamiento inicial */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+}
+
+.dropdown-menu ul {
+  list-style-type: none; /* Sin viñetas */
+  padding: 10px; /* Espaciado interno normal */
+  margin: 0; /* Sin margen */
+}
+
+.dropdown-menu li {
+  margin: 5px 0; /* Espaciado entre elementos normal */
+}
+
+.dropdown-menu a {
+  text-decoration: none; /* Sin subrayado */
+  color: black; /* Color del texto */
+  padding: 10px 15px; /* Espaciado interno consistente normal */
+  display: block; /* Hacer que el área clickeable sea más grande */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+  font-size: 16px; /* Tamaño de fuente */
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
   border-radius: 3px; /* Bordes redondeados */
 }
 
-/* Estilo para el menú */
+/* ========================= */
+/* Estilo para el menú lateral */
+/* ========================= */
 .menu {
-  background-color: #020c8f; /* Color de fondo */
+  background: var(--primary-color); /* Degradado azul oscuro */
   width: 220px; /* Ancho fijo para el menú */
   height: 100vh; /* Altura completa de la pantalla */
   position: fixed; /* Fijar el menú en la parte izquierda */
@@ -297,13 +439,15 @@ button:hover {
   transition: transform 0.3s ease; /* Transición suave para mostrar/ocultar */
 }
 
+/* ========================= */
 /* Estilo general para el botón de menú */
+/* ========================= */
 .menu-toggle {
   position: fixed; /* Posicionar el botón de forma fija */
   background: transparent; /* Fondo transparente para el botón */
   top: 10px; /* Espaciado desde la parte superior */
   left: 10px; /* Espaciado desde la izquierda */
-  background-color: #464646; /* Color de fondo del botón */
+  background-color: #040505b0; /* Color de fondo del botón */
   border: none; /* Sin borde */
   border-radius: 5px; /* Bordes redondeados */
   padding: 5px; /* Espaciado interno reducido */
@@ -318,10 +462,16 @@ button:hover {
   transition: transform 0.3s ease; /* Asegurar que la transición sea suave */
 }
 
+/* ========================= */
+/* Contenedor del menú */
+/* ========================= */
 .menu-container {
   position: relative; /* Asegurar que el menú se posicione correctamente */
 }
 
+/* ========================= */
+/* Clases para mostrar/ocultar el menú */
+/* ========================= */
 .menu.hidden {
   transform: translateX(-100%); /* Ocultar el menú moviéndolo fuera de la vista */
 }
@@ -330,6 +480,9 @@ button:hover {
   transform: translateX(0); /* Mostrar el menú */
 }
 
+/* ========================= */
+/* Estilos para la lista del menú */
+/* ========================= */
 .menu ul {
   list-style-type: none; /* Sin viñetas */
   padding: 0; /* Sin padding */
@@ -341,7 +494,7 @@ button:hover {
 }
 
 .menu a {
-  color: rgb(0, 0, 0); /* Color del texto */
+  color: rgb(255, 249, 249); /* Color del texto */
   text-decoration: none; /* Sin subrayado */
   padding: 10px 15px; /* Espaciado interno para los enlaces normal */
   display: block; /* Hacer que el área clickeable sea más grande */
@@ -349,11 +502,13 @@ button:hover {
 }
 
 .menu a:hover {
-  background-color: #ffffff; /* Color de fondo al pasar el mouse */
+  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
   border-radius: 5px; /* Bordes redondeados */
 }
 
+/* ========================= */
 /* En pantallas pequeñas, mantener el tamaño del dashboard */
+/* ========================= */
 @media (max-width: 599px) {
   .dashboard-content {
     width: 100%; /* Mantener el ancho completo */
@@ -362,17 +517,18 @@ button:hover {
   }
 }
 
+/* TERMINA MENU */
+
 /* INICIO DASHBOARD */
 .dashboard-container {
   display: flex; /* Usar flexbox para alinear elementos */
   height: calc(100vh - 50px); /* Altura completa menos la altura del header */
   width: 100vw; /* Ancho completo de la ventana */
-  background-color: #b4b4b4; /* Color de fondo para el dashboard */
+  background-color: #ffffff; /* Color de fondo para el dashboard */
   margin: 0; /* Eliminar márgenes */
   padding: 0; /* Eliminar padding */
 }
 
-/* Estilo para el contenido del dashboard */
 .dashboard-content {
   flex: 1; /* Permitir que el contenido ocupe el espacio restante */
   display: flex; /* Usar flexbox para alinear elementos dentro del contenido */
@@ -380,10 +536,11 @@ button:hover {
   justify-content: flex-start; /* Alinear elementos al inicio */
   padding: 15px; /* Espaciado interno para el contenido */
   background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con un poco de transparencia */
-  border-radius: 5px; /* Bordes redondeados */
+  border-radius: 20px; /* Bordes redondeados */
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para el contenido */
   margin-left: 220px; /* Dejar espacio para el menú */
-  transition: margin-left 0.3s ease; /* Transición suave para el margen */
+  height: calc(100vh - 50px); /* Altura completa menos la altura del header */
+  overflow-y: auto; /* Permitir el desplazamiento vertical */
 }
 
 /* En pantallas grandes, mover el dashboard cuando el menú está visible */
@@ -409,6 +566,14 @@ button:hover {
   margin-left: 0; /* Sin margen izquierdo cuando el menú está oculto */
 }
 
+/* Estilos para el título del Dashboard */
+.dashboard-title {
+  font-size: 24px; /* Tamaño de fuente grande */
+  font-weight: bold; /* Negrita */
+  color: var(--primary-color); /* Color del texto */
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
 /* Media Queries */
 @media (max-width: 600px) {
   .dashboard-content {
@@ -416,23 +581,384 @@ button:hover {
     width: 100%; /* Mantener el ancho completo */
   }
 }
+
+/* Estilos para el contenedor del logo */
+.logo-container {
+  display: flex; /* Usar flexbox para centrar el logo */
+  justify-content: center; /* Centrar horizontalmente */
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
 /* TERMINA DASHBOARD */
 
-/* INICIA FOOTER */
-
+/* INICIO FOOTER */
 .footer {
-  background-color: #000149; /* Color de fondo */
+  background: linear-gradient(to right, var(--primary-color), #006699); /* Degradado azul oscuro */
   color: white; /* Color del texto */
   text-align: center; /* Centrar texto */
-  padding: 20px 0; /* Aumentar espaciado normal */
+  padding: 10px 0; /* Reducir espaciado vertical */
   position: fixed; /* Fijar al fondo */
   bottom: 0; /* Fijar al fondo */
   left: 0; /* Alinear a la izquierda */
   right: 0; /* Alinear a la derecha */
   width: 100%; /* Ancho completo */
+  min-height: 40px; /* Altura mínima del footer */
   z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
-  font-size: 14px; /* Tamaño de fuente normal */
+  font-size: 12px; /* Tamaño de fuente más pequeño */
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Sombra superior */
 }
+/* TERMINA FOOTER */
 
-/*TERMINA FOOTER */
+/* INICIO CONTENIDO */
+/* App.css */
+.form-control {
+  width: 100%; /* O puedes usar un tamaño específico como '300px' */
+  padding: 10px; /* Espaciado interno */
+  margin: 2px 0; /* Espaciado externo */
+  border: 1px solid var(--border-color); /* Borde */
+  border-radius: 5px; /* Bordes redondeados */
+  box-sizing: border-box; /* Incluye padding y border en el ancho total */
+  height: 36px;
+  font-size: 15px;
+}
+
+
+.submit-button {
+  padding: 10px 15px; /* Espaciado interno del botón */
+  background-color: var(--primary-color); /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.submit-button:hover {
+  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
+}
+
+/* Estilos para inputs con diferentes tamaños */
+.form-row {
+  display: flex; /* Usar flexbox */
+  flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+  margin: -5px; /* Espaciado negativo para compensar el padding */
+}
+
+/* Grupo de formulario */
+.form-group {
+  padding: 5px; /* Espaciado interno */
+  box-sizing: border-box; /* Incluir padding y border en el ancho total */
+  width: 100%; /* Asegúrate de que ocupe el 100% del contenedor */
+}
+
+/* Estilos para inputs con diferentes tamaños */
+.input-col-1 { width: 8.33%; }
+.input-col-2 { width: 16.67%; }
+.input-col-3 { width: 25%; }
+.input-col-4 { width: 33.33%; }
+.input-col-5 { width: 41.67%; }
+.input-col-6 { width: 50%; }
+.input-col-7 { width: 58.33%; }
+.input-col-8 { width: 66.67%; }
+.input-col-9 { width: 75%; }
+.input-col-10 { width: 83.33%; }
+.input-col-11 { width: 91.67%; }
+.input-col-12 { width: 100%; }
+
+/* Alineación a la izquierda */
+.align-left { text-align: left; }
+
+/* Alineación al centro */
+.align-center { text-align: center; }
+
+/* Alineación a la derecha */
+.align-right { text-align: right; }
+
+
+
+/* Alineación de inputs usando flexbox */
+
+/* Nueva clase para el contenedor del formulario */
+.form-container {
+  background-color: #a5a5a57e; /* Color de fondo (puedes cambiarlo) */
+  padding: 10px; /* Espaciado interno */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+  margin: 20px auto; /* Margen superior e inferior, centrado horizontalmente */
+  max-width: 60%; /* Ancho máximo del contenedor */
+  width: 90%; /* Ancho del contenedor en pantallas pequeñas */
+}
+
+/* Estilo para las etiquetas (labels) */
+.form-label {
+  font-weight: bold; /* Negrita */
+  font-size: 1rem; /* Tamaño de fuente */
+  color: var(--text-color); /* Color del texto */
+  margin-bottom: 5px; /* Espaciado inferior */
+}
+
+/* Estilo para subtítulos */
+.subtitulo {
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+  color: #666; /* Color del texto más claro */
+  margin-top: 0; /* Sin margen superior */
+  margin-bottom: 10px; /* Espaciado inferior */
+  font-style: italic; /* Cursiva */
+}
+
+/* Botón de envío */
+.submit-button {
+  margin-top: 10px; /* Margen superior */
+  padding: 10px 15px; /* Espaciado interno */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar el ratón */
+}
+
+/* Colores de los botones */
+.submit-button.azul { background-color: var(--primary-color); /* Azul */ }
+.submit-button.rojo { background-color: var(--error-color); /* Rojo */ }
+.submit-button.verde { background-color: #4caf50; /* Verde */ }
+.submit-button.anaranjado { background-color: #bb7000; /* Naranja */ }
+.submit-button.morado { background-color: #700483; /* Púrpura */ }
+.submit-button.teal { background-color: #009688; /* Verde azulado */ }
+.submit-button.amarrilo { background-color: #ffeb3b; /* Amarillo */ color: black; /* Cambiar el color del texto a negro para mejor contraste */ }
+.submit-button.rosa { background-color: #e91e63; /* Rosa */ }
+.submit-button.marron { background-color: #795848; /* Marrón */ }
+.submit-button.gris { background-color: #9e9e9e; /* Gris */ color: black; /* Cambiar el color del texto a negro para mejor contraste */ }
+.submit-button.light-blue { background-color: #03a9f4; /* Azul claro */ }
+.submit-button.indigo { background-color: #3f51b5; /* Índigo */ }
+
+.submit-button:hover {
+  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
+}
+
+/* Barra desplegable */
+.dropdown {
+  position: relative; /* Posicionar el contenedor relativo */
+}
+
+.dropdown-menu {
+  position: absolute; /* Posicionar el menú desplegable */
+  right:  0; /* Alinear a la derecha */
+  top: 100%; /* Ajustar la posición para que esté justo debajo del botón */
+  background-color: #ffffff; /* Color de fondo del menú */
+  color: #333; /* Color del texto */
+  border: 1px solid var(--border-color); /* Borde del menú */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
+  z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  width: 200px; /* Ancho fijo del menú normal */
+  display: none; /* Ocultar por defecto */
+}
+
+.dropdown-menu.visible {
+  display: block; /* Mostrar el menú cuando sea visible */
+}
+
+.dropdown-menu ul {
+  list-style-type: none; /* Sin viñetas */
+  padding: 10px; /* Espaciado interno normal */
+  margin: 0; /* Sin margen */
+}
+
+.dropdown-menu li {
+  margin: 5px 0; /* Espaciado entre elementos normal */
+}
+
+.dropdown-menu a {
+  text-decoration: none; /* Sin subrayado */
+  color: black; /* Color del texto */
+  padding: 10px 15px; /* Espaciado interno consistente normal */
+  display: block; /* Hacer que el área clickeable sea más grande */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--primary-hover-color); /* Color de fondo al pasar el mouse */
+}
+
+.records-table {
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para la tabla */
+  border-radius: 8px; /* Bordes redondeados */
+  overflow: hidden; /* Para que los bordes redondeados se apliquen */
+}
+
+.table th, .table td {
+  border: 1px solid #636262; /* Color de borde más suave */
+  padding: 12px; /* Espaciado interno */
+  text-align: left;
+  transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+.table th {
+  background:  linear-gradient(to right, var(--primary-color), #006699); /* Color de fondo más atractivo */
+  color: white; /* Color del texto en el encabezado */
+  font-weight: bold; /* Negrita para el encabezado */
+}
+
+.table tr {
+  transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+.table tr:hover {
+  background-color: #f1f1f1; /* Color de fondo al pasar el mouse */
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Color de fondo alternativo para filas pares */
+}
+
+.table tr:nth-child(odd) {
+  background-color: #ffffff; /* Color de fondo para filas impares */
+}
+
+.table td {
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  color: #0a0808; /* Color del texto */
+}
+
+.table button {
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+  color: #225475; /* Color del texto */
+  margin-right: 10px; /* Espaciado entre botones */
+  font-size: 18px; /* Tamaño de fuente */
+}
+
+.table button:hover {
+  color: #0056b3; /* Color al pasar el mouse */
+}
+
+.search-container {
+  display: flex;
+  align-items: center ;
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
+.no-results {
+  color: red; /* Cambiar el color del texto a rojo */
+  text-align: center; /* Centrar el texto */
+  font-weight: bold; /* Hacer el texto en negrita */
+  padding: 10px; /* Agregar un poco de espacio alrededor del texto */
+}
+
+.search-label {
+  margin-right: 10px; /* Espaciado entre la etiqueta y el campo de búsqueda */
+}
+
+.search-input {
+  padding: 8px;
+  border: 1px solid #ccc; /* Borde del campo de búsqueda */
+  border-radius: 4px; /* Bordes redondeados */
+  margin-right: 10px; /* Espaciado entre el campo y el botón */
+  flex: 1; /* Ocupa el espacio disponible */
+}
+
+.add-button {
+  background-color: #28a745; /* Color de fondo del botón */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 8px 12px; /* Espaciado interno */
+  cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+}
+
+.add-button:hover {
+  background-color: #218838; /* Color al pasar el mouse */
+}
+
+.container {
+  width: 100%;
+  max-width: 1700px; /* O el ancho que desees */
+  margin: 0 auto; /* Centra el contenedor */
+  padding: 20px; /* Espaciado interno */
+}
+
+/* Modales */
+/* src/assets/styles/Modal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%; /* Cambiar a 100% para que ocupe todo el ancho disponible */
+  max-width: 500px; /* Ancho máximo del modal */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative; /* Para posicionar el botón de cerrar */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: red; /* Cambiar el color a rojo */
+}
+
+.close-button:hover {
+  color: darkred; /* Cambiar el color al pasar el mouse */
+}
+
+/* src/assets/styles/App.css o src/assets/styles/Form.css */
+.form-row {
+  display: flex; /* Usar flexbox para alinear los elementos */
+  flex-wrap: wrap; /* Permitir que los elementos se envuelvan en la siguiente línea si no hay suficiente espacio */
+  margin-bottom: 15px; /* Espaciado entre filas */
+}
+
+.form-group:last-child {
+  margin-right: 0; /* Eliminar el margen derecho del último grupo */
+}
+
+/* Media query para pantallas más pequeñas */
+@media (max-width: 600px) {
+  .form-group {
+    flex: 1 1 80%; /* Hacer que cada grupo ocupe el 100% del ancho en pantallas pequeñas */
+    margin-right: 0; /* Eliminar el margen derecho */
+  }
+}
+
+.form-control {
+  width: 100%; /* Asegurarse de que los inputs ocupen todo el ancho del grupo */
+  padding: 10px; /* Espaciado interno */
+  border: 1px solid #ccc; /* Borde del input */
+  border-radius: 4px; /* Bordes redondeados */
+  box-sizing: border-box; /* Incluir padding y border en el ancho total */
+}
+
+button[type="submit"] {
+  background-color: #2a79a7; /* Color de fondo */
+  color: white; /* Color del texto */
+  padding: 10px 15px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+  margin-top: 10px; /* Espaciado superior */
+}
+
+button[type="submit"]:hover {
+  background-color: #08449e; /* Color de fondo al pasar el mouse */
+}

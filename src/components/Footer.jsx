@@ -1,4 +1,3 @@
-// src/components/Footer.js
 import React from 'react';
 import '../assets/styles/App.css';
 

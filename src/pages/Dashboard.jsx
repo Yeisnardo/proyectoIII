@@ -1,9 +1,10 @@
 // src/pages/Dashboard.js
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import Menu from '../components/Menu';
-import Footer from '../components/Footer';
-import '../assets/styles/App.css';
+import React, { useState } from "react";
+import Header from "../components/Header";
+import Menu from "../components/Menu"; // Asegúrate de que este componente esté definido
+import Footer from "../components/Footer";
+import logo from "../assets/images/ifemi.jpg"; // Importa el logo
+import "../assets/styles/App.css";
 
 const Dashboard = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true); // Estado para controlar la visibilidad del menú
@@ -13,12 +14,16 @@ const Dashboard = () => {
   };
 
   return (
-    <div className={`dashboard-container ${isMenuVisible ? '' : 'menu-hidden'}`}>
+    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
-        <h1 className="dashboard-title">Instituto Fortalecimiento Emprendedor del Municipio Independencia</h1>
-        {/* Aquí puedes agregar más contenido del dashboard */}
+        <br />
+        <br />
+        <br />
+        <div className="logo-container">
+          <img src={logo} alt="Logo de la Institución" className="institution-logo" />
+        </div>
       </div>
       <Footer />
     </div>
