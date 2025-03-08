@@ -794,13 +794,16 @@ input:focus {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para la tabla */
   border-radius: 8px; /* Bordes redondeados */
   overflow: hidden; /* Para que los bordes redondeados se apliquen */
+  width: 100%; /* Ancho completo de la tabla */
+  border-collapse: collapse; /* Colapsar bordes */
 }
 
 .table th, .table td {
   border: 1px solid #636262; /* Color de borde más suave */
-  padding: 12px; /* Espaciado interno */
+  padding: 10px; /* Espaciado interno */
   text-align: left;
   transition: background-color 0.3s; /* Transición suave para el hover */
+  border-bottom: 1px solid #ddd; /* Línea divisoria entre filas */
 }
 
 .table th {
@@ -890,6 +893,48 @@ input:focus {
 
 /* Modales */
 /* src/assets/styles/Modal.css */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%; /* Ancho del modal en dispositivos móviles */
+  max-width: 500px; /* Ancho máximo para pantallas más grandes */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Permitir desplazamiento si el contenido es demasiado largo */
+}
+
+.close-button {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #3498db; /* Color del botón de cerrar */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 15px; /* Ajustar el padding en pantallas pequeñas */
+  }
+
+  .close-button {
+    font-size: 1.2rem; /* Tamaño del botón de cerrar en pantallas pequeñas */
+  }
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1117,4 +1162,21 @@ button[type="submit"]:hover {
 
 .modal-actions button:last-child {
   background-color: #e0e0e0; /* Color gris para el botón de cancelar */
+}
+
+.records-container {
+  padding: 20px;
+  background-color: #ffffff; /* Color de fondo */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+  margin: 20px 0; /* Margen superior e inferior */
+}
+
+.table-container {
+  max-height: 400px; /* Altura máxima del contenedor */
+  overflow-y: auto; /* Desplazamiento vertical */
+  overflow-x: auto; /* Desplazamiento horizontal */
+  border: 1px solid #ccc; /* Borde del contenedor */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-top: 20px; /* Margen superior */
 }
