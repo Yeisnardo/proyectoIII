@@ -153,7 +153,7 @@ input:focus {
 .header {
   background: linear-gradient(to right, var(--primary-color), #006699); /* Degradado azul oscuro */
   color: rgb(252, 252, 252); /* Color del texto */
-  padding: 10px 20px; /* Espaciado vertical y horizontal */
+  padding: 7px 20px; /* Espaciado vertical y horizontal */
   width: 100vw; /* Abarcar todo el ancho de la pantalla */
   position: fixed; /* Fijar al top */
   top: 0; /* Alinear al top */
@@ -180,7 +180,7 @@ input:focus {
   display: flex; /* Usar flexbox para centrar el ícono */
   justify-content: center; /* Centrar horizontalmente */
   align-items: center; /* Centrar verticalmente */
-  margin-left: 20px; /* Espaciado entre íconos normal */
+  margin-left: 25px; /* Espaciado entre íconos normal */
   cursor: pointer; /* Cambiar el cursor al pasar el mouse */
   font-size: 20px; /* Tamaño de los íconos normal */
   transition: color 0.3s, transform 0.3s; /* Transición suave para el hover */
@@ -346,7 +346,29 @@ input:focus {
   padding: 10px 20px; /* Espaciado alrededor del contenido */
   background-color: var(--primary-color); /* Color de fondo del encabezado */
   border-bottom: 2px solid var(--primary-color); /* Borde inferior para separar el encabezado del resto del menú */
+  margin-top: -40px; /* Ajustar este valor según sea necesario */
 }
+
+
+
+.menu-menu {
+  display: flex; /* Asegúrate de que sea un contenedor flex */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  font-size: 1.5rem; /* Tamaño de fuente */
+  color: #ffffff; /* Color del texto (blanco) para un mejor contraste */
+  margin: 0; /* Eliminar margen */
+  font-weight: 600; /* Peso de fuente semi-negrita */
+  text-transform: uppercase; /* Transformar texto a mayúsculas para un aspecto más moderno */
+  letter-spacing: 1px; /* Espaciado entre letras para mejorar la legibilidad */
+  padding: 10px 20px; /* Espaciado interno para dar más espacio alrededor del texto */
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente para destacar el texto */
+  border-radius: 5px; /* Bordes redondeados para un aspecto más suave */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para dar profundidad */
+}
+
+
+
 
 /* ========================= */
 /* Estilos para el logo del menú */
@@ -357,15 +379,54 @@ input:focus {
   border-radius: 50%; /* Hacer la imagen circular */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para la imagen */
 }
+/* ========================= */
+
+.menu-label-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  padding: 5px; /* Espaciado alrededor del contenedor */
+  background-color: #003366; /* Color de fondo suave */
+}
+
+.menu-label {
+  font-size: 15px; /* Tamaño de fuente más grande */
+  color: #ffffff; /* Color de texto oscuro */
+  transition: color 0.3s ease; /* Transición suave para el color */
+}
+
+.nav-list {
+  list-style-type: none; /* Elimina los puntos de la lista */
+  padding: 0; /* Elimina el padding por defecto */
+  margin: 0; /* Elimina el margen por defecto */
+  display: flex; /* Utiliza Flexbox para alinear los elementos */
+  flex-direction: column; /* Alinea los elementos en una columna */
+}
+
+.nav-list li {
+  margin: 5px 0; /* Espaciado entre los elementos de la lista */
+}
+
+.nav-list a {
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+  color: black; /* Cambia el color del texto */
+}
+
+.nav-list a.active {
+  font-weight: bold; /* Estilo para el enlace activo */
+  color: blue; /* Cambia el color del enlace activo */
+}
 
 /* ========================= */
 /* Estilos para los iconos del menú */
 /* ========================= */
 .menu-icon {
   color: white; /* Color del icono */
-  font-size: 20px; /* Tamaño del icono */
+  font-size: 22px; /* Tamaño del icono */
   margin-right: 8px; /* Espacio entre el icono y el texto */
   transition: color 0.3s; /* Transición suave para el color */
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+  color: #d3d3d3;
 }
 
 .menu-icon:hover {
@@ -428,7 +489,7 @@ input:focus {
 /* ========================= */
 .menu {
   background: var(--primary-color); /* Degradado azul oscuro */
-  width: 220px; /* Ancho fijo para el menú */
+  width: 235px; /* Ancho fijo para el menú */
   height: 100vh; /* Altura completa de la pantalla */
   position: fixed; /* Fijar el menú en la parte izquierda */
   top: 0; /* Alinear al top */
@@ -437,6 +498,10 @@ input:focus {
   z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Sombra a la derecha */
   transition: transform 0.3s ease; /* Transición suave para mostrar/ocultar */
+  
+  /* Nuevas propiedades para la barra de desplazamiento */
+  max-height: calc(100vh - 50px); /* Altura máxima menos el espacio del encabezado */
+  overflow-y: auto; /* Habilitar desplazamiento vertical */
 }
 
 /* ========================= */
@@ -446,8 +511,8 @@ input:focus {
   position: fixed; /* Posicionar el botón de forma fija */
   background: transparent; /* Fondo transparente para el botón */
   top: 10px; /* Espaciado desde la parte superior */
-  left: 10px; /* Espaciado desde la izquierda */
-  background-color: #040505b0; /* Color de fondo del botón */
+  left: 25px; /* Espaciado desde la izquierda */
+  background-color: #000000b0; /* Color de fondo del botón */
   border: none; /* Sin borde */
   border-radius: 5px; /* Bordes redondeados */
   padding: 5px; /* Espaciado interno reducido */
@@ -654,6 +719,7 @@ input:focus {
   width: 100%; /* El input ocupará el 100% del ancho del contenedor */
   padding: 15px; /* Espaciado interno del input */
   box-sizing: border-box; /* Asegúrate de que el padding se incluya en el ancho total */
+  border-color: #0a0808;
 }
 
 /* Estilos para inputs con diferentes tamaños */
@@ -1115,11 +1181,6 @@ button[type="submit"]:hover {
   display: flex;
   align-items: center; /* Alinear verticalmente el icono y el texto */
   padding: 10px;
-}
-
-.menu-icon {
-  margin-right: 8px; /* Espacio entre el icono y el texto */
-  color: #003366;
 }
 
 .logout-modal {

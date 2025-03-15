@@ -3,47 +3,31 @@ import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckC
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
-import Modal from "../components/Modal"; // Importar el componente Modal
-import "../assets/styles/App.css";
+import Modal from "../components/Modal"; 
+import "../assets/styles/App.css"
 
 const Persona = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([
-    {
-      identityCard: "30608606",
-      firstName: "Yeisnardo",
-      lastName: "Bravo",
-      type: "Natural",
-    },
-    {
-      identityCard: "12345678",
-      firstName: "Juan",
-      lastName: "Pérez",
-      type: "Natural",
-    },
-    {
-      identityCard: "87654321",
-      firstName: "María",
-      lastName: "González",
-      type: "Jurídica",
-    },
-  ]);
+  const [records, setRecords] = useState([]); // Inicializa como un array vacío
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
+  const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false); // Modal de creación
+  const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false); // Modal de actualización
+
   const [newRecord, setNewRecord] = useState({
-    identityCard: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    type: "Natural",
-    gender: "",
-    birthDate: "",
-    phone: "",
+    cedula: "",
+    nombre: "",
+    apellido: "",
+    sexo: "",
+    f_nacimiento: "",
+    telefono: "",
+    correo: "",
+    tipo: "",
   });
 
   const [viewRecord, setViewRecord] = useState(null);
@@ -61,27 +45,31 @@ const Persona = () => {
     setRecords([...records, newRecord]);
     resetForm();
     setIsModalOpen(false);
+    setIsCreatedModalOpen(true); // Abre el modal de creación
   };
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    setRecords(records.map(record => 
-      record.identityCard === newRecord.identityCard ? newRecord : record
-    ));
+    setRecords(
+      records.map((record) =>
+        record.cedula === newRecord.cedula ? newRecord : record
+      )
+    );
     resetForm();
     setIsEditModalOpen(false);
+    setIsUpdatedModalOpen(true); // Abre el modal de actualización
   };
 
   const resetForm = () => {
     setNewRecord({
-      identityCard: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      type: "Natural",
-      gender: "",
-      birthDate: "",
-      phone: "",
+      cedula: "",
+      nombre: "",
+      apellido: "",
+      sexo: "",
+      f_nacimiento: "",
+      telefono: "",
+      correo: "",
+      tipo: "",
     });
   };
 
@@ -92,16 +80,19 @@ const Persona = () => {
   const renderDataTable = () => {
     const filteredRecords = records.filter((record) => {
       return (
-        record.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.identityCard.includes(searchTerm)
+        record.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        record.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        record.cedula.includes(searchTerm)
       );
     });
-  
+
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
-    const currentRecords = filteredRecords.slice(startIndex, startIndex + limit);
-  
+    const currentRecords = filteredRecords.slice(
+      startIndex,
+      startIndex + limit
+    );
+
     return (
       <div className="records-container">
         <h2>Catalago de Persona</h2>
@@ -125,7 +116,7 @@ const Persona = () => {
             <FaPlus />
           </button>
         </div>
-  
+
         <div className="limit-container">
           <label htmlFor="limit">Entradas de registros:</label>
           <select
@@ -143,8 +134,8 @@ const Persona = () => {
             <option value={50}>50</option>
           </select>
         </div>
-  
-        <div className="table-container"> {/* Contenedor con scroll */}
+
+        <div className="table-container">
           <table className="table">
             <thead>
               <tr>
@@ -157,25 +148,25 @@ const Persona = () => {
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.identityCard}>
-                    <td>{record.identityCard}</td>
-                    <td>{`${record.firstName} ${record.lastName}`}</td>
-                    <td>{record.type}</td>
+                  <tr key={record.cedula}>
+                    <td>{record.cedula}</td>
+                    <td>{`${record.nombre} ${record.apellido}`}</td>
+                    <td>{record.tipo}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.identityCard)}
+                        onClick={() => handleView(record.cedula)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.identityCard)}
+                        onClick={() => handleEdit(record.cedula)}
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(record.identityCard)}
+                        onClick={() => handleDelete(record.cedula)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -193,7 +184,7 @@ const Persona = () => {
             </tbody>
           </table>
         </div>
-  
+
         <div className="pagination">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -206,7 +197,9 @@ const Persona = () => {
             Página {currentPage} de {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
             className="pagination-button"
           >
@@ -218,7 +211,7 @@ const Persona = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.identityCard === id);
+    const recordToView = records.find((record) => record.cedula === id);
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -226,7 +219,7 @@ const Persona = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.identityCard === id);
+    const recordToEdit = records.find((record) => record.cedula === id);
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -234,7 +227,7 @@ const Persona = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.identityCard === id);
+    const recordToDelete = records.find((record) => record.cedula === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -242,14 +235,18 @@ const Persona = () => {
   };
 
   const confirmDelete = () => {
-    setRecords(records.filter((record) => record.identityCard !== recordToDelete.identityCard));
+    setRecords(
+      records.filter((record) => record.cedula !== recordToDelete.cedula)
+    );
     setRecordToDelete(null);
     setIsDeleteModalOpen(false);
     setIsDeletedModalOpen(true);
   };
 
   return (
-    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
+    <div
+      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
+    >
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
@@ -266,77 +263,41 @@ const Persona = () => {
               <label>Cédula de Identidad:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="cedula"
+                value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre:</label>
+              <label>Nombres:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="nombre"
+                value={newRecord.nombre}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Apellido:</label>
+              <label>Apellidos:</label>
               <input
                 type="text"
-                name="lastName"
-                value={newRecord.lastName}
+                name="apellido"
+                value={newRecord.apellido}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Sexo:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
-            </div>
-            <div className="form-group input-col-6">
-              <label>Fecha de Nacimiento:</label>
-              <input
-                type="date"
-                name="birthDate"
-                value={newRecord.birthDate}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
+            <div className="form-group input-col-12">
               <label>Teléfono:</label>
               <input
                 type="text"
-                name="phone"
-                value={newRecord.phone}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label>Correo Electrónico:</label>
-              <input
-                type="email"
-                name="email"
-                value={newRecord.email}
+                name="telefono"
+                value={newRecord.telefono}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -345,15 +306,19 @@ const Persona = () => {
             <div className="form-group input-col-12">
               <label>Tipo de Persona:</label>
               <select
-                name="type"
-                value={newRecord.type}
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
                 <option value="">Seleccionar...</option>
-                <option value="Natural">Natural</option>
-                <option value="Jurídica">Jurídica</option>
+                <option value="Presidente">Presidente</option>
+                <option value="Coord. Creditos y Cobranzas">Coord. Creditos y Cobranzas</option>
+                <option value="Asist. Creditos y Cobranzas">Asist. Creditos y Cobranzas</option>
+                <option value="Coord. Formalizacion de Emprendimiento">Coord. Formalizacion de Emprendimiento</option>
+                <option value="Coord. Nuevo Emprendimento">Coord. Nuevo Emprendimento</option>
+                <option value="Emprendedor">Emprendedor</option>
               </select>
             </div>
           </div>
@@ -366,14 +331,30 @@ const Persona = () => {
         <h2>Detalles de Persona</h2>
         {viewRecord && (
           <div className="view-record-details">
-            <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
-            <p><strong>Nombre:</strong> {viewRecord.firstName}</p>
-            <p><strong>Apellido:</strong> {viewRecord.lastName}</p>
-            <p><strong>Sexo:</strong> {viewRecord.gender}</p>
-            <p><strong>Fecha de Nacimiento:</strong> {viewRecord.birthDate}</p>
-            <p><strong>Teléfono:</strong> {viewRecord.phone}</p>
-            <p><strong>Correo Electrónico:</strong> {viewRecord.email}</p>
-            <p><strong>Tipo de Persona:</strong> {viewRecord.type}</p>
+            <p>
+              <strong>Cédula de Identidad:</strong> {viewRecord.cedula}
+            </p>
+            <p>
+              <strong>Nombre:</strong> {viewRecord.nombre}
+            </p>
+            <p>
+              <strong>Apellido:</strong> {viewRecord.apellido}
+            </p>
+            <p>
+              <strong>Sexo:</strong> {viewRecord.sexo}
+            </p>
+            <p>
+              <strong>Fecha de Nacimiento:</strong> {viewRecord.f_nacimiento}
+            </p>
+            <p>
+              <strong>Teléfono:</strong> {viewRecord.telefono}
+            </p>
+            <p>
+              <strong>Correo Electrónico:</strong> {viewRecord.correo}
+            </p>
+            <p>
+              <strong>Tipo de Persona:</strong> {viewRecord.tipo}
+            </p>
           </div>
         )}
       </Modal>
@@ -387,8 +368,8 @@ const Persona = () => {
               <label>Cédula de Identidad:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="cedula"
+                value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -398,8 +379,8 @@ const Persona = () => {
               <label>Nombre:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="nombre"
+                value={newRecord.nombre}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -409,8 +390,8 @@ const Persona = () => {
               <label>Apellido:</label>
               <input
                 type="text"
-                name="lastName"
-                value={newRecord.lastName}
+                name="apellido"
+                value={newRecord.apellido}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -419,8 +400,8 @@ const Persona = () => {
             <div className="form-group input-col-6">
               <label>Sexo:</label>
               <select
-                name="gender"
-                value={newRecord.gender}
+                name="sexo"
+                value={newRecord.sexo}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -434,8 +415,8 @@ const Persona = () => {
               <label>Fecha de Nacimiento:</label>
               <input
                 type="date"
-                name="birthDate"
-                value={newRecord.birthDate}
+                name="f_nacimiento"
+                value={newRecord.f_nacimiento}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -445,19 +426,19 @@ const Persona = () => {
               <label>Teléfono:</label>
               <input
                 type="text"
-                name="phone"
-                value={newRecord.phone}
+                name="telefono"
+                value={newRecord.telefono}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Correo Electrónico:</label>
+              <label className="form-label">Correo Electrónico:</label>
               <input
                 type="email"
-                name="email"
-                value={newRecord.email}
+                name="correo"
+                value={newRecord.correo}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -466,8 +447,8 @@ const Persona = () => {
             <div className="form-group input-col-12">
               <label>Tipo de Persona:</label>
               <select
-                name="type"
-                value={newRecord.type}
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -483,11 +464,19 @@ const Persona = () => {
       </Modal>
 
       {/* Modal para confirmar eliminación */}
-      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <p><strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}</p>
-        <p><strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}</p>
+        <p>
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula}
+        </p>
+        <p>
+          <strong>Nombre:</strong> {recordToDelete?.nombre}{" "}
+          {recordToDelete?.apellido}
+        </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
           <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
@@ -495,11 +484,42 @@ const Persona = () => {
       </Modal>
 
       {/* Modal para mostrar que el registro ha sido eliminado */}
-      <Modal isOpen={isDeletedModalOpen} onClose={() => setIsDeletedModalOpen(false)}>
+      <Modal
+        isOpen={isDeletedModalOpen}
+        onClose={() => setIsDeletedModalOpen(false)}
+      >
         <h2>Registro Eliminado</h2>
         <div className="deleted-message">
           <FaCheckCircle className="deleted-icon" />
           <p>El registro ha sido eliminado con éxito.</p>
+        </div>
+      </Modal>
+
+      {/* Modal para mostrar que el registro ha sido creado */}
+      <Modal
+        isOpen={isCreatedModalOpen}
+        onClose={() => setIsCreatedModalOpen(false)}
+      >
+        <h2>Registro Creado</h2>
+        <div className="confirmation-modal">
+          <div className="confirmation-message">
+            <FaCheckCircle className="confirmation-icon" />
+            <p>El registro ha sido creado con éxito.</p>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal para mostrar que el registro ha sido actualizado */}
+      <Modal
+        isOpen={isUpdatedModalOpen}
+        onClose={() => setIsUpdatedModalOpen(false)}
+      >
+        <h2>Registro Actualizado</h2>
+        <div className="confirmation-modal">
+          <div className="confirmation-message">
+            <FaCheckCircle className="confirmation-icon" />
+            <p>El registro ha sido actualizado con éxito.</p>
+          </div>
         </div>
       </Modal>
     </div>

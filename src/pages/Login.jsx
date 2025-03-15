@@ -11,7 +11,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === "admin" && password === "password") {
+    if (username === "admin" && password === "12345") {
       alert("Inicio de sesión exitoso");
       navigate("/dashboard");
     } else {

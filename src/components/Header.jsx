@@ -78,11 +78,11 @@ const Header = () => {
             <ul className="menu-list">
               <li className="menu-list-item">
                 <FaLock className="menu-icon" />
-                <a href="/change-password">Cambiar Contraseña</a>
+                <a href="/change-password">Configuracion</a>
               </li>
               <li className="menu-list-item" onClick={handleLogout}>
                 <FaSignOutAlt className="menu-icon" />
-                <span>Cerrar Sesión</span>
+                <a href="/">Cerrar sesion</a>
               </li>
             </ul>
           </div>
