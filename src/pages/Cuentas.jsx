@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
+import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
@@ -20,6 +20,34 @@ const Usuario = () => {
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
 
+  const bancos = [
+    "Banco Central de Venezuela",
+    "Banco de Venezuela S.A.C.A.",
+    "Venezolano de Crédito, S.A.",
+    "Banco Mercantil, C.A.",
+    "Banco Provincial, S.A.",
+    "Bancaribe C.A.",
+    "Banco Exterior C.A.",
+    "Banco Occidental de Descuento, C.A.",
+    "Banco Caroní C.A.",
+    "Banesco Banco Universal S.A.C.A.",
+    "Banco Sofitasa, C.A.",
+    "Banco Plaza, C.A.",
+    "Banco de la Gente Emprendedora C.A.",
+    "BFC Banco Fondo Común C.A.",
+    "100% Banco, C.A.",
+    "DelSur Banco Universal C.A.",
+    "Banco del Tesoro, C.A.",
+    "Banco Agrícola de Venezuela, C.A.",
+    "Bancrecer, S.A.",
+    "Mi Banco, C.A.",
+    "Banco Activo, C.A.",
+    "Bancamiga, C.A.",
+    "Banco Internacional de Desarrollo, C.A.",
+    "Banplus Banco Universal, C.A.",
+    "Banco Bicentenario del Pueblo de la Clase Obrera, Mujer y Comunas B.U.",
+  ];
+
   const initialRecordState = {
     identityCard: "",
     firstName: "",
@@ -29,6 +57,9 @@ const Usuario = () => {
     gender: "",
     birthDate: "",
     phone: "",
+    bank: "", // Agrega esta línea
+    accountType: "", // Agrega esta línea
+    accountNumber: "", // Agrega esta línea
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
@@ -77,7 +108,7 @@ const Usuario = () => {
   
     return (
       <div className="records-container">
-        <h2>Catálogo de Amortizacion</h2>
+        <h2>Catálogo de Cuenta Bancaria</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">Buscar usuario</label>
           <input
@@ -115,10 +146,9 @@ const Usuario = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I Emprendedor</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Direccion</th>
+                <th>C.I</th>
+                <th>Usuario</th>
+                <th>Tipo de Usuario</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -129,13 +159,15 @@ const Usuario = () => {
                     <td>{record.identityCard}</td>
                     <td>{`${record.firstName} ${record.lastName}`}</td>
                     <td>{record.type}</td>
-                    <td>{record.type}</td>
                     <td>
-                      <button onClick={() => handleView(record.identityCard)} title="Ver Pagos">
+                      <button onClick={() => handleView(record.identityCard)} title="Ver Datos">
                         <FaEye />
                       </button>
                       <button onClick={() => handleEdit(record.identityCard)} title="Actualizar">
                         <FaEdit />
+                      </button>
+                      <button onClick={() => handleDelete(record.identityCard)} title="Eliminar">
+                        <FaTrash />
                       </button>
                     </td>
                   </tr>
@@ -204,43 +236,57 @@ const Usuario = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Agregar persona para la Amortizacion</h2>
+        <h2>Datos de la Cuenta Bancaria</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-11">
-              <label>Cedula del Emprendedor</label>
+              <label>Cédula del Emprendedor:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="identityCard"
+                value={newRecord.identityCard}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
-            <div className="input-col-1">
-              <button type="submit">B</button>
-            </div>
-            <div className="form-group input-col-11">
-              <label>N° de Contrato</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
+            <div className="form-group input-col-6">
+              <label>Nombre del Banco:</label>
+              <select
+                name="bank"
+                value={newRecord.bank}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              />
+              >
+                <option value="">Seleccionar Banco...</option>
+                {bancos.map((banco, index) => (
+                  <option key={index} value={banco}>
+                    {banco}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="input-col-1">
-              <button type="submit">B</button>
+            <div className="form-group input-col-6">
+              <label>Tipo de Cuenta:</label>
+              <select
+                name="accountType"
+                value={newRecord.accountType}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Ahorro">Ahorro</option>
+                <option value="Corriente">Corriente</option>
+              </select>
             </div>
             <div className="form-group input-col-12">
-              <label>Plazo de Semanas</label>
+              <label>N° de Cuenta:</label>
               <input
-                type="Number"
-                name="firstName"
-                value={newRecord.firstName}
+                type="text"
+                name="accountNumber"
+                value={newRecord.accountNumber}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -260,6 +306,9 @@ const Usuario = () => {
             <p><strong>Usuario:</strong> {viewRecord.firstName}</p>
             <p><strong>Estatus:</strong> {viewRecord.lastName}</p>
             <p><strong>Tipo de Usuario:</strong> {viewRecord.gender}</p>
+            <p><strong>Banco:</strong> {viewRecord.bank}</p>
+            <p><strong>Tipo de Cuenta:</strong> {viewRecord.accountType}</p>
+            <p><strong>N° de Cuenta:</strong> {viewRecord.accountNumber}</p>
           </div>
         )}
       </Modal>
@@ -268,7 +317,7 @@ const Usuario = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
-        <div className="form-row">
+          <div className="form-row">
             <div className="form-group input-col-12">
               <label>Cédula de Identidad:</label>
               <input
@@ -317,22 +366,25 @@ const Usuario = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label>Estatus:</label>
+              <label>Nombre del Banco:</label>
               <select
-                name="gender"
-                value={newRecord.gender}
+                name="bank"
+                value={newRecord.bank}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
+                <option value="">Seleccionar Banco...</option>
+                {bancos.map((banco, index) => (
+                  <option key={index} value={banco}>
+                    {banco}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
           <button type="submit">Actualizar</button>
-        </form>
+ </form>
       </Modal>
 
       {/* Modal para confirmar eliminación */}

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaUser , FaUsers, FaExchangeAlt, FaClipboardCheck, FaPlusCircle, FaFileContract, FaMoneyBillWave, FaBars, FaTimes } from "react-icons/fa";
+import { FaHome, FaUser , FaUsers, FaExchangeAlt, FaClipboardCheck, FaPlusCircle, FaFileContract, FaMoneyBillWave, FaBars, FaTimes, FaBuilding } from "react-icons/fa"; // Cambia FaBank por FaBuilding
 import { NavLink } from "react-router-dom";
 import "../assets/styles/App.css";
 import logo from "../assets/images/logo.jpg";
@@ -31,7 +31,12 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           </li>
           <li>
             <NavLink to="/al-cambio" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaExchangeAlt className="menu-icon" /> Cambios Monetario
+              <FaExchangeAlt className="menu-icon" /> Precio de Divisa
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/cuentas" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaBuilding className="menu-icon" /> Cuentas Bancarias {/* Cambia el ícono aquí */}
             </NavLink>
           </li>
           <li>
@@ -51,7 +56,7 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           </li>
           <li>
             <NavLink to="/amortizacion" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaMoneyBillWave className="menu-icon" /> Amortización
+              <FaMoneyBillWave className="menu-icon" /> Gestion de Amortización
             </NavLink>
           </li>
         </ul>

@@ -208,7 +208,7 @@ const Usuario = () => {
         <h2>Datos del Contrato</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-12">
+            <div className="form-group input-col-7">
               <label>Numero de contrato:</label>
               <input
                 type="text"
@@ -219,7 +219,18 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-11">
+            <div className="form-group input-col-5">
+              <label>Fecha de Apertura:</label>
+              <input
+                type="date"
+                name="identityCard"
+                value={newRecord.identityCard}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-5">
               <label>Cedula del Emprendedor</label>
               <input
                 type="text"
@@ -230,7 +241,10 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-11">
+            <div className="input-col-1">
+              <button type="submit">B</button>
+            </div>
+            <div className="form-group input-col-5">
               <label>RIF del Emprendimiento</label>
               <input
                 type="text"
@@ -240,6 +254,9 @@ const Usuario = () => {
                 className="form-control"
                 required
               />
+            </div>
+            <div className="input-col-1">
+              <button type="submit">B</button>
             </div>
             <div className="form-group input-col-12">
               <label>Monto del Credito en $</label>

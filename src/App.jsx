@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Persona from './pages/Persona';
 import Usuario from './pages/Usuario';
 import Cambio from './pages/Al-cambio.jsx';
+import Cuentas from './pages/Cuentas.jsx';
 import FormalizacionEmprendimiento from './pages/FormalizacionEmprendimiento'; // Importar nuevo componente
 import NuevoEmprendimiento from './pages/NuevoEmprendimiento'; // Importar nuevo componente
 import Contrato from './pages/Contrato'; // Importar nuevo componente
@@ -21,6 +22,7 @@ function App() {
           <Route path="/persona" element={<Persona />} />
           <Route path="/usuario" element={<Usuario />} />
           <Route path="/Al-cambio" element={<Cambio />} />
+          <Route path="/Cuentas" element={<Cuentas />} />
           <Route path="/formalizacion-emprendimiento" element={<FormalizacionEmprendimiento />} /> {/* Nueva ruta */}
           <Route path="/nuevo-emprendimiento" element={<NuevoEmprendimiento />} /> {/* Nueva ruta */}
           <Route path="/contrato" element={<Contrato />} /> {/* Nueva ruta */}
