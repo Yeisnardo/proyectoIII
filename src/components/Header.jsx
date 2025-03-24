@@ -3,7 +3,7 @@ import { FaBell, FaUser , FaLock, FaSignOutAlt } from "react-icons/fa"; // Impor
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import "../assets/styles/App.css";
 
-const Header = () => {
+const Header = ({ userName, userType }) => {
   const navigate = useNavigate(); // Inicializa useNavigate
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
@@ -57,10 +57,20 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-icons">
-        <div className="notification-icon" onClick={toggleNotification} aria-expanded={isNotificationOpen}>
+        <div
+          className="notification-icon"
+          onClick={toggleNotification}
+          aria-expanded={isNotificationOpen}
+        >
           <FaBell aria-hidden="true" />
-          {notifications.length > 0 && <span className="notification-badge">{notifications.length}</span>}
-          <div className={`notification-menu ${isNotificationOpen ? "visible" : ""}`}>
+          {notifications.length > 0 && (
+            <span className="notification-badge">{notifications.length}</span>
+          )}
+          <div
+            className={`notification-menu ${
+              isNotificationOpen ? "visible" : ""
+            }`}
+          >
             <div className="notification-arrow" />
             <ul>
               {notifications.map((notification) => (
@@ -69,20 +79,31 @@ const Header = () => {
             </ul>
           </div>
         </div>
-        <div className="profile" onClick={toggleDropdown} ref={dropdownRef} aria-expanded={isDropdownOpen}>
+        <div
+          className="profile"
+          onClick={toggleDropdown}
+          ref={dropdownRef}
+          aria-expanded={isDropdownOpen}
+        >
           <div className="profile-icon">
             <FaUser  aria-hidden="true" />
           </div>
           <div className={`dropdown-menu ${isDropdownOpen ? "visible" : ""}`}>
             <div className="arrow" />
             <ul className="menu-list">
+              <li className="menu-list-item profile-info">
+                <div>
+                  <span className="user-name">Yeisnardo Eliander Bravo Colina</span>
+                  <span className="user-type">Presidente</span>
+                </div>
+              </li>
               <li className="menu-list-item">
                 <FaLock className="menu-icon" />
-                <a href="/change-password">Configuracion</a>
+                <a href="/change-password">Configuración</a>
               </li>
-              <li className="menu-list-item" onClick={handleLogout}>
+              < li className="menu-list-item" onClick={confirmLogout}>
                 <FaSignOutAlt className="menu-icon" />
-                <a href="/">Cerrar sesion</a>
+                <a href="/">Cerrar sesión</a>
               </li>
             </ul>
           </div>
@@ -97,7 +118,9 @@ const Header = () => {
             <p>¿Estás seguro de que deseas cerrar sesión?</p>
             <div className="modal-actions">
               <button onClick={confirmLogout}>Sí, cerrar sesión</button>
-              <button onClick={() => setLogoutModalOpen(false)}>Cancelar</button>
+              <button onClick={() => setLogoutModalOpen(false)}>
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
