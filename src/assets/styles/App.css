@@ -957,6 +957,18 @@ input:focus {
   padding: 20px; /* Espaciado interno */
 }
 
+.password-container {
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px; /* Espacio entre el input y el botón */
+}
+
 /* Modales */
 /* src/assets/styles/Modal.css */
 .modal {

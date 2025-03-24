@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
+import { 
+  FaEye, 
+  FaEyeSlash, 
+  FaEdit, 
+  FaTrash, 
+  FaPlus, 
+  FaChevronLeft, 
+  FaChevronRight, 
+  FaCheckCircle 
+} from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
@@ -19,16 +28,16 @@ const Usuario = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const initialRecordState = {
     identityCard: "",
     firstName: "",
     lastName: "",
     email: "",
-    type: "",
-    gender: "",
     birthDate: "",
     phone: "",
+    status: "activo",
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
@@ -70,11 +79,11 @@ const Usuario = () => {
         record.identityCard.includes(searchTerm)
       );
     });
-  
+
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
     const currentRecords = filteredRecords.slice(startIndex, startIndex + limit);
-  
+
     return (
       <div className="records-container">
         <h2>Catálogo de Usuario</h2>
@@ -92,7 +101,7 @@ const Usuario = () => {
             <FaPlus />
           </button>
         </div>
-  
+
         <div className="limit-container">
           <label htmlFor="limit">Entradas de registros:</label>
           <select
@@ -110,14 +119,14 @@ const Usuario = () => {
             <option value={50}>50</option>
           </select>
         </div>
-  
+
         <div className="table-container">
           <table className="table">
             <thead>
               <tr>
                 <th>C.I</th>
                 <th>Usuario</th>
-                <th>Tipo de Usuario</th>
+                <th>Estatus</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -126,8 +135,8 @@ const Usuario = () => {
                 currentRecords.map((record) => (
                   <tr key={record.identityCard}>
                     <td>{record.identityCard}</td>
-                    <td>{`${record.firstName} ${record.lastName}`}</td>
-                    <td>{record.type}</td>
+                    <td>{`${record.firstName}`}</td>
+                    <td>{record.status}</td>
                     <td>
                       <button onClick={() => handleView(record.identityCard)} title="Ver Datos">
                         <FaEye />
@@ -149,7 +158,7 @@ const Usuario = () => {
             </tbody>
           </table>
         </div>
-  
+
         <div className="pagination">
           <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="pagination-button">
             <FaChevronLeft />
@@ -232,27 +241,36 @@ const Usuario = () => {
             </div>
             <div className="form-group input-col-6">
               <label>Contraseña:</label>
-              <input
-                type="password"
-                name="lastName"
-                value={newRecord.lastName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
+              <div className="password-container">
+                <input
+                  type={isPasswordVisible ? "text" : "password"}
+                  name="lastName" // Cambia esto si es necesario
+                  value={newRecord.lastName}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  className="password-toggle-button"
+                  title={isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"}
+                >
+                  {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </div>
             <div className="form-group input-col-12">
-              <label>Tipo de Usuario:</label>
+              <label>Estado:</label>
               <select
-                name="gender"
-                value={newRecord.gender}
+                name="status"
+                value={newRecord.status}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
               </select>
             </div>
           </div>
@@ -267,8 +285,7 @@ const Usuario = () => {
           <div className="view-record-details">
             <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
             <p><strong>Usuario:</strong> {viewRecord.firstName}</p>
-            <p><strong>Estatus:</strong> {viewRecord.lastName}</p>
-            <p><strong>Tipo de Usuario:</strong> {viewRecord.gender}</p>
+            <p><strong>Estatus:</strong> {viewRecord.status}</p>
           </div>
         )}
       </Modal>
@@ -277,7 +294,7 @@ const Usuario = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
-        <div className="form-row">
+          <div className="form-row">
             <div className="form-group input-col-12">
               <label>Cédula de Identidad:</label>
               <input
@@ -302,41 +319,36 @@ const Usuario = () => {
             </div>
             <div className="form-group input-col-6">
               <label>Contraseña:</label>
-              <input
-                type="password"
-                name="lastName"
-                value={newRecord.lastName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
+              <div className="password-container">
+                <input
+                  type={isPasswordVisible ? "text" : "password"}
+                  name="lastName" // Cambia esto si es necesario
+                  value={newRecord.lastName}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  className="password-toggle-button"
+                  title={isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"}
+                >
+                  {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Usuario:</label>
+            <div className="form-group input-col-12">
+              <label>Estado:</label>
               <select
-                name="gender"
-                value={newRecord.gender}
+                name="status"
+                value={newRecord.status}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
-            </div>
-            <div className="form-group input-col-6">
-              <label>Estatus:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
               </select>
             </div>
           </div>

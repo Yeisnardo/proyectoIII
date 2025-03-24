@@ -5,8 +5,9 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Persona from './pages/Persona';
 import Usuario from './pages/Usuario';
+import Ferias from './pages/Ferias';
 import Cambio from './pages/Al-cambio.jsx';
-import Cuentas from './pages/Cuentas.jsx';
+import Credito from './pages/Credito.jsx';
 import FormalizacionEmprendimiento from './pages/FormalizacionEmprendimiento'; // Importar nuevo componente
 import NuevoEmprendimiento from './pages/NuevoEmprendimiento'; // Importar nuevo componente
 import Contrato from './pages/Contrato'; // Importar nuevo componente
@@ -21,8 +22,9 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/persona" element={<Persona />} />
           <Route path="/usuario" element={<Usuario />} />
+          <Route path="/ferias" element={<Ferias />} />
           <Route path="/Al-cambio" element={<Cambio />} />
-          <Route path="/Cuentas" element={<Cuentas />} />
+          <Route path="/Credito" element={<Credito />} />
           <Route path="/formalizacion-emprendimiento" element={<FormalizacionEmprendimiento />} /> {/* Nueva ruta */}
           <Route path="/nuevo-emprendimiento" element={<NuevoEmprendimiento />} /> {/* Nueva ruta */}
           <Route path="/contrato" element={<Contrato />} /> {/* Nueva ruta */}

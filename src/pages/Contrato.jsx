@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
+import {
+  FaEye,
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCheckCircle,
+} from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
-import Modal from "../components/Modal"; 
+import Modal from "../components/Modal";
 import "../assets/styles/App.css";
 
 const Usuario = () => {
@@ -33,11 +41,13 @@ const Usuario = () => {
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
 
+  // Handle input changes for the form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRecord({ ...newRecord, [name]: value });
   };
 
+  // Handle form submission for adding a new record
   const handleSubmit = (e) => {
     e.preventDefault();
     setRecords([...records, newRecord]);
@@ -45,23 +55,29 @@ const Usuario = () => {
     setIsModalOpen(false);
   };
 
+  // Handle form submission for updating a record
   const handleUpdate = (e) => {
     e.preventDefault();
-    setRecords(records.map(record => 
-      record.identityCard === newRecord.identityCard ? newRecord : record
-    ));
+    setRecords(
+      records.map((record) =>
+        record.identityCard === newRecord.identityCard ? newRecord : record
+      )
+    );
     resetForm();
     setIsEditModalOpen(false);
   };
 
+  // Reset the form to its initial state
   const resetForm = () => {
     setNewRecord(initialRecordState);
   };
 
+  // Toggle the visibility of the menu
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   };
 
+  // Render the data table with pagination and search functionality
   const renderDataTable = () => {
     const filteredRecords = records.filter((record) => {
       return (
@@ -70,16 +86,21 @@ const Usuario = () => {
         record.identityCard.includes(searchTerm)
       );
     });
-  
+
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
-    const currentRecords = filteredRecords.slice(startIndex, startIndex + limit);
-  
+    const currentRecords = filteredRecords.slice(
+      startIndex,
+      startIndex + limit
+    );
+
     return (
       <div className="records-container">
         <h2>Catálogo de Contrato</h2>
         <div className="search-container">
-          <label htmlFor="search" className="search-label">Buscar usuario</label>
+          <label htmlFor="search" className="search-label">
+            Buscar usuario
+          </label>
           <input
             type="text"
             id="search"
@@ -88,11 +109,15 @@ const Usuario = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button onClick={() => setIsModalOpen(true)} className="add-button" title="Agregar Nuevo Registro">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="add-button"
+            title="Agregar Nuevo Registro"
+          >
             <FaPlus />
           </button>
         </div>
-  
+
         <div className="limit-container">
           <label htmlFor="limit">Entradas de registros:</label>
           <select
@@ -110,14 +135,14 @@ const Usuario = () => {
             <option value={50}>50</option>
           </select>
         </div>
-  
+
         <div className="table-container">
           <table className="table">
             <thead>
               <tr>
                 <th>C.I</th>
-                <th>Usuario</th>
-                <th>Tipo de Usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -129,13 +154,22 @@ const Usuario = () => {
                     <td>{`${record.firstName} ${record.lastName}`}</td>
                     <td>{record.type}</td>
                     <td>
-                      <button onClick={() => handleView(record.identityCard)} title="Ver Datos">
+                      <button
+                        onClick={() => handleView(record.identityCard)}
+                        title="Ver Contrato"
+                      >
                         <FaEye />
                       </button>
-                      <button onClick={() => handleEdit(record.identityCard)} title="Actualizar">
+                      <button
+                        onClick={() => handleEdit(record.identityCard)}
+                        title="Actualizar"
+                      >
                         <FaEdit />
                       </button>
-                      <button onClick={() => handleDelete(record.identityCard)} title="Eliminar">
+                      <button
+                        onClick={() => handleDelete(record.identityCard)}
+                        title="Eliminar"
+                      >
                         <FaTrash />
                       </button>
                     </td>
@@ -143,19 +177,33 @@ const Usuario = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="no-results">No se encontraron registros.</td>
+                  <td colSpan="4" className="no-results">
+                    No se encontraron registros.
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-  
+
         <div className="pagination">
-          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="pagination-button">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-button"
+          >
             <FaChevronLeft />
           </button>
-          <span>Página {currentPage} de {totalPages}</span>
-          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="pagination-button">
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
             <FaChevronRight />
           </button>
         </div>
@@ -163,6 +211,7 @@ const Usuario = () => {
     );
   };
 
+  // Handle viewing a record
   const handleView = (id) => {
     const recordToView = records.find((record) => record.identityCard === id);
     if (recordToView) {
@@ -171,6 +220,7 @@ const Usuario = () => {
     }
   };
 
+  // Handle editing a record
   const handleEdit = (id) => {
     const recordToEdit = records.find((record) => record.identityCard === id);
     if (recordToEdit) {
@@ -179,6 +229,7 @@ const Usuario = () => {
     }
   };
 
+  // Handle deleting a record
   const handleDelete = (id) => {
     const recordToDelete = records.find((record) => record.identityCard === id);
     if (recordToDelete) {
@@ -187,15 +238,22 @@ const Usuario = () => {
     }
   };
 
+  // Confirm deletion of a record
   const confirmDelete = () => {
-    setRecords(records.filter((record) => record.identityCard !== recordToDelete.identityCard));
+    setRecords(
+      records.filter(
+        (record) => record.identityCard !== recordToDelete.identityCard
+      )
+    );
     setRecordToDelete(null);
     setIsDeleteModalOpen(false);
     setIsDeletedModalOpen(true);
   };
 
   return (
-    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
+    <div
+      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
+    >
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
@@ -208,6 +266,20 @@ const Usuario = () => {
         <h2>Datos del Contrato</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
+            <div className="form-group input-col-11">
+              <label>Cedula del Emprendedor</label>
+              <input
+                type="text"
+                name="firstName"
+                value={newRecord.firstName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="input-col-1">
+              <button type="submit">B</button>
+            </div>
             <div className="form-group input-col-7">
               <label>Numero de contrato:</label>
               <input
@@ -223,47 +295,8 @@ const Usuario = () => {
               <label>Fecha de Apertura:</label>
               <input
                 type="date"
-                name="identityCard"
-                value={newRecord.identityCard}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-5">
-              <label>Cedula del Emprendedor</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="input-col-1">
-              <button type="submit">B</button>
-            </div>
-            <div className="form-group input-col-5">
-              <label>RIF del Emprendimiento</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="input-col-1">
-              <button type="submit">B</button>
-            </div>
-            <div className="form-group input-col-12">
-              <label>Monto del Credito en $</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="birthDate" // Changed to the correct field
+                value={newRecord.birthDate}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -279,10 +312,18 @@ const Usuario = () => {
         <h2>Detalles de Usuario</h2>
         {viewRecord && (
           <div className="view-record-details">
-            <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
-            <p><strong>Usuario:</strong> {viewRecord.firstName}</p>
-            <p><strong>Estatus:</strong> {viewRecord.lastName}</p>
-            <p><strong>Tipo de Usuario:</strong> {viewRecord.gender}</p>
+            <p>
+              <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
+            </p>
+            <p>
+              <strong>Usuario:</strong> {viewRecord.firstName}
+            </p>
+            <p>
+              <strong>Estatus:</strong> {viewRecord.lastName}
+            </p>
+            <p>
+              <strong>Tipo de Usuario:</strong> {viewRecord.gender}
+            </p>
           </div>
         )}
       </Modal>
@@ -291,7 +332,7 @@ const Usuario = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
-        <div className="form-row">
+          <div className="form-row">
             <div className="form-group input-col-12">
               <label>Cédula de Identidad:</label>
               <input
@@ -342,7 +383,7 @@ const Usuario = () => {
             <div className="form-group input-col-6">
               <label>Estatus:</label>
               <select
-                name="gender"
+                name="gender" // This should be a different field for status
                 value={newRecord.gender}
                 onChange={handleInputChange}
                 className="form-control"
@@ -359,11 +400,19 @@ const Usuario = () => {
       </Modal>
 
       {/* Modal para confirmar eliminación */}
-      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <p><strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}</p>
-        <p><strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}</p>
+        <p>
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
+        </p>
+        <p>
+          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
+          {recordToDelete?.lastName}
+        </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
           <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
@@ -371,7 +420,10 @@ const Usuario = () => {
       </Modal>
 
       {/* Modal para mostrar que el registro ha sido eliminado */}
-      <Modal isOpen={isDeletedModalOpen} onClose={() => setIsDeletedModalOpen(false)}>
+      <Modal
+        isOpen={isDeletedModalOpen}
+        onClose={() => setIsDeletedModalOpen(false)}
+      >
         <h2>Registro Eliminado</h2>
         <div className="deleted-message">
           <FaCheckCircle className="deleted-icon" />

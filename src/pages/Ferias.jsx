@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import Modal from "../components/Modal"; 
 import "../assets/styles/App.css";
 
-const Usuario = () => {
+const Ferias = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -15,58 +15,55 @@ const Usuario = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
+  const [isRegisterAttendanceModalOpen, setIsRegisterAttendanceModalOpen] = useState(false);
+  const [isSearchFairModalOpen, setIsSearchFairModalOpen] = useState(false);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
 
-  const bancos = [
-    "Banco Central de Venezuela",
-    "Banco de Venezuela S.A.C.A.",
-    "Venezolano de Crédito, S.A.",
-    "Banco Mercantil, C.A.",
-    "Banco Provincial, S.A.",
-    "Bancaribe C.A.",
-    "Banco Exterior C.A.",
-    "Banco Occidental de Descuento, C.A.",
-    "Banco Caroní C.A.",
-    "Banesco Banco Universal S.A.C.A.",
-    "Banco Sofitasa, C.A.",
-    "Banco Plaza, C.A.",
-    "Banco de la Gente Emprendedora C.A.",
-    "BFC Banco Fondo Común C.A.",
-    "100% Banco, C.A.",
-    "DelSur Banco Universal C.A.",
-    "Banco del Tesoro, C.A.",
-    "Banco Agrícola de Venezuela, C.A.",
-    "Bancrecer, S.A.",
-    "Mi Banco, C.A.",
-    "Banco Activo, C.A.",
-    "Bancamiga, C.A.",
-    "Banco Internacional de Desarrollo, C.A.",
-    "Banplus Banco Universal, C.A.",
-    "Banco Bicentenario del Pueblo de la Clase Obrera, Mujer y Comunas B.U.",
-  ];
-
   const initialRecordState = {
     identityCard: "",
     firstName: "",
     lastName: "",
-    email: "",
-    type: "",
-    gender: "",
-    birthDate: "",
-    phone: "",
-    bank: "", // Agrega esta línea
-    accountType: "", // Agrega esta línea
-    accountNumber: "", // Agrega esta línea
+    fairName: "",
+    attendanceDate: "",
+    comments: "",
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
 
+  // Estado para registrar ferias
+  const initialFairState = {
+    fairCode: "",
+    fairName: "",
+    fairDate: "",
+  };
+
+  const [newFair, setNewFair] = useState(initialFairState);
+  
+  // Estado para buscar ferias
+  const initialSearchState = {
+    searchCode: "",
+    entrepreneurName: "",
+    searchDate: "",
+  };
+
+  const [searchData, setSearchData] = useState(initialSearchState);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRecord({ ...newRecord, [name]: value });
+  };
+
+  const handleFairInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewFair({ ...newFair, [name]: value });
+  };
+
+  const handleSearchInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearchData({ ...searchData, [name]: value });
   };
 
   const handleSubmit = (e) => {
@@ -74,6 +71,22 @@ const Usuario = () => {
     setRecords([...records, newRecord]);
     resetForm();
     setIsModalOpen(false);
+  };
+
+  const handleRegisterFairSubmit = (e) => {
+    e.preventDefault();
+    // Aquí puedes agregar la lógica para guardar la feria
+    console.log("Feria registrada:", newFair);
+    resetFairForm();
+    setIsRegisterAttendanceModalOpen(false);
+  };
+
+  const handleSearchFairSubmit = (e) => {
+    e.preventDefault();
+    // Aquí puedes agregar la lógica para buscar la feria
+    console.log("Buscar feria con:", searchData);
+    // Implementa la lógica de búsqueda aquí
+    setIsSearchFairModalOpen(false);
   };
 
   const handleUpdate = (e) => {
@@ -87,6 +100,14 @@ const Usuario = () => {
 
   const resetForm = () => {
     setNewRecord(initialRecordState);
+  };
+
+  const resetFairForm = () => {
+    setNewFair(initialFairState);
+  };
+
+  const resetSearchForm = () => {
+    setSearchData(initialSearchState);
   };
 
   const toggleMenu = () => {
@@ -108,7 +129,7 @@ const Usuario = () => {
   
     return (
       <div className="records-container">
-        <h2>Catálogo de Cuenta Bancaria</h2>
+        <h2>Catálogo de Ferias</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">Buscar usuario</label>
           <input
@@ -119,8 +140,12 @@ const Usuario = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button onClick={() => setIsModalOpen(true)} className="add-button" title="Agregar Nuevo Registro">
-            <FaPlus />
+          <button onClick={() => setIsRegisterAttendanceModalOpen(true)} className="add-button" title="Registrar Asistencia">
+            <FaPlus /> Registrar Asistencia
+          </button>
+          &nbsp;
+          <button onClick={() => setIsSearchFairModalOpen(true)} className="add-button" title="Buscar Feria">
+            <FaPlus /> Registrar Feria
           </button>
         </div>
   
@@ -146,9 +171,9 @@ const Usuario = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I</th>
-                <th>Usuario</th>
-                <th>Tipo de Usuario</th>
+                <th>Codigo</th>
+                <th>Nombre de la Feria</th>
+                <th>Fecha Realizada</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -236,11 +261,11 @@ const Usuario = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos de la Cuenta Bancaria</h2>
+        <h2>Datos de nueva formalizacion de Emprendimiento</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-11">
-              <label>Cédula del Emprendedor:</label>
+            <div className="form-group input-col-12">
+              <label>Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -250,43 +275,23 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Nombre del Banco:</label>
-              <select
-                name="bank"
-                value={newRecord.bank}
+            <div className="form-group input-col-3">
+              <label>Fecha de Inscripcion:</label>
+              <input
+                type="date"
+                name="firstName"
+                value={newRecord.firstName}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar Banco...</option>
-                {bancos.map((banco, index) => (
-                  <option key={index} value={banco}>
-                    {banco}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Cuenta:</label>
-              <select
-                name="accountType"
-                value={newRecord.accountType}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="Ahorro">Ahorro</option>
-                <option value="Corriente">Corriente</option>
-              </select>
-            </div>
-            <div className="form-group input-col-12">
-              <label>N° de Cuenta:</label>
+            <div className="form-group input-col-9">
+              <label>N° de Registro del Certificado Emitido Pagina Emprender Juntos:</label>
               <input
                 type="text"
-                name="accountNumber"
-                value={newRecord.accountNumber}
+                name="lastName"
+                value={newRecord.lastName}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -297,25 +302,108 @@ const Usuario = () => {
         </form>
       </Modal>
 
+      {/* Modal para registrar asistencia a la feria */}
+      <Modal isOpen={isRegisterAttendanceModalOpen} onClose={() => setIsRegisterAttendanceModalOpen(false)}>
+        <h2>Registro de Asistencia a la Feria</h2>
+        <form onSubmit={handleSubmit} className="modal-form">
+          <div className="form-row">
+            <div className="form-group input-col-12">
+              <label>Cédula de Identidad del Emprendedor:</label>
+              <input
+                type="text"
+                name="identityCard"
+                value={newRecord.identityCard}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-4">
+              <label>Codigo de la Feria:</label>
+              <input
+                type="text"
+                name="fairName"
+                value={newRecord.fairName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-1">
+              <button type="submit">B</button>
+            </div>
+            <div className="form-group input-col-7">
+              <label>Fecha de Asistencia:</label>
+              <input
+                type="date"
+                name="attendanceDate"
+                value={newRecord.attendanceDate}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+          </div>
+          <button type="submit">Registrar Asistencia</button>
+        </form>
+      </Modal>
+
+      {/* Modal para buscar feria */}
+      <Modal isOpen={isSearchFairModalOpen} onClose={() => setIsSearchFairModalOpen(false)}>
+        <h2>Registrar feria Feria</h2>
+        <form onSubmit={handleSearchFairSubmit} className="modal-form">
+          <div className="form-row">
+            <div className="form-group input-col-12">
+              <label>Código Identificador:</label>
+              <input
+                type="text"
+                name="searchCode"
+                value={searchData.searchCode}
+                onChange={handleSearchInputChange}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group input-col-12">
+              <label>Nombre del Emprendedor:</label>
+              <input
+                type="text"
+                name="entrepreneurName"
+                value={searchData.entrepreneurName}
+                onChange={handleSearchInputChange}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group input-col-12">
+              <label>Fecha de la Feria:</label>
+              <input
+                type="date"
+                name="searchDate"
+                value={searchData.searchDate}
+                onChange={handleSearchInputChange}
+                className="form-control"
+              />
+            </div>
+          </div>
+          <button type="submit">Buscar Feria</button>
+        </form>
+      </Modal>
+
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Usuario</h2>
+        <h2>Detalles de Ferias</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
-            <p><strong>Usuario:</strong> {viewRecord.firstName}</p>
+            <p><strong>Ferias:</strong> {viewRecord.firstName}</p>
             <p><strong>Estatus:</strong> {viewRecord.lastName}</p>
-            <p><strong>Tipo de Usuario:</strong> {viewRecord.gender}</p>
-            <p><strong>Banco:</strong> {viewRecord.bank}</p>
-            <p><strong>Tipo de Cuenta:</strong> {viewRecord.accountType}</p>
-            <p><strong>N° de Cuenta:</strong> {viewRecord.accountNumber}</p>
+            <p><strong>Tipo de Ferias:</strong> {viewRecord.gender}</p>
           </div>
         )}
       </Modal>
 
       {/* Modal para editar datos */}
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Usuario</h2>
+        <h2>Actualizar Datos de Ferias</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -330,7 +418,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+              <label>Nombre de Ferias:</label>
               <input
                 type="text"
                 name="firstName"
@@ -352,7 +440,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Tipo de Usuario:</label>
+              <label>Tipo de Ferias:</label>
               <select
                 name="gender"
                 value={newRecord.gender}
@@ -366,25 +454,22 @@ const Usuario = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre del Banco:</label>
+              <label>Estatus:</label>
               <select
-                name="bank"
-                value={newRecord.bank}
+                name="gender"
+                value={newRecord.gender}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
-                <option value="">Seleccionar Banco...</option>
-                {bancos.map((banco, index) => (
-                  <option key={index} value={banco}>
-                    {banco}
-                  </option>
-                ))}
+                <option value="">Seleccionar...</option>
+                <option value="F">F</option>
+                <option value="M">M</option>
               </select>
             </div>
           </div>
           <button type="submit">Actualizar</button>
- </form>
+        </form>
       </Modal>
 
       {/* Modal para confirmar eliminación */}
@@ -411,4 +496,4 @@ const Usuario = () => {
   );
 };
 
-export default Usuario;
+export default Ferias;

@@ -1,23 +1,30 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
+import {
+  FaEye,
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCheckCircle,
+} from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
-import Modal from "../components/Modal"; 
-import "../assets/styles/App.css"
+import Modal from "../components/Modal";
+import "../assets/styles/App.css";
 
 const Persona = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]); // Inicializa como un array vacío
-
+  const [records, setRecords] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
-  const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false); // Modal de creación
-  const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false); // Modal de actualización
+  const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
+  const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
 
   const [newRecord, setNewRecord] = useState({
     cedula: "",
@@ -42,14 +49,30 @@ const Persona = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Check for duplicate cedula
+    if (records.some((record) => record.cedula === newRecord.cedula)) {
+      alert("La cédula ya existe.");
+      return;
+    }
     setRecords([...records, newRecord]);
     resetForm();
     setIsModalOpen(false);
-    setIsCreatedModalOpen(true); // Abre el modal de creación
+    setIsCreatedModalOpen(true);
   };
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    // Check for duplicate cedula
+    if (
+      records.some(
+        (record) =>
+          record.cedula === newRecord.cedula &&
+          record.cedula !== newRecord.cedula
+      )
+    ) {
+      alert("La cédula ya existe.");
+      return;
+    }
     setRecords(
       records.map((record) =>
         record.cedula === newRecord.cedula ? newRecord : record
@@ -57,7 +80,7 @@ const Persona = () => {
     );
     resetForm();
     setIsEditModalOpen(false);
-    setIsUpdatedModalOpen(true); // Abre el modal de actualización
+    setIsUpdatedModalOpen(true);
   };
 
   const resetForm = () => {
@@ -95,7 +118,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catalago de Persona</h2>
+        <h2>Catálogo de Personas</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -314,10 +337,21 @@ const Persona = () => {
               >
                 <option value="">Seleccionar...</option>
                 <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">Coord. Creditos y Cobranzas</option>
-                <option value="Asist. Creditos y Cobranzas">Asist. Creditos y Cobranzas</option>
-                <option value="Coord. Formalizacion de Emprendimiento">Coord. Formalizacion de Emprendimiento</option>
-                <option value="Coord. Nuevo Emprendimento">Coord. Nuevo Emprendimento</option>
+                <option value="Coord. Creditos y Cobranzas">
+                  Coord. Creditos y Cobranzas
+                </option>
+                <option value="Asist. Creditos y Cobranzas">
+                  Asist. Creditos y Cobranzas
+                </option>
+                <option value="Coord. Formalizacion de Emprendimiento">
+                  Coord. Formalizacion de Emprendimiento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Nuevo Emprendimento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Ferias
+                </option>
                 <option value="Emprendedor">Emprendedor</option>
               </select>
             </div>
@@ -376,7 +410,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre:</label>
+              <label>Nombres:</label>
               <input
                 type="text"
                 name="nombre"
@@ -387,7 +421,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Apellido:</label>
+              <label>Apellidos:</label>
               <input
                 type="text"
                 name="apellido"
@@ -397,48 +431,12 @@ const Persona = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Sexo:</label>
-              <select
-                name="sexo"
-                value={newRecord.sexo}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
-            </div>
-            <div className="form-group input-col-6">
-              <label>Fecha de Nacimiento:</label>
-              <input
-                type="date"
-                name="f_nacimiento"
-                value={newRecord.f_nacimiento}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
+            <div className="form-group input-col-12">
               <label>Teléfono:</label>
               <input
                 type="text"
                 name="telefono"
                 value={newRecord.telefono}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Correo Electrónico:</label>
-              <input
-                type="email"
-                name="correo"
-                value={newRecord.correo}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -454,12 +452,24 @@ const Persona = () => {
                 required
               >
                 <option value="">Seleccionar...</option>
-                <option value="Natural">Natural</option>
-                <option value="Jurídica">Jurídica</option>
+                <option value="Presidente">Presidente</option>
+                <option value="Coord. Creditos y Cobranzas">
+                  Coord. Creditos y Cobranzas
+                </option>
+                <option value="Asist. Creditos y Cobranzas">
+                  Asist. Creditos y Cobranzas
+                </option>
+                <option value="Coord. Formalizacion de Emprendimiento">
+                  Coord. Formalizacion de Emprendimiento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Nuevo Emprendimento
+                </option>
+                <option value="Emprendedor">Emprendedor</option>
               </select>
             </div>
           </div>
-          <button type="submit">Actualizar</button>
+          <button type="submit">Guardar</button>
         </form>
       </Modal>
 

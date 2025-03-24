@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle, FaDollarSign, FaEuroSign } from "react-icons/fa";
+import { FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle, FaDollarSign, FaEuroSign } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
@@ -11,22 +11,13 @@ const Usuario = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewRecord, setViewRecord] = useState(null);
+  const [newRecord, setNewRecord] = useState({ date: "", dollarPrice: "", euroPrice: "" });
   const [recordToDelete, setRecordToDelete] = useState(null);
-
-  const initialRecordState = {
-    date: "",
-    dollarPrice: "",
-    euroPrice: "",
-  };
-
-  const [newRecord, setNewRecord] = useState(initialRecordState);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('es-VE', {
@@ -72,7 +63,7 @@ const Usuario = () => {
   };
 
   const resetForm = () => {
-    setNewRecord(initialRecordState);
+    setNewRecord({ date: "", dollarPrice: "", euroPrice: "" });
   };
 
   const toggleMenu = () => {
@@ -168,22 +159,6 @@ const Usuario = () => {
     );
   };
 
-  const handleView = (date) => {
-    const recordToView = records.find((record) => record.date === date);
-    if (recordToView) {
-      setViewRecord(recordToView);
-      setIsViewModalOpen(true);
-    }
-  };
-
-  const handleEdit = (date) => {
-    const recordToEdit = records.find((record) => record.date === date);
-    if (recordToEdit) {
-      setNewRecord(recordToEdit);
-      setIsEditModalOpen(true);
-    }
-  };
-
   const handleDelete = (date) => {
     const recordToDelete = records.find((record) => record.date === date);
     if (recordToDelete) {
@@ -248,61 +223,6 @@ const Usuario = () => {
             </div>
           </div>
           <button type="submit">Guardar</button>
-        </form>
-      </Modal>
-
-      {/* Modal para ver datos */}
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Precios de Divisas</h2>
-        {viewRecord && (
-          <div className="view-record-details">
-            <p><strong>Fecha:</strong> {viewRecord.date}</p>
-            <p><strong>Precio Dólar:</strong> {formatCurrency(viewRecord.dollarPrice)} <FaDollarSign /></p>
-            <p><strong>Precio Euro:</strong> {formatCurrency(viewRecord.euroPrice)} <FaEuroSign /></p>
-          </div>
-        )}
-      </Modal>
-
-      {/* Modal para editar datos */}
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Precios de Divisas</h2>
-        <form onSubmit={handleUpdate} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-12">
-              <label>Fecha:</label>
-              <input
-                type="date"
-                name="date"
-                value={newRecord.date}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label><FaDollarSign /> Precio Dólar:</label>
-              <input
-                type="text"
-                name="dollarPrice"
-                value={newRecord.dollarPrice}
-                onChange={handlePriceChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label><FaEuroSign /> Precio Euro:</label>
-              <input
-                type="text"
-                name="euroPrice"
-                value={newRecord.euroPrice}
-                onChange={handlePriceChange}
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit">Actualizar</button>
         </form>
       </Modal>
 

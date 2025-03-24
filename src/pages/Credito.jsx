@@ -15,6 +15,7 @@ import Modal from "../components/Modal";
 import "../assets/styles/App.css";
 
 const Usuario = () => {
+  // State management
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -28,6 +29,36 @@ const Usuario = () => {
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
 
+  // Bank options
+  const bancos = [
+    "Banco Central de Venezuela",
+    "Banco de Venezuela S.A.C.A.",
+    "Venezolano de Crédito, S.A.",
+    "Banco Mercantil, C.A.",
+    "Banco Provincial, S.A.",
+    "Bancaribe C.A.",
+    "Banco Exterior C.A.",
+    "Banco Occidental de Descuento, C.A.",
+    "Banco Caroní C.A.",
+    "Banesco Banco Universal S.A.C.A.",
+    "Banco Sofitasa, C.A.",
+    "Banco Plaza, C.A.",
+    "Banco de la Gente Emprendedora C.A.",
+    "BFC Banco Fondo Común C.A.",
+    "100% Banco, C.A.",
+    "DelSur Banco Universal C.A.",
+    "Banco del Tesoro, C.A.",
+    "Banco Agrícola de Venezuela, C.A.",
+    "Bancrecer, S.A.",
+    "Mi Banco, C.A.",
+    "Banco Activo, C.A.",
+    "Bancamiga, C.A.",
+    "Banco Internacional de Desarrollo, C.A.",
+    "Banplus Banco Universal, C.A.",
+    "Banco Bicentenario del Pueblo de la Clase Obrera, Mujer y Comunas B.U.",
+  ];
+
+  // Initial record state
   const initialRecordState = {
     identityCard: "",
     firstName: "",
@@ -37,15 +68,22 @@ const Usuario = () => {
     gender: "",
     birthDate: "",
     phone: "",
+    bank: "",
+    accountType: "",
+    accountNumber: "",
+    amountInDollars: "",
+    exchangeInBolivares: "",
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
 
+  // Input change handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRecord({ ...newRecord, [name]: value });
   };
 
+  // Form submission handlers
   const handleSubmit = (e) => {
     e.preventDefault();
     setRecords([...records, newRecord]);
@@ -68,10 +106,12 @@ const Usuario = () => {
     setNewRecord(initialRecordState);
   };
 
+  // Menu toggle
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   };
 
+  // Data table rendering
   const renderDataTable = () => {
     const filteredRecords = records.filter((record) => {
       return (
@@ -90,7 +130,7 @@ const Usuario = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Nuevo Emprendimiento</h2>
+        <h2>Catálogo de Gestión de Crédito</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar usuario
@@ -135,8 +175,8 @@ const Usuario = () => {
             <thead>
               <tr>
                 <th>C.I</th>
-                <th>Usuario</th>
-                <th>Tipo de Usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -205,6 +245,7 @@ const Usuario = () => {
     );
   };
 
+  // Record handling functions
   const handleView = (id) => {
     const recordToView = records.find((record) => record.identityCard === id);
     if (recordToView) {
@@ -253,11 +294,11 @@ const Usuario = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos del Emprendimiento</h2>
+        <h2>Datos para la gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+            <div className="form-group input-col-11">
+              <label>N° de Contrato:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -267,77 +308,94 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Fecha de Emisión:</label>
-              <input
-                type="date"
-                name="birthDate" // Changed to birthDate for consistency
-                value={newRecord.birthDate}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Emprendimiento:</label>
-              <input
-                type="text"
-                name="type" // Changed to type for consistency
-                value={newRecord.type}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-4">
-              <label>RIF:</label>
-              <input
-                type="text"
-                name="rif" // Changed to rif for consistency
-                value={newRecord.rif}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-8">
-              <label>Nombre del Emprendimiento:</label>
-              <input
-                type="text"
-                name="businessName" // Changed to businessName for clarity
-                value={newRecord.businessName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
             <div className="form-group input-col-12">
-              <label>Estado Actual Emprendimiento:</label>
-              <input
-                type="text"
-                name="businessName" // Changed to businessName for clarity
-                value={newRecord.businessName}
+              <label>Método de Pago:</label>
+              <select
+                name="accountType"
+                value={newRecord.accountType}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Divisa">Divisa</option>
+                <option value="Transferencia">Transferencia</option>
+              </select>
             </div>
-            <div className="form-group input-col-12">
-              <label>Dirección del Emprendimiento:</label>
-              <textarea
-                name="address"
-                value={newRecord.address}
-                onChange={handleInputChange}
-                className="form-control"
-                rows="6" // Increase the number of rows
-                cols="50" // Set the number of columns
-                required
-              />
-            </div>
+
+            {newRecord.accountType === "Transferencia" && (
+              <>
+                <div className="form-group input-col-6">
+                  <label>Nombre del Banco:</label>
+                  <select
+                    name="bank"
+                    value={newRecord.bank}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  >
+                    <option value="">Seleccionar Banco...</option>
+                    {bancos.map((banco, index) => (
+                      <option key={index} value={banco}>
+                        {banco}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group input-col-6">
+                  <label>N° de Cuenta:</label>
+                  <input
+                    type="text"
+                    name="accountNumber"
+                    value={newRecord.accountNumber}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+                <div className="form-group input-col-6">
+                  <label>Monto en Dólar:</label>
+                  <input
+                    type="text"
+                    name="amountInDollars"
+                    value={newRecord.amountInDollars}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+                <div className="form-group input-col-6">
+                  <label>Cambio en Bolívares:</label>
+                  <input
+                    type="text"
+                    name="exchangeInBolivares"
+                    value={newRecord.exchangeInBolivares}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            {newRecord.accountType === "Divisa" && (
+              <div className="form-group input-col-12">
+                <label>Monto en Dólar:</label>
+                <input
+                  type="text"
+                  name="amountInDollars"
+                  value={newRecord.amountInDollars}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+            )}
           </div>
           <button type="submit">Guardar</button>
         </form>
       </Modal>
+
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de Usuario</h2>
@@ -354,6 +412,15 @@ const Usuario = () => {
             </p>
             <p>
               <strong>Tipo de Usuario:</strong> {viewRecord.gender}
+            </p>
+            <p>
+              <strong>Banco:</strong> {viewRecord.bank}
+            </p>
+            <p>
+              <strong>Tipo de Cuenta:</strong> {viewRecord.accountType}
+            </p>
+            <p>
+              <strong>N° de Cuenta:</strong> {viewRecord.accountNumber}
             </p>
           </div>
         )}
@@ -412,17 +479,20 @@ const Usuario = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label>Estatus:</label>
+              <label>Nombre del Banco:</label>
               <select
-                name="gender"
-                value={newRecord.gender}
+                name="bank"
+                value={newRecord.bank}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
+                <option value="">Seleccionar Banco...</option>
+                {bancos.map((banco, index) => (
+                  <option key={index} value={banco}>
+                    {banco}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

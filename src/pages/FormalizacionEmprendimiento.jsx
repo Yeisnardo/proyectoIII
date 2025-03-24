@@ -77,7 +77,7 @@ const Usuario = () => {
   
     return (
       <div className="records-container">
-        <h2>Catálogo de Usuario</h2>
+        <h2>Catálogo de formalizacion de Emprendimiento</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">Buscar usuario</label>
           <input
@@ -205,7 +205,7 @@ const Usuario = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos de Usuario</h2>
+        <h2>Datos de nueva formalizacion de Emprendimiento</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -219,10 +219,10 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+            <div className="form-group input-col-3">
+              <label>Fecha de Inscripcion:</label>
               <input
-                type="text"
+                type="date"
                 name="firstName"
                 value={newRecord.firstName}
                 onChange={handleInputChange}
@@ -230,30 +230,16 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+            <div className="form-group input-col-9">
+              <label>N° de Registro del Certificado Emitido Pagina Emprender Juntos:</label>
               <input
-                type="password"
+                type="text"
                 name="lastName"
                 value={newRecord.lastName}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
-            </div>
-            <div className="form-group input-col-12">
-              <label>Tipo de Usuario:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
             </div>
           </div>
           <button type="submit">Guardar</button>

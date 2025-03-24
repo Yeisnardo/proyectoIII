@@ -30,18 +30,8 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/al-cambio" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaExchangeAlt className="menu-icon" /> Precio de Divisa
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/cuentas" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaBuilding className="menu-icon" /> Cuentas Bancarias {/* Cambia el ícono aquí */}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/formalizacion-emprendimiento" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaClipboardCheck className="menu-icon" /> Formalización de Emprendimiento
+            <NavLink to="/ferias" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUsers className="menu-icon" /> Gestion de Ferias
             </NavLink>
           </li>
           <li>
@@ -50,8 +40,23 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/formalizacion-emprendimiento" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaClipboardCheck className="menu-icon" /> Formalización de Emprendimiento
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/contrato" className={({ isActive }) => (isActive ? "active" : "")}>
               <FaFileContract className="menu-icon" /> Gestión de Contrato
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/credito" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaBuilding className="menu-icon" /> Gestion de credito {/* Cambia el ícono aquí */}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/al-cambio" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaExchangeAlt className="menu-icon" /> Precio de Divisa
             </NavLink>
           </li>
           <li>
