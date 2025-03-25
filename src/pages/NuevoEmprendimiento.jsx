@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEye,
   FaEdit,
@@ -14,7 +14,7 @@ import Footer from "../components/Footer";
 import Modal from "../components/Modal";
 import "../assets/styles/App.css";
 
-const Usuario = () => {
+const NuevoEmprendimiento = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -37,9 +37,58 @@ const Usuario = () => {
     gender: "",
     birthDate: "",
     phone: "",
+    rif: "",
+    businessName: "",
+    address: "",
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
+
+  // Sample data
+  useEffect(() => {
+    const sampleRecords = [
+      {
+        identityCard: "12345678",
+        firstName: "Juan",
+        lastName: "Pérez",
+        email: "juan.perez@example.com",
+        type: "Emprendimiento",
+        gender: "Masculino",
+        birthDate: "1990-01-01",
+        phone: "1234567890",
+        rif: "J-12345678-9",
+        businessName: "Emprendimiento Uno",
+        address: "Calle Falsa 123",
+      },
+      {
+        identityCard: "87654321",
+        firstName: "María",
+        lastName: "Gómez",
+        email: "maria.gomez@example.com",
+        type: "Emprendimiento",
+        gender: "Femenino",
+        birthDate: "1992-02-02",
+        phone: "0987654321",
+        rif: "J-87654321-0",
+        businessName: "Emprendimiento Dos",
+        address: "Avenida Siempre Viva 742",
+      },
+      {
+        identityCard: "11223344",
+        firstName: "Carlos",
+        lastName: "López",
+        email: "carlos.lopez@example.com",
+        type: "Emprendimiento",
+        gender: "Masculino",
+        birthDate: "1985-03-03",
+        phone: "1122334455",
+        rif: "J-11223344-1",
+        businessName: "Emprendimiento Tres",
+        address: "Boulevard de los Sueños 456",
+      },
+    ];
+    setRecords(sampleRecords);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,8 +184,8 @@ const Usuario = () => {
             <thead>
               <tr>
                 <th>C.I</th>
-                <th>Usuario</th>
-                <th>Tipo de Usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -150,7 +199,7 @@ const Usuario = () => {
                     <td>
                       <button
                         onClick={() => handleView(record.identityCard)}
-                        title="Ver Datos"
+                        title="Ver Emprendimiento"
                       >
                         <FaEye />
                       </button>
@@ -315,8 +364,8 @@ const Usuario = () => {
               <label>Estado Actual Emprendimiento:</label>
               <input
                 type="text"
-                name="businessName" // Changed to businessName for clarity
-                value={newRecord.businessName}
+                name="businessStatus" // Changed to businessStatus for clarity
+                value={newRecord.businessStatus}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -340,20 +389,35 @@ const Usuario = () => {
       </Modal>
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Usuario</h2>
+        <h2>Detalles de NuevoEmprendimiento</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
               <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
             </p>
             <p>
-              <strong>Usuario:</strong> {viewRecord.firstName}
+              <strong>Nombres:</strong> {viewRecord.firstName}
             </p>
             <p>
-              <strong>Estatus:</strong> {viewRecord.lastName}
+              <strong>Apellidos:</strong> {viewRecord.lastName}
             </p>
             <p>
-              <strong>Tipo de Usuario:</strong> {viewRecord.gender}
+              <strong>Fecha de Emision:</strong> {viewRecord.birthDate}
+            </p>
+            <p>
+              <strong>Tipo de Emprendimiento:</strong> {viewRecord.type}
+            </p>
+            <p>
+              <strong>RIF:</strong> {viewRecord.rif}
+            </p>
+            <p>
+              <strong>Nombre del Emprendimiento:</strong> {viewRecord.businessName}
+            </p>
+            <p>
+              <strong>Estado Actual de Emprendimiento:</strong> {viewRecord.businessStatus}
+            </p>
+            <p>
+              <strong>Direccion de Emprendimiento:</strong> {viewRecord.address}
             </p>
           </div>
         )}
@@ -361,7 +425,7 @@ const Usuario = () => {
 
       {/* Modal para editar datos */}
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Usuario</h2>
+        <h2>Actualizar Datos de NuevoEmprendimiento</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -376,54 +440,71 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+              <label>Fecha de Emisión:</label>
+              <input
+                type="date"
+                name="birthDate" // Changed to birthDate for consistency
+                value={newRecord.birthDate}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label>Tipo de Emprendimiento:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="type" // Changed to type for consistency
+                value={newRecord.type}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+            <div className="form-group input-col-4">
+              <label>RIF:</label>
               <input
-                type="password"
-                name="lastName"
-                value={newRecord.lastName}
+                type="text"
+                name="rif" // Changed to rif for consistency
+                value={newRecord.rif}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Usuario:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
+            <div className="form-group input-col-8">
+              <label>Nombre del Emprendimiento:</label>
+              <input
+                type="text"
+                name="businessName" // Changed to businessName for clarity
+                value={newRecord.businessName}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
+              />
             </div>
-            <div className="form-group input-col-6">
-              <label>Estatus:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
+            <div className="form-group input-col-12">
+              <label>Estado Actual Emprendimiento:</label>
+              <input
+                type="text"
+                name="businessStatus" // Changed to businessStatus for clarity
+                value={newRecord.businessStatus}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
+              />
+            </div>
+            <div className="form-group input-col-12">
+              <label>Dirección del Emprendimiento:</label>
+              <textarea
+                name="address"
+                value={newRecord.address}
+                onChange={handleInputChange}
+                className="form-control"
+                rows="6" // Increase the number of rows
+                cols="50" // Set the number of columns
+                required
+              />
             </div>
           </div>
           <button type="submit">Actualizar</button>
@@ -465,4 +546,4 @@ const Usuario = () => {
   );
 };
 
-export default Usuario;
+export default NuevoEmprendimiento;

@@ -17,7 +17,58 @@ import "../assets/styles/App.css";
 const Persona = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([
+    {
+      cedula: "12345678",
+      nombre: "Juan",
+      apellido: "Pérez",
+      sexo: "Masculino",
+      f_nacimiento: "1990-01-01",
+      telefono: "123456789",
+      correo: "juan.perez@example.com",
+      tipo: "Presidente",
+    },
+    {
+      cedula: "87654321",
+      nombre: "María",
+      apellido: "Gómez",
+      sexo: "Femenino",
+      f_nacimiento: "1985-05-15",
+      telefono: "987654321",
+      correo: "maria.gomez@example.com",
+      tipo: "Emprendedor",
+    },
+    {
+      cedula: "11223344",
+      nombre: "Carlos",
+      apellido: "López",
+      sexo: "Masculino",
+      f_nacimiento: "1992-03-20",
+      telefono: "456789123",
+      correo: "carlos.lopez@example.com",
+      tipo: "Coord. Creditos y Cobranzas",
+    },
+    {
+      cedula: "44332211",
+      nombre: "Ana",
+      apellido: "Martínez",
+      sexo: "Femenino",
+      f_nacimiento: "1995-07-30",
+      telefono: "321654987",
+      correo: "ana.martinez@example.com",
+      tipo: "Asist. Creditos y Cobranzas",
+    },
+    {
+      cedula: "55667788",
+      nombre: "Luis",
+      apellido: "Fernández",
+      sexo: "Masculino",
+      f_nacimiento: "1988-11-11",
+      telefono: "654321789",
+      correo: "luis.fernandez@example.com",
+      tipo: "Coord. Formalizacion de Emprendimiento",
+    },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -348,9 +399,6 @@ const Persona = () => {
                 </option>
                 <option value="Coord. Nuevo Emprendimento">
                   Coord. Nuevo Emprendimento
-                </option>
-                <option value="Coord. Nuevo Emprendimento">
-                  Coord. Ferias
                 </option>
                 <option value="Emprendedor">Emprendedor</option>
               </select>

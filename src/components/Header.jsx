@@ -101,9 +101,9 @@ const Header = ({ userName, userType }) => {
                 <FaLock className="menu-icon" />
                 <a href="/change-password">Configuración</a>
               </li>
-              < li className="menu-list-item" onClick={confirmLogout}>
+              <li className="menu-list-item" onClick={handleLogout}>
                 <FaSignOutAlt className="menu-icon" />
-                <a href="/">Cerrar sesión</a>
+                <span>Cerrar sesión</span>
               </li>
             </ul>
           </div>

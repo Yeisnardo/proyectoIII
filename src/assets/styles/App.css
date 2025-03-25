@@ -1379,3 +1379,27 @@ button[type="submit"]:hover {
   border-radius: 8px; /* Bordes redondeados */
   margin-top: 20px; /* Margen superior */
 }
+
+.styled-link {
+  display: inline-block; /* Para que el padding y el borde funcionen correctamente */
+  color: #fff; /* Texto blanco */
+  text-decoration: none; /* Sin subrayado */
+  font-weight: bold; /* Negrita */
+  padding: 12px 20px; /* Espaciado interno */
+  border-radius: 25px; /* Bordes redondeados */
+  background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%); /* Degradado */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+  transition: transform 0.3s, box-shadow 0.3s; /* Transición suave */
+}
+
+.link-image {
+  width: 200px; /* Ajusta el tamaño de la imagen */
+  height: auto; /* Mantiene la proporción de la imagen */
+  margin-right: 8px; /* Espacio entre la imagen y el texto */
+  vertical-align: middle; /* Alinea la imagen verticalmente con el texto */
+}
+
+.styled-link:hover {
+  transform: translateY(-3px); /* Eleva el enlace al pasar el mouse */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+}

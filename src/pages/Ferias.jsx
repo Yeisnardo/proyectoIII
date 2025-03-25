@@ -9,7 +9,48 @@ import "../assets/styles/App.css";
 const Ferias = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([
+    {
+      identityCard: "12345678",
+      firstName: "Juan",
+      lastName: "Pérez",
+      fairName: "Feria de Emprendedores",
+      attendanceDate: "2023-10-01",
+      comments: "Asistió con éxito.",
+    },
+    {
+      identityCard: "87654321",
+      firstName: "María",
+      lastName: "Gómez",
+      fairName: "Feria de Innovación",
+      attendanceDate: "2023-09-15",
+      comments: "Interesada en nuevas oportunidades.",
+    },
+    {
+      identityCard: "11223344",
+      firstName: "Carlos",
+      lastName: "López",
+      fairName: "Feria de Tecnología",
+      attendanceDate: "2023-08-20",
+      comments: "Buscando socios estratégicos.",
+    },
+    {
+      identityCard: "44332211",
+      firstName: "Ana",
+      lastName: "Martínez",
+      fairName: "Feria de Artesanía",
+      attendanceDate: "2023-07-10",
+      comments: "Exhibió productos artesanales.",
+    },
+    {
+      identityCard: "55667788",
+      firstName: "Luis",
+      lastName: "Fernández",
+      fairName: "Feria de Gastronomía",
+      attendanceDate: "2023-06-05",
+      comments: "Presentó su nuevo menú.",
+    },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -17,6 +58,7 @@ const Ferias = () => {
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
   const [isRegisterAttendanceModalOpen, setIsRegisterAttendanceModalOpen] = useState(false);
   const [isSearchFairModalOpen, setIsSearchFairModalOpen] = useState(false);
+  const [attendees, setAttendees] = useState([]); // Nuevo estado para almacenar asistentes
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewRecord, setViewRecord] = useState(null);
@@ -75,7 +117,6 @@ const Ferias = () => {
 
   const handleRegisterFairSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para guardar la feria
     console.log("Feria registrada:", newFair);
     resetFairForm();
     setIsRegisterAttendanceModalOpen(false);
@@ -83,10 +124,14 @@ const Ferias = () => {
 
   const handleSearchFairSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para buscar la feria
-    console.log("Buscar feria con:", searchData);
-    // Implementa la lógica de búsqueda aquí
+    const filteredAttendees = records.filter(record => 
+      record.fairName.includes(searchData.searchCode) || 
+      record.firstName.includes(searchData.entrepreneurName) || 
+      record.attendanceDate === searchData.searchDate
+    );
+    setAttendees(filteredAttendees);
     setIsSearchFairModalOpen(false);
+    setIsViewModalOpen(true); // Mostrar el modal de asistentes
   };
 
   const handleUpdate = (e) => {
@@ -145,7 +190,7 @@ const Ferias = () => {
           </button>
           &nbsp;
           <button onClick={() => setIsSearchFairModalOpen(true)} className="add-button" title="Buscar Feria">
-            <FaPlus /> Registrar Feria
+            <FaPlus /> Registrar Feria  
           </button>
         </div>
   
@@ -171,9 +216,9 @@ const Ferias = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>Codigo</th>
+                <th>ID</th>
                 <th>Nombre de la Feria</th>
-                <th>Fecha Realizada</th>
+                <th>Fecha de Realización</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -182,8 +227,8 @@ const Ferias = () => {
                 currentRecords.map((record) => (
                   <tr key={record.identityCard}>
                     <td>{record.identityCard}</td>
-                    <td>{`${record.firstName} ${record.lastName}`}</td>
-                    <td>{record.type}</td>
+                    <td>{record.fairName}</td>
+                    <td>{record.attendanceDate}</td>
                     <td>
                       <button onClick={() => handleView(record.identityCard)} title="Ver Datos">
                         <FaEye />
@@ -261,7 +306,7 @@ const Ferias = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos de nueva formalizacion de Emprendimiento</h2>
+        <h2>Datos de nueva formalización de Emprendimiento</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -276,22 +321,22 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-3">
-              <label>Fecha de Inscripcion:</label>
+              <label>Fecha de Inscripción:</label>
               <input
                 type="date"
-                name="firstName"
-                value={newRecord.firstName}
+                name="attendanceDate"
+                value={newRecord.attendanceDate}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-9">
-              <label>N° de Registro del Certificado Emitido Pagina Emprender Juntos:</label>
+              <label>N° de Registro del Certificado Emitido Página Emprender Juntos:</label>
               <input
                 type="text"
-                name="lastName"
-                value={newRecord.lastName}
+                name="comments"
+                value={newRecord.comments}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -319,7 +364,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-4">
-              <label>Codigo de la Feria:</label>
+              <label>Código de la Feria:</label>
               <input
                 type="text"
                 name="fairName"
@@ -328,9 +373,6 @@ const Ferias = () => {
                 className="form-control"
                 required
               />
-            </div>
-            <div className="form-group input-col-1">
-              <button type="submit">B</button>
             </div>
             <div className="form-group input-col-7">
               <label>Fecha de Asistencia:</label>
@@ -350,7 +392,7 @@ const Ferias = () => {
 
       {/* Modal para buscar feria */}
       <Modal isOpen={isSearchFairModalOpen} onClose={() => setIsSearchFairModalOpen(false)}>
-        <h2>Registrar feria Feria</h2>
+        <h2>Buscar Feria</h2>
         <form onSubmit={handleSearchFairSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -390,15 +432,44 @@ const Ferias = () => {
 
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Ferias</h2>
-        {viewRecord && (
-          <div className="view-record-details">
-            <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
-            <p><strong>Ferias:</strong> {viewRecord.firstName}</p>
-            <p><strong>Estatus:</strong> {viewRecord.lastName}</p>
-            <p><strong>Tipo de Ferias:</strong> {viewRecord.gender}</p>
-          </div>
-        )}
+        <h2>Asistentes a la Feria</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Cédula de Identidad</th>
+              <th>Nombre</th>
+              <th>Descripcion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Datos ficticios de asistentes */}
+            <tr>
+              <td>12345678</td>
+              <td>Juan Pérez</td>
+              <td>Asistió con éxito.</td>
+            </tr>
+            <tr>
+              <td>87654321</td>
+              <td>María Gómez</td>
+              <td>Interesada en nuevas oportunidades.</td>
+            </tr>
+            <tr>
+              <td>11223344</td>
+              <td>Carlos López</td>
+              <td>Buscando socios estratégicos.</td>
+            </tr>
+            <tr>
+              <td>44332211</td>
+              <td>Ana Martínez</td>
+              <td>Exhibió productos artesanales.</td>
+            </tr>
+            <tr>
+              <td>55667788</td>
+              <td>Luis Fernández</td>
+              <td>Presentó su nuevo menú.</td>
+            </tr>
+          </tbody>
+        </table>
       </Modal>
 
       {/* Modal para editar datos */}
@@ -418,54 +489,37 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de Ferias:</label>
+              <label>Nombre de la Feria:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="fairName"
+                value={newRecord.fairName}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+              <label>Fecha de Asistencia:</label>
               <input
-                type="password"
-                name="lastName"
-                value={newRecord.lastName}
+                type="date"
+                name="attendanceDate"
+                value={newRecord.attendanceDate}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Ferias:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
+            <div className="form-group input-col-12">
+              <label>Comentarios:</label>
+              <input
+                type="text"
+                name="comments"
+                value={newRecord.comments}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
-            </div>
-            <div className="form-group input-col-6">
-              <label>Estatus:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
+              />
             </div>
           </div>
           <button type="submit">Actualizar</button>

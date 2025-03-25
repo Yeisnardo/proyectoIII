@@ -18,7 +18,53 @@ import "../assets/styles/App.css";
 const Usuario = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([
+    {
+      identityCard: "12345678",
+      firstName: "Juan",
+      lastName: "Pérez",
+      email: "juan.perez@example.com",
+      birthDate: "1990-01-01",
+      phone: "123456789",
+      status: "activo",
+    },
+    {
+      identityCard: "87654321",
+      firstName: "María",
+      lastName: "Gómez",
+      email: "maria.gomez@example.com",
+      birthDate: "1985-05-15",
+      phone: "987654321",
+      status: "inactivo",
+    },
+    {
+      identityCard: "11223344",
+      firstName: "Carlos",
+      lastName: "López",
+      email: "carlos.lopez@example.com",
+      birthDate: "1992-03-20",
+      phone: "456789123",
+      status: "activo",
+    },
+    {
+      identityCard: "44332211",
+      firstName: "Ana",
+      lastName: "Martínez",
+      email: "ana.martinez@example.com",
+      birthDate: "1995-07-30",
+      phone: "321654987",
+      status: "activo",
+    },
+    {
+      identityCard: "55667788",
+      firstName: "Luis",
+      lastName: "Fernández",
+      email: "luis.fernandez@example.com",
+      birthDate: "1988-11-11",
+      phone: "654321789",
+      status: "inactivo",
+    },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -269,8 +315,7 @@ const Usuario = () => {
                 className="form-control"
                 required
               >
-                <option value="active">Activo</option>
-                <option value="inactive">Inactivo</option>
+                <option value="activo">Activo</option>
               </select>
             </div>
           </div>
@@ -347,8 +392,8 @@ const Usuario = () => {
                 className="form-control"
                 required
               >
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
               </select>
             </div>
           </div>

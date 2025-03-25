@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEye,
   FaEdit,
@@ -36,7 +36,7 @@ const Usuario = () => {
     type: "",
     gender: "",
     birthDate: "",
-    phone: "",
+    credito: "",
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
@@ -151,8 +151,8 @@ const Usuario = () => {
                 currentRecords.map((record) => (
                   <tr key={record.identityCard}>
                     <td>{record.identityCard}</td>
-                    <td>{`${record.firstName} ${record.lastName}`}</td>
-                    <td>{record.type}</td>
+                    <td>{record.firstName}</td>
+                    <td>{record.lastName}</td>
                     <td>
                       <button
                         onClick={() => handleView(record.identityCard)}
@@ -250,10 +250,70 @@ const Usuario = () => {
     setIsDeletedModalOpen(true);
   };
 
+  // Function to generate fake data
+  const generateFakeData = () => {
+    const fakeRecords = [
+      {
+        identityCard: "123456789",
+        firstName: "Juan",
+        lastName: "Pérez",
+        email: "juan.perez@example.com",
+        type: "Emprendedor",
+        gender: "Masculino",
+        birthDate: "1990-01-01",
+        credito: "IFEMI/CRED/001-24",
+      },
+      {
+        identityCard: "987654321",
+        firstName: "María",
+        lastName: "Gómez",
+        email: "maria.gomez@example.com",
+        type: "Emprendedor",
+        gender: "Femenino",
+        birthDate: "1992-02-02",
+        credito: "IFEMI/CRED/002-24",
+      },
+      {
+        identityCard: "456789123",
+        firstName: "Carlos",
+        lastName: "López",
+        email: "carlos.lopez@example.com",
+        type: "Emprendedor",
+        gender: "Masculino",
+        birthDate: "1988-03-03",
+        credito: "IFEMI/CRED/003-24",
+      },
+      {
+        identityCard: "321654987",
+        firstName: "Ana",
+        lastName: "Martínez",
+        email: "ana.martinez@example.com",
+        type: "Emprendedor",
+        gender: "Femenino",
+        birthDate: "1995-04-04",
+        credito: "IFEMI/CRED/004-24",
+      },
+      {
+        identityCard: "654321789",
+        firstName: "Luis",
+        lastName: "Hernández",
+        email: "luis.hernandez@example.com",
+        type: "Emprendedor",
+        gender: "Masculino",
+        birthDate: "1985-05-05",
+        credito: "IFEMI/CRED/005-24",
+      },
+    ];
+    setRecords(fakeRecords);
+  };
+
+  // Use effect to generate fake data on component mount
+  useEffect(() => {
+    generateFakeData();
+  }, []);
+
   return (
-    <div
-      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
-    >
+    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
@@ -267,21 +327,7 @@ const Usuario = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-11">
-              <label>Cedula del Emprendedor</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="input-col-1">
-              <button type="submit">B</button>
-            </div>
-            <div className="form-group input-col-7">
-              <label>Numero de contrato:</label>
+              <label>Cédula del Emprendedor</label>
               <input
                 type="text"
                 name="identityCard"
@@ -291,12 +337,45 @@ const Usuario = () => {
                 required
               />
             </div>
+            <div className="form-group input-col-7">
+              <label>Nombres:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={newRecord.firstName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-7">
+              <label>Apellidos:</label>
+              <input
+                type="text"
+                name="lastName"
+                value={newRecord.lastName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
             <div className="form-group input-col-5">
               <label>Fecha de Apertura:</label>
               <input
                 type="date"
-                name="birthDate" // Changed to the correct field
+                name="birthDate"
                 value={newRecord.birthDate}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-7">
+              <label>N° Contrato:</label>
+              <input
+                type="text"
+                name="credito"
+                value={newRecord.credito}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -316,13 +395,16 @@ const Usuario = () => {
               <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
             </p>
             <p>
-              <strong>Usuario:</strong> {viewRecord.firstName}
+              <strong>Nombre:</strong> {viewRecord.firstName}
             </p>
             <p>
-              <strong>Estatus:</strong> {viewRecord.lastName}
+              <strong>Apellido:</strong> {viewRecord.lastName}
             </p>
             <p>
-              <strong>Tipo de Usuario:</strong> {viewRecord.gender}
+              <strong>N° Contrato:</strong> {viewRecord.credito}
+            </p>
+            <p>
+              <strong>Fecha de Apertura:</strong> {viewRecord.birthDate}
             </p>
           </div>
         )}
@@ -333,8 +415,8 @@ const Usuario = () => {
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+            <div className="form-group input-col-11">
+              <label>Cédula del Emprendedor</label>
               <input
                 type="text"
                 name="identityCard"
@@ -344,8 +426,8 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+            <div className="form-group input-col-7">
+              <label>Nombres:</label>
               <input
                 type="text"
                 name="firstName"
@@ -355,10 +437,10 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+            <div className="form-group input-col-7">
+              <label>Apellidos:</label>
               <input
-                type="password"
+                type="text"
                 name="lastName"
                 value={newRecord.lastName}
                 onChange={handleInputChange}
@@ -366,33 +448,27 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Usuario:</label>
-              <select
-                name="gender"
-                value={newRecord.gender}
+            <div className="form-group input-col-5">
+              <label>Fecha de Apertura:</label>
+              <input
+                type="date"
+                name="birthDate"
+                value={newRecord.birthDate}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
+              />
             </div>
-            <div className="form-group input-col-6">
-              <label>Estatus:</label>
-              <select
-                name="gender" // This should be a different field for status
-                value={newRecord.gender}
+            <div className="form-group input-col-7">
+              <label>N° Contrato:</label>
+              <input
+                type="text"
+                name="credito"
+                value={newRecord.credito}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
+              />
             </div>
           </div>
           <button type="submit">Actualizar</button>
@@ -410,8 +486,7 @@ const Usuario = () => {
           <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
-          {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
