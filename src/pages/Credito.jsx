@@ -18,7 +18,69 @@ const Usuario = () => {
   // State management
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([
+    {
+      identityCard: "12345678",
+      firstName: "Juan",
+      lastName: "Pérez",
+      email: "juan.perez@example.com",
+      type: "Cliente",
+      gender: "Masculino",
+      birthDate: "1990-01-01",
+      phone: "0412-3456789",
+      payments: [
+        {
+          accountType: "Transferencia",
+          bank: "Banesco Banco Universal S.A.C.A.",
+          accountNumber: "1234567890",
+          amountInDollars: "1000",
+          exchangeInBolivares: "2000000",
+        },
+        {
+          accountType: "Divisa",
+          amountInDollars: "500",
+          exchangeInBolivares: "",
+        },
+      ],
+    },
+    {
+      identityCard: "87654321",
+      firstName: "María",
+      lastName: "González",
+      email: "maria.gonzalez@example.com",
+      type: "Cliente",
+      gender: "Femenino",
+      birthDate: "1985-05-15",
+      phone: "0414-9876543",
+      payments: [
+        {
+          accountType: "Divisa",
+          amountInDollars: "500",
+          exchangeInBolivares: "",
+        },
+      ],
+    },
+    {
+      identityCard: "11223344",
+      firstName: "Carlos",
+      lastName: "Ramírez",
+      email: "carlos.ramirez@example.com",
+      type: "Cliente",
+      gender: "Masculino",
+      birthDate: "1992-03-20",
+      phone: "0416-1234567",
+      payments: [
+        {
+          accountType: "Transferencia",
+          bank: "Banco de Venezuela S.A.C.A.",
+          accountNumber: "0987654321",
+          amountInDollars: "750",
+          exchangeInBolivares: "1500000",
+        },
+      ],
+    },
+  ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -68,11 +130,7 @@ const Usuario = () => {
     gender: "",
     birthDate: "",
     phone: "",
-    bank: "",
-    accountType: "",
-    accountNumber: "",
-    amountInDollars: "",
-    exchangeInBolivares: "",
+    payments: [],
   };
 
   const [newRecord, setNewRecord] = useState(initialRecordState);
@@ -185,8 +243,8 @@ const Usuario = () => {
                 currentRecords.map((record) => (
                   <tr key={record.identityCard}>
                     <td>{record.identityCard}</td>
-                    <td>{`${record.firstName} ${record.lastName}`}</td>
-                    <td>{record.type}</td>
+                    <td>{record.firstName}</td>
+                    <td>{record.lastName}</td>
                     <td>
                       <button
                         onClick={() => handleView(record.identityCard)}
@@ -211,7 +269,7 @@ const Usuario = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="no-results">
+                  <td colSpan="5" className="no-results">
                     No se encontraron registros.
                   </td>
                 </tr>
@@ -282,9 +340,7 @@ const Usuario = () => {
   };
 
   return (
-    <div
-      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
-    >
+    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
@@ -298,7 +354,7 @@ const Usuario = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-11">
-              <label>N° de Contrato:</label>
+              <label className="form-label">N° de Contrato:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -309,7 +365,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Método de Pago:</label>
+              <label className="form-label">Método de Pago:</label>
               <select
                 name="accountType"
                 value={newRecord.accountType}
@@ -326,7 +382,7 @@ const Usuario = () => {
             {newRecord.accountType === "Transferencia" && (
               <>
                 <div className="form-group input-col-6">
-                  <label>Nombre del Banco:</label>
+                  <label className="form-label">Nombre del Banco:</label>
                   <select
                     name="bank"
                     value={newRecord.bank}
@@ -343,7 +399,7 @@ const Usuario = () => {
                   </select>
                 </div>
                 <div className="form-group input-col-6">
-                  <label>N° de Cuenta:</label>
+                  <label className="form-label">N° de Cuenta:</label>
                   <input
                     type="text"
                     name="accountNumber"
@@ -354,7 +410,7 @@ const Usuario = () => {
                   />
                 </div>
                 <div className="form-group input-col-6">
-                  <label>Monto en Dólar:</label>
+                  <label className="form-label">Monto en Dólar:</label>
                   <input
                     type="text"
                     name="amountInDollars"
@@ -365,7 +421,7 @@ const Usuario = () => {
                   />
                 </div>
                 <div className="form-group input-col-6">
-                  <label>Cambio en Bolívares:</label>
+                  <label className="form-label">Cambio en Bolívares:</label>
                   <input
                     type="text"
                     name="exchangeInBolivares"
@@ -380,7 +436,7 @@ const Usuario = () => {
 
             {newRecord.accountType === "Divisa" && (
               <div className="form-group input-col-12">
-                <label>Monto en Dólar:</label>
+                <label className="form-label">Monto en Dólar:</label>
                 <input
                   type="text"
                   name="amountInDollars"
@@ -398,30 +454,43 @@ const Usuario = () => {
 
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Usuario</h2>
+        <h2>Detalles de crédito</h2>
         {viewRecord && (
-          <div className="view-record-details">
-            <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
-            </p>
-            <p>
-              <strong>Usuario:</strong> {viewRecord.firstName}
-            </p>
-            <p>
-              <strong>Estatus:</strong> {viewRecord.lastName}
-            </p>
-            <p>
-              <strong>Tipo de Usuario:</strong> {viewRecord.gender}
-            </p>
-            <p>
-              <strong>Banco:</strong> {viewRecord.bank}
-            </p>
-            <p>
-              <strong>Tipo de Cuenta:</strong> {viewRecord.accountType}
-            </p>
-            <p>
-              <strong>N° de Cuenta:</strong> {viewRecord.accountNumber}
-            </p>
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Método de Pago</th>
+                  {viewRecord.payments.map((payment, index) => (
+                    <React.Fragment key={index}>
+                      {payment.accountType === "Transferencia" && (
+                        <>
+                          <th>Banco</th>
+                          <th>N° de Cuenta</th>
+                        </>
+                      )}
+                    </React.Fragment>
+                  ))}
+                  <th>Monto en Dólar</th>
+                  <th>Cambio en Bolívares</th>
+                </tr>
+              </thead>
+              <tbody>
+                {viewRecord.payments.map((payment, index) => (
+                  <tr key={index}>
+                    <td>{payment.accountType}</td>
+                    {payment.accountType === "Transferencia" && (
+                      <>
+                        <td>{payment.bank}</td>
+                        <td>{payment.accountNumber}</td>
+                      </>
+                    )}
+                    <td>{payment.amountInDollars}</td>
+                    <td>{payment.exchangeInBolivares || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </Modal>
@@ -431,8 +500,8 @@ const Usuario = () => {
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+            <div className="form-group input-col-11">
+              <label className="form-label">N° de Contrato:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -442,59 +511,89 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label>Contraseña:</label>
-              <input
-                type="password"
-                name="lastName"
-                value={newRecord.lastName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label>Tipo de Usuario:</label>
+            <div className="form-group input-col-12">
+              <label className="form-label">Método de Pago:</label>
               <select
-                name="gender"
-                value={newRecord.gender}
+                name="accountType"
+                value={newRecord.accountType}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               >
                 <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
+                <option value="Divisa">Divisa</option>
+                <option value="Transferencia">Transferencia</option>
               </select>
             </div>
-            <div className="form-group input-col-6">
-              <label>Nombre del Banco:</label>
-              <select
-                name="bank"
-                value={newRecord.bank}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar Banco...</option>
-                {bancos.map((banco, index) => (
-                  <option key={index} value={banco}>
-                    {banco}
-                  </option>
-                ))}
-              </select>
-            </div>
+
+            {newRecord.accountType === "Transferencia" && (
+              <>
+                <div className="form-group input-col-6">
+                  <label className="form-label">Nombre del Banco:</label>
+                  <select
+                    name="bank"
+                    value={newRecord.bank}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  >
+                    <option value="">Seleccionar Banco...</option>
+                    {bancos.map((banco, index) => (
+                      <option key={index} value={banco}>
+                        {banco}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group input-col-6">
+                  <label className="form-label">N° de Cuenta:</label>
+                  <input
+                    type="text"
+                    name="accountNumber"
+                    value={newRecord.accountNumber}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+                <div className="form-group input-col-6">
+                  <label className="form-label">Monto en Dólar:</label>
+                  <input
+                    type="text"
+                    name="amountInDollars"
+                    value={newRecord.amountInDollars}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+                <div className="form-group input-col-6">
+                  <label className="form-label">Cambio en Bolívares:</label>
+                  <input
+                    type="text"
+                    name="exchangeInBolivares"
+                    value={newRecord.exchangeInBolivares}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            {newRecord.accountType === "Divisa" && (
+              <div className="form-group input-col-12">
+                <label className="form-label">Monto en Dólar:</label>
+                <input
+                  type="text"
+                  name="amountInDollars"
+                  value={newRecord.amountInDollars}
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+            )}
           </div>
           <button type="submit">Actualizar</button>
         </form>
@@ -511,8 +610,7 @@ const Usuario = () => {
           <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
-          {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>

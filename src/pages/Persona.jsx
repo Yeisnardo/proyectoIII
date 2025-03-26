@@ -334,7 +334,7 @@ const Persona = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="cedula"
@@ -345,7 +345,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombres:</label>
+              <label className="form-label">Nombres:</label>
               <input
                 type="text"
                 name="nombre"
@@ -356,7 +356,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Apellidos:</label>
+              <label className="form-label">Apellidos:</label>
               <input
                 type="text"
                 name="apellido"
@@ -367,7 +367,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Teléfono:</label>
+              <label className="form-label">Teléfono:</label>
               <input
                 type="text"
                 name="telefono"
@@ -378,7 +378,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Tipo de Persona:</label>
+              <label className="form-label">Tipo de Persona:</label>
               <select
                 name="tipo"
                 value={newRecord.tipo}
@@ -447,7 +447,7 @@ const Persona = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="cedula"
@@ -458,7 +458,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombres:</label>
+              <label className="form-label">Nombres:</label>
               <input
                 type="text"
                 name="nombre"
@@ -469,7 +469,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Apellidos:</label>
+              <label className="form-label">Apellidos:</label>
               <input
                 type="text"
                 name="apellido"
@@ -480,7 +480,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Teléfono:</label>
+              <label className="form-label">Teléfono:</label>
               <input
                 type="text"
                 name="telefono"
@@ -491,7 +491,7 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Tipo de Persona:</label>
+              <label className="form-label">Tipo de Persona:</label>
               <select
                 name="tipo"
                 value={newRecord.tipo}

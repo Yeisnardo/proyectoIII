@@ -327,7 +327,7 @@ const Usuario = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-11">
-              <label>Cédula del Emprendedor</label>
+              <label className="form-label">Cédula del Emprendedor</label>
               <input
                 type="text"
                 name="identityCard"
@@ -338,7 +338,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>Nombres:</label>
+              <label className="form-label">Nombres:</label>
               <input
                 type="text"
                 name="firstName"
@@ -349,7 +349,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>Apellidos:</label>
+              <label className="form-label">Apellidos:</label>
               <input
                 type="text"
                 name="lastName"
@@ -360,7 +360,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-5">
-              <label>Fecha de Apertura:</label>
+              <label className="form-label">Fecha de Apertura:</label>
               <input
                 type="date"
                 name="birthDate"
@@ -371,7 +371,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>N° Contrato:</label>
+              <label className="form-label">N° Contrato:</label>
               <input
                 type="text"
                 name="credito"
@@ -416,7 +416,7 @@ const Usuario = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-11">
-              <label>Cédula del Emprendedor</label>
+              <label className="form-label">Cédula del Emprendedor</label>
               <input
                 type="text"
                 name="identityCard"
@@ -427,7 +427,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>Nombres:</label>
+              <label className="form-label">Nombres:</label>
               <input
                 type="text"
                 name="firstName"
@@ -438,7 +438,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>Apellidos:</label>
+              <label className="form-label">Apellidos:</label>
               <input
                 type="text"
                 name="lastName"
@@ -449,7 +449,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-5">
-              <label>Fecha de Apertura:</label>
+              <label className="form-label">Fecha de Apertura:</label>
               <input
                 type="date"
                 name="birthDate"
@@ -460,7 +460,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>N° Contrato:</label>
+              <label className="form-label">N° Contrato:</label>
               <input
                 type="text"
                 name="credito"

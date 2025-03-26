@@ -336,7 +336,7 @@ const Formalizacion = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -347,7 +347,7 @@ const Formalizacion = () => {
               />
             </div>
             <div className="form-group input-col-3">
-              <label>Fecha de Inscripcion:</label>
+              <label className="form-label">Fecha de Inscripcion:</label>
               <input
                 type="date"
                 name="firstName"
@@ -358,7 +358,7 @@ const Formalizacion = () => {
               />
             </div>
             <div className="form-group input-col-9">
-              <label>
+              <label className="form-label">
                 N° de Registro del Certificado Emitido Pagina Emprender Juntos:
               </label>
               <input
@@ -408,7 +408,7 @@ const Formalizacion = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -419,7 +419,7 @@ const Formalizacion = () => {
               />
             </div>
             <div className="form-group input-col-3">
-              <label>Fecha de Inscripcion:</label>
+              <label className="form-label">Fecha de Inscripcion:</label>
               <input
                 type="date"
                 name="firstName"
@@ -430,7 +430,7 @@ const Formalizacion = () => {
               />
             </div>
             <div className="form-group input-col-9">
-              <label>
+              <label className="form-label">
                 N° de Registro del Certificado Emitido Pagina Emprender Juntos:
               </label>
               <input

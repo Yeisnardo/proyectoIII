@@ -310,7 +310,7 @@ const Ferias = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -321,7 +321,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-3">
-              <label>Fecha de Inscripción:</label>
+              <label className="form-label">Fecha de Inscripción:</label>
               <input
                 type="date"
                 name="attendanceDate"
@@ -332,7 +332,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-9">
-              <label>N° de Registro del Certificado Emitido Página Emprender Juntos:</label>
+              <label className="form-label">N° de Registro del Certificado Emitido Página Emprender Juntos:</label>
               <input
                 type="text"
                 name="comments"
@@ -353,7 +353,7 @@ const Ferias = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad del Emprendedor:</label>
+              <label className="form-label">Cédula de Identidad del Emprendedor:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -364,7 +364,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-4">
-              <label>Código de la Feria:</label>
+              <label className="form-label">Código de la Feria:</label>
               <input
                 type="text"
                 name="fairName"
@@ -375,7 +375,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-7">
-              <label>Fecha de Asistencia:</label>
+              <label className="form-label">Fecha de Asistencia:</label>
               <input
                 type="date"
                 name="attendanceDate"
@@ -396,7 +396,7 @@ const Ferias = () => {
         <form onSubmit={handleSearchFairSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Código Identificador:</label>
+              <label className="form-label">Código Identificador:</label>
               <input
                 type="text"
                 name="searchCode"
@@ -406,7 +406,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Nombre del Emprendedor:</label>
+              <label className="form-label">Nombre del Emprendedor:</label>
               <input
                 type="text"
                 name="entrepreneurName"
@@ -416,7 +416,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Fecha de la Feria:</label>
+              <label className="form-label">Fecha de la Feria:</label>
               <input
                 type="date"
                 name="searchDate"
@@ -478,7 +478,7 @@ const Ferias = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -489,7 +489,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de la Feria:</label>
+              <label className="form-label">Nombre de la Feria:</label>
               <input
                 type="text"
                 name="fairName"
@@ -500,7 +500,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Fecha de Asistencia:</label>
+              <label className="form-label">Fecha de Asistencia:</label>
               <input
                 type="date"
                 name="attendanceDate"
@@ -511,7 +511,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Comentarios:</label>
+              <label className="form-label">Comentarios:</label>
               <input
                 type="text"
                 name="comments"

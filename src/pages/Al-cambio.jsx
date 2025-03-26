@@ -9,7 +9,13 @@ import "../assets/styles/App.css";
 const Usuario = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([
+    { date: "2023-10-01", dollarPrice: "80.00", euroPrice: "85.50" },
+    { date: "2023-10-02", dollarPrice: "81.10", euroPrice: "87.60" },
+    { date: "2023-10-03", dollarPrice: "85.20", euroPrice: "90.70" },
+    { date: "2023-10-04", dollarPrice: "96.30", euroPrice: "100.80" },
+    { date: "2023-10-05", dollarPrice: "99.00", euroPrice: "110.90" },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -133,8 +139,8 @@ const Usuario = () => {
                 currentRecords.map((record) => (
                   <tr key={record.date}>
                     <td>{record.date}</td>
-                    <td>{formatCurrency(record.dollarPrice)} <FaDollarSign /></td>
-                    <td>{formatCurrency(record.euroPrice)} <FaEuroSign /></td>
+                    <td>{formatCurrency(record.dollarPrice)}</td>
+                    <td>{formatCurrency(record.euroPrice)}</td>
                   </tr>
                 ))
               ) : (
@@ -189,7 +195,7 @@ const Usuario = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Fecha:</label>
+              <label className="form-label">Fecha:</label>
               <input
                 type="date"
                 name="date"
@@ -200,7 +206,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label><FaDollarSign /> Precio Dólar:</label>
+              <label className="form-label"><FaDollarSign /> Precio Dólar:</label>
               <input
                 type="text"
                 name="dollarPrice"
@@ -211,7 +217,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label><FaEuroSign /> Precio Euro:</label>
+              <label className="form-label"><FaEuroSign /> Precio Euro:</label>
               <input
                 type="text"
                 name="euroPrice"
@@ -224,26 +230,6 @@ const Usuario = () => {
           </div>
           <button type="submit">Guardar</button>
         </form>
-      </Modal>
-
-      {/* Modal para confirmar eliminación */}
-      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
-        <h2>Confirmar Eliminación</h2>
-        <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <p><strong>Fecha:</strong> {recordToDelete?.date}</p>
-        <div className="modal-actions">
-          <button onClick={confirmDelete}>Eliminar</button>
-          <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
-        </div>
-      </Modal>
-
-      {/* Modal para mostrar que el registro ha sido eliminado */}
-      <Modal isOpen={isDeletedModalOpen} onClose={() => setIsDeletedModalOpen(false)}>
-        <h2>Registro Eliminado</h2>
-        <div className="deleted-message">
-          <FaCheckCircle className="deleted-icon" />
-          <p>El registro ha sido eliminado con éxito.</p>
-        </div>
       </Modal>
     </div>
   );

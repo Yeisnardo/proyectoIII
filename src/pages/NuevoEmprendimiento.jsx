@@ -306,7 +306,7 @@ const NuevoEmprendimiento = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -317,7 +317,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Fecha de Emisión:</label>
+              <label className="form-label">Fecha de Emisión:</label>
               <input
                 type="date"
                 name="birthDate" // Changed to birthDate for consistency
@@ -328,7 +328,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Tipo de Emprendimiento:</label>
+              <label className="form-label">Tipo de Emprendimiento:</label>
               <input
                 type="text"
                 name="type" // Changed to type for consistency
@@ -339,7 +339,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-4">
-              <label>RIF:</label>
+              <label className="form-label">RIF:</label>
               <input
                 type="text"
                 name="rif" // Changed to rif for consistency
@@ -350,7 +350,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-8">
-              <label>Nombre del Emprendimiento:</label>
+              <label className="form-label">Nombre del Emprendimiento:</label>
               <input
                 type="text"
                 name="businessName" // Changed to businessName for clarity
@@ -361,7 +361,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Estado Actual Emprendimiento:</label>
+              <label className="form-label">Estado Actual Emprendimiento:</label>
               <input
                 type="text"
                 name="businessStatus" // Changed to businessStatus for clarity
@@ -372,7 +372,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Dirección del Emprendimiento:</label>
+              <label className="form-label">Dirección del Emprendimiento:</label>
               <textarea
                 name="address"
                 value={newRecord.address}
@@ -429,7 +429,7 @@ const NuevoEmprendimiento = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -440,7 +440,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Fecha de Emisión:</label>
+              <label className="form-label">Fecha de Emisión:</label>
               <input
                 type="date"
                 name="birthDate" // Changed to birthDate for consistency
@@ -451,7 +451,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Tipo de Emprendimiento:</label>
+              <label className="form-label">Tipo de Emprendimiento:</label>
               <input
                 type="text"
                 name="type" // Changed to type for consistency
@@ -462,7 +462,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-4">
-              <label>RIF:</label>
+              <label className="form-label">RIF:</label>
               <input
                 type="text"
                 name="rif" // Changed to rif for consistency
@@ -473,7 +473,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-8">
-              <label>Nombre del Emprendimiento:</label>
+              <label className="form-label">Nombre del Emprendimiento:</label>
               <input
                 type="text"
                 name="businessName" // Changed to businessName for clarity
@@ -484,7 +484,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Estado Actual Emprendimiento:</label>
+              <label className="form-label">Estado Actual Emprendimiento:</label>
               <input
                 type="text"
                 name="businessStatus" // Changed to businessStatus for clarity
@@ -495,7 +495,7 @@ const NuevoEmprendimiento = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label>Dirección del Emprendimiento:</label>
+              <label className="form-label">Dirección del Emprendimiento:</label>
               <textarea
                 name="address"
                 value={newRecord.address}

@@ -735,15 +735,16 @@ input:focus {
 /* INICIO CONTENIDO */
 /* App.css */
 .form-control {
-  width: 100%; /* O puedes usar un tamaño específico como '300px' */
+  width: 100%; /* Asegurarse de que los inputs ocupen todo el ancho del grupo */
   padding: 10px; /* Espaciado interno */
   margin: 2px 0; /* Espaciado externo */
-  border: 1px solid var(--border-color); /* Borde */
-  border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid rgb(0, 0, 0); /* Borde */
+  border-radius: 4px; /* Bordes redondeados */
   box-sizing: border-box; /* Incluye padding y border en el ancho total */
-  height: 36px;
-  font-size: 15px;
+  height: 40px; /* Altura del input */
+  font-size: 15px; /* Tamaño de la fuente */
 }
+
 
 .submit-button {
   padding: 10px 15px; /* Espaciado interno del botón */
@@ -819,21 +820,6 @@ input:focus {
   width: 100%;
 }
 
-/* Alineación a la izquierda */
-.align-left {
-  text-align: left;
-}
-
-/* Alineación al centro */
-.align-center {
-  text-align: center;
-}
-
-/* Alineación a la derecha */
-.align-right {
-  text-align: right;
-}
-
 /* Alineación de inputs usando flexbox */
 
 /* Nueva clase para el contenedor del formulario */
@@ -853,6 +839,7 @@ input:focus {
   font-size: 1rem; /* Tamaño de fuente */
   color: var(--text-color); /* Color del texto */
   margin-bottom: 5px; /* Espaciado inferior */
+  text-align: left; /* Alinear a la izquierda */
 }
 
 /* Estilo para subtítulos */
@@ -1095,18 +1082,22 @@ input:focus {
 /* src/assets/styles/Modal.css */
 .modal {
   display: flex;
-  justify-content: center;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+  background-color: rgba(0, 0, 0, 0.863); /* Fondo semitransparente */
   z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
 }
 
+.modal-content .form-label {
+  margin-bottom: 5px; /* Espaciado inferior */
+  display: block; /* Asegúrate de que el label ocupe toda la línea */
+}
+
 .modal-content {
+  text-align: left; /* Alinear el texto a la izquierda */
   background-color: white;
   border-radius: 10px;
   padding: 20px;
@@ -1194,13 +1185,7 @@ input:focus {
   }
 }
 
-.form-control {
-  width: 100%; /* Asegurarse de que los inputs ocupen todo el ancho del grupo */
-  padding: 10px; /* Espaciado interno */
-  border: 1px solid #ccc; /* Borde del input */
-  border-radius: 4px; /* Bordes redondeados */
-  box-sizing: border-box; /* Incluir padding y border en el ancho total */
-}
+
 
 button[type="submit"] {
   background-color: #2a79a7; /* Color de fondo */

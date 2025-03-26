@@ -264,7 +264,7 @@ const Usuario = () => {
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -275,7 +275,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+              <label className="form-label">Nombre de Usuario:</label>
               <input
                 type="text"
                 name="firstName"
@@ -286,7 +286,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+              <label className="form-label">Contraseña:</label>
               <div className="password-container">
                 <input
                   type={isPasswordVisible ? "text" : "password"}
@@ -307,7 +307,7 @@ const Usuario = () => {
               </div>
             </div>
             <div className="form-group input-col-12">
-              <label>Estado:</label>
+              <label className="form-label">Estado:</label>
               <select
                 name="status"
                 value={newRecord.status}
@@ -341,7 +341,7 @@ const Usuario = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -352,7 +352,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+              <label className="form-label">Nombre de Usuario:</label>
               <input
                 type="text"
                 name="firstName"
@@ -363,7 +363,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+              <label className="form-label">Contraseña:</label>
               <div className="password-container">
                 <input
                   type={isPasswordVisible ? "text" : "password"}
@@ -384,7 +384,7 @@ const Usuario = () => {
               </div>
             </div>
             <div className="form-group input-col-12">
-              <label>Estado:</label>
+              <label className="form-label">Estado:</label>
               <select
                 name="status"
                 value={newRecord.status}

@@ -6,6 +6,8 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaCheckCircle,
+  FaDollarSign,
+  FaEuroSign,
 } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
@@ -16,7 +18,67 @@ import "../assets/styles/App.css";
 const Usuario = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([
+    {
+      identityCard: "12345678",
+      firstName: "Juan",
+      lastName: "Pérez",
+      email: "juan.perez@example.com",
+      type: "Cliente",
+      gender: "Masculino",
+      birthDate: "1990-01-01",
+      phone: "0412-3456789",
+      contractNumber: "C123",
+      weeks: "4",
+      payments: [
+        {
+          week: "1",
+          paymentDate: "2023-10-01",
+          weeklyPayment: "100.00",
+          balance: "400.00",
+        },
+        {
+          week: "2",
+          paymentDate: "2023-10-08",
+          weeklyPayment: "100.00",
+          balance: "300.00",
+        },
+      ],
+    },
+    {
+      identityCard: "87654321",
+      firstName: "María",
+      lastName: "González",
+      email: "maria.gonzalez@example.com",
+      type: "Cliente",
+      gender: "Femenino",
+      birthDate: "1985-05-15",
+      phone: "0414-9876543",
+      contractNumber: "C456",
+      weeks: "4",
+      payments: [
+        {
+          week: "1",
+          paymentDate: "2023-10-02",
+          weeklyPayment: "150.00",
+          balance: "350.00",
+        },
+      ],
+    },
+    {
+      identityCard: "11223344",
+      firstName: "Carlos",
+      lastName: "Ramírez",
+      email: "carlos.ramirez@example.com",
+      type: "Cliente",
+      gender: "Masculino",
+      birthDate: "1992-03-20",
+      phone: "0416-1234567",
+      contractNumber: "C789",
+      weeks: "4",
+      payments: [],
+    },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -27,9 +89,7 @@ const Usuario = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
-  const [paymentDetails, setPaymentDetails] = useState([]);
-
-  const initialRecordState = {
+  const [newRecord, setNewRecord] = useState({
     identityCard: "",
     firstName: "",
     lastName: "",
@@ -41,9 +101,7 @@ const Usuario = () => {
     contractNumber: "",
     weeks: "",
     payments: [],
-  };
-
-  const [newRecord, setNewRecord] = useState(initialRecordState);
+  });
   const [newPayment, setNewPayment] = useState({
     week: "",
     paymentDate: "",
@@ -96,7 +154,19 @@ const Usuario = () => {
   };
 
   const resetForm = () => {
-    setNewRecord(initialRecordState);
+    setNewRecord({
+      identityCard: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      type: "",
+      gender: "",
+      birthDate: "",
+      phone: "",
+      contractNumber: "",
+      weeks: "",
+      payments: [],
+    });
   };
 
   const resetPaymentForm = () => {
@@ -130,7 +200,7 @@ const Usuario = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Amortizacion</h2>
+        <h2>Catálogo de Amortización</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar usuario
@@ -193,8 +263,8 @@ const Usuario = () => {
                 currentRecords.map((record) => (
                   <tr key={record.identityCard}>
                     <td>{record.identityCard}</td>
-                    <td>{`${record.firstName} ${record.lastName}`}</td>
-                    <td>{record.type}</td>
+                    <td>{`${record.firstName}`}</td>
+                    <td>{`${record.lastName}`}</td>
                     <td>
                       <button
                         onClick={() => handleView(record.identityCard)}
@@ -251,7 +321,6 @@ const Usuario = () => {
     const recordToView = records.find((record) => record.identityCard === id);
     if (recordToView) {
       setViewRecord(recordToView);
-      setPaymentDetails(recordToView.payments);
       setIsViewModalOpen(true);
     }
   };
@@ -296,11 +365,99 @@ const Usuario = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Agregar tiempo de pago de Credito</h2>
+        <h2>Agregar Usuario</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-11">
-              <label>N° de Contrato</label>
+            <div className="form-group input-col-12">
+              <label className="form-label">Cédula de Identidad:</label>
+              <input
+                type="text"
+                name="identityCard"
+                value={newRecord.identityCard}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Nombre:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={newRecord.firstName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Apellido:</label>
+              <input
+                type="text"
+                name="lastName"
+                value={newRecord.lastName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={newRecord.email}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono:</label>
+              <input
+                type="text"
+                name="phone"
+                value={newRecord.phone}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Tipo:</label>
+              <input
+                type="text"
+                name="type"
+                value={newRecord.type}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Género:</label>
+              <input
+                type="text"
+                name="gender"
+                value={newRecord.gender}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Fecha de Nacimiento:</label>
+              <input
+                type="date"
+                name="birthDate"
+                value={newRecord.birthDate}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Número de Contrato:</label>
               <input
                 type="text"
                 name="contractNumber"
@@ -310,24 +467,10 @@ const Usuario = () => {
                 required
               />
             </div>
-            <div className="form-group input-col-1">
-              <button type="submit">B</button>
-            </div>
             <div className="form-group input-col-6">
-              <label>Desde</label>
+              <label className="form-label">Semanas:</label>
               <input
-                type="date"
-                name="weeks"
-                value={newRecord.weeks}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label>Hasta</label>
-              <input
-                type="date"
+                type="text"
                 name="weeks"
                 value={newRecord.weeks}
                 onChange={handleInputChange}
@@ -342,33 +485,34 @@ const Usuario = () => {
 
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Cobros</h2>
+        <h2>Detalles de Usuario</h2>
         {viewRecord && (
           <div>
             <p>
               <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
             </p>
             <p>
-              <strong>Nombre:</strong> {viewRecord.firstName}{" "}
-              {viewRecord.lastName}
+              <strong>Nombre:</strong> {viewRecord.firstName} {viewRecord.lastName}
             </p>
             <p>
-              <strong>Apellido:</strong> {viewRecord.email}
+              <strong>Número de Contrato:</strong> {viewRecord.contractNumber}
             </p>
-
+            <p>
+              <strong>Semanas Limite:</strong> {viewRecord.weeks}
+            </p>
             <h3>Detalles de Pagos</h3>
             <table className="table">
               <thead>
                 <tr>
                   <th>Semana</th>
                   <th>Fecha de Pago</th>
-                  <th>Monto pagado</th>
-                  <th>Saldo</th>
+                  <th>Monto Pagado</th>
+                  <th>Deuda</th>
                 </tr>
               </thead>
               <tbody>
-                {paymentDetails.length > 0 ? (
-                  paymentDetails.map((payment, index) => (
+                {viewRecord.payments.length > 0 ? (
+                  viewRecord.payments.map((payment, index) => (
                     <tr key={index}>
                       <td>{payment.week}</td>
                       <td>{payment.paymentDate}</td>
@@ -395,7 +539,7 @@ const Usuario = () => {
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label>Cédula de Identidad:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -406,7 +550,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Nombre de Usuario:</label>
+              <label className="form-label">Nombre:</label>
               <input
                 type="text"
                 name="firstName"
@@ -417,9 +561,9 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Contraseña:</label>
+              <label className="form-label">Apellido:</label>
               <input
-                type="password"
+                type="text"
                 name="lastName"
                 value={newRecord.lastName}
                 onChange={handleInputChange}
@@ -428,32 +572,81 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label>Tipo de Usuario:</label>
-              <select
+              <label className="form-label">Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={newRecord.email}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono:</label>
+              <input
+                type="text"
+                name="phone"
+                value={newRecord.phone}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Tipo:</label>
+              <input
+                type="text"
+                name="type"
+                value={newRecord.type}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Género:</label>
+              <input
+                type="text"
                 name="gender"
                 value={newRecord.gender}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="F">F</option>
-                <option value="M">M</option>
-              </select>
+              />
             </div>
             <div className="form-group input-col-6">
-              <label>Estatus:</label>
-              <select
-                name="status"
-                value={newRecord.status}
+              <label className="form-label">Fecha de Nacimiento:</label>
+              <input
+                type="date"
+                name="birthDate"
+                value={newRecord.birthDate}
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="active">Activo</option>
-                <option value="inactive">Inactivo</option>
-              </select>
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Número de Contrato:</label>
+              <input
+                type="text"
+                name="contractNumber"
+                value={newRecord.contractNumber}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Semanas:</label>
+              <input
+                type="text"
+                name="weeks"
+                value={newRecord.weeks}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
             </div>
           </div>
           <button type="submit">Actualizar</button>
@@ -471,8 +664,7 @@ const Usuario = () => {
           <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
-          {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
@@ -501,7 +693,7 @@ const Usuario = () => {
         <form onSubmit={handleAddPayment} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-4">
-              <label>Referencia Bancaria</label>
+              <label className="form-label">Semana</label>
               <input
                 type="text"
                 name="week"
@@ -512,7 +704,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-4">
-              <label>Fecha de Pago</label>
+              <label className="form-label">Fecha de Pago</label>
               <input
                 type="date"
                 name="paymentDate"
@@ -523,7 +715,7 @@ const Usuario = () => {
               />
             </div>
             <div className="form-group input-col-4">
-              <label>Monto Pagado</label>
+              <label className="form-label">Monto Pagado</label>
               <input
                 type="number"
                 name="weeklyPayment"
