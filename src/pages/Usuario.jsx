@@ -75,6 +75,7 @@ const Usuario = () => {
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const initialRecordState = {
     identityCard: "",
@@ -93,8 +94,22 @@ const Usuario = () => {
     setNewRecord({ ...newRecord, [name]: value });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!newRecord.identityCard) newErrors.identityCard = "La cédula es OBLIGATORIA.";
+    if (!newRecord.firstName) newErrors.firstName = "El usuario es OBLIGATORIO.";
+    if (!newRecord.lastName) newErrors.lastName = "La contraseña es OBLIGATORIA.";
+    if (!newRecord.status) newErrors.status = "El estado es OBLIGATORIO.";
+    return newErrors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     setRecords([...records, newRecord]);
     resetForm();
     setIsModalOpen(false);
@@ -102,6 +117,11 @@ const Usuario = () => {
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     setRecords(records.map(record => 
       record.identityCard === newRecord.identityCard ? newRecord : record
     ));
@@ -111,6 +131,7 @@ const Usuario = () => {
 
   const resetForm = () => {
     setNewRecord(initialRecordState);
+    setErrors({});
   };
 
   const toggleMenu = () => {
@@ -254,7 +275,9 @@ const Usuario = () => {
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
-        <div className="container">{renderDataTable()}</div>
+        <div className="container">
+          {renderDataTable()}
+        </div>
       </div>
       <Footer />
 
@@ -271,8 +294,8 @@ const Usuario = () => {
                 value={newRecord.identityCard}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.identityCard && <span className="error-message">{errors.identityCard}</span>}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombre de Usuario:</label>
@@ -282,8 +305,8 @@ const Usuario = () => {
                 value={newRecord.firstName}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.firstName && <span className="error-message">{errors.firstName}</span>}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Contraseña:</label>
@@ -294,7 +317,7 @@ const Usuario = () => {
                   value={newRecord.lastName}
                   onChange={handleInputChange}
                   className="form-control"
-                  required
+
                 />
                 <button
                   type="button"
@@ -305,6 +328,7 @@ const Usuario = () => {
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+              {errors.lastName && <span className="error-message">{errors.lastName}</span>}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Estado:</label>
@@ -313,10 +337,11 @@ const Usuario = () => {
                 value={newRecord.status}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               >
                 <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
               </select>
+              {errors.status && <span className="error-message">{errors.status}</span>}
             </div>
           </div>
           <button type="submit">Guardar</button>
@@ -348,8 +373,8 @@ const Usuario = () => {
                 value={newRecord.identityCard}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.identityCard && <span className="error-message">{errors.identityCard}</span>}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombre de Usuario:</label>
@@ -359,8 +384,8 @@ const Usuario = () => {
                 value={newRecord.firstName}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.firstName && <span className="error-message">{errors.firstName}</span>}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Contraseña:</label>
@@ -371,7 +396,7 @@ const Usuario = () => {
                   value={newRecord.lastName}
                   onChange={handleInputChange}
                   className="form-control"
-                  required
+
                 />
                 <button
                   type="button"
@@ -382,6 +407,7 @@ const Usuario = () => {
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+              {errors.lastName && <span className="error-message">{errors.lastName}</span>}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Estado:</label>
@@ -390,11 +416,11 @@ const Usuario = () => {
                 value={newRecord.status}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               >
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
+              {errors.status && <span className="error-message">{errors.status}</span>}
             </div>
           </div>
           <button type="submit">Actualizar</button>

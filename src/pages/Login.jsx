@@ -11,6 +11,29 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(""); // Reset error message
+
+    // Validaciones
+    if (!username) {
+      setError("Por favor, ingresa tu usuario.");
+      return;
+    }
+
+    if (!password) {
+      setError("Por favor, ingresa tu contraseña.");
+      return;
+    }
+
+    if (username.length < 3) {
+      setError("El nombre de usuario debe tener al menos 3 caracteres.");
+      return;
+    }
+
+    if (password.length < 5) {
+      setError("La contraseña debe tener al menos 5 caracteres.");
+      return;
+    }
+
     if (username === "admin" && password === "12345") {
       alert("Inicio de sesión exitoso");
       navigate("/dashboard");
@@ -33,7 +56,6 @@ const Login = () => {
               name="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required
               placeholder="Ingresa tu usuario"
             />
           </div>
@@ -48,7 +70,6 @@ const Login = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               placeholder="Ingresa tu contraseña"
             />
           </div>

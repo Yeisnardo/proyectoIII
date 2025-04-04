@@ -53,7 +53,7 @@ const Persona = () => {
       nombre: "Ana",
       apellido: "Martínez",
       sexo: "Femenino",
-      f_nacimiento: "1995-07-30",
+      f_nacimiento: "1988-07-30",
       telefono: "321654987",
       correo: "ana.martinez@example.com",
       tipo: "Asist. Creditos y Cobranzas",
@@ -63,12 +63,13 @@ const Persona = () => {
       nombre: "Luis",
       apellido: "Fernández",
       sexo: "Masculino",
-      f_nacimiento: "1988-11-11",
+      f_nacimiento: "1995-11-11",
       telefono: "654321789",
       correo: "luis.fernandez@example.com",
-      tipo: "Coord. Formalizacion de Emprendimiento",
+      tipo: "Coord. Nuevo Emprendimento",
     },
   ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -92,19 +93,38 @@ const Persona = () => {
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [errors, setErrors] = useState({}); // Estado para manejar errores
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRecord({ ...newRecord, [name]: value });
+    setErrors({ ...errors, [name]: "" }); // Limpiar error al cambiar el valor
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!newRecord.cedula) newErrors.cedula = "La cedula es OBLIGATORIO.";
+    if (!newRecord.nombre) newErrors.nombre = "El nombre es OBLIGATORIO.";
+    if (!newRecord.apellido) newErrors.apellido = "El apellido es OBLIGATORIO.";
+    if (!newRecord.telefono) newErrors.telefono = "El teléfono es OBLIGATORIO.";
+    if (!newRecord.tipo) newErrors.tipo = "El tipo de persona es OBLIGATORIO.";
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     // Check for duplicate cedula
     if (records.some((record) => record.cedula === newRecord.cedula)) {
       alert("La cédula ya existe.");
       return;
     }
+
     setRecords([...records, newRecord]);
     resetForm();
     setIsModalOpen(false);
@@ -113,6 +133,12 @@ const Persona = () => {
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     // Check for duplicate cedula
     if (
       records.some(
@@ -124,6 +150,7 @@ const Persona = () => {
       alert("La cédula ya existe.");
       return;
     }
+
     setRecords(
       records.map((record) =>
         record.cedula === newRecord.cedula ? newRecord : record
@@ -145,6 +172,7 @@ const Persona = () => {
       correo: "",
       tipo: "",
     });
+    setErrors({});
   };
 
   const toggleMenu = () => {
@@ -341,8 +369,10 @@ const Persona = () => {
                 value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.cedula && (
+                <span className="error-message">{errors.cedula}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombres:</label>
@@ -352,8 +382,10 @@ const Persona = () => {
                 value={newRecord.nombre}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.nombre && (
+                <span className="error-message">{errors.nombre}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Apellidos:</label>
@@ -363,8 +395,10 @@ const Persona = () => {
                 value={newRecord.apellido}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Teléfono:</label>
@@ -374,8 +408,10 @@ const Persona = () => {
                 value={newRecord.telefono}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Tipo de Persona:</label>
@@ -384,7 +420,6 @@ const Persona = () => {
                 value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               >
                 <option value="">Seleccionar...</option>
                 <option value="Presidente">Presidente</option>
@@ -402,6 +437,9 @@ const Persona = () => {
                 </option>
                 <option value="Emprendedor">Emprendedor</option>
               </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
             </div>
           </div>
           <button type="submit">Guardar</button>
@@ -412,7 +450,7 @@ const Persona = () => {
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de Persona</h2>
         {viewRecord && (
-          <div className="view-record-details">
+          <div className="view-record -details">
             <p>
               <strong>Cédula de Identidad:</strong> {viewRecord.cedula}
             </p>
@@ -454,8 +492,10 @@ const Persona = () => {
                 value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.cedula && (
+                <span className="error-message">{errors.cedula}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombres:</label>
@@ -465,8 +505,10 @@ const Persona = () => {
                 value={newRecord.nombre}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.nombre && (
+                <span className="error-message">{errors.nombre}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Apellidos:</label>
@@ -476,8 +518,10 @@ const Persona = () => {
                 value={newRecord.apellido}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Teléfono:</label>
@@ -487,8 +531,10 @@ const Persona = () => {
                 value={newRecord.telefono}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Tipo de Persona:</label>
@@ -497,7 +543,6 @@ const Persona = () => {
                 value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               >
                 <option value="">Seleccionar...</option>
                 <option value="Presidente">Presidente</option>
@@ -515,6 +560,9 @@ const Persona = () => {
                 </option>
                 <option value="Emprendedor">Emprendedor</option>
               </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
             </div>
           </div>
           <button type="submit">Guardar</button>

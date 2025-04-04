@@ -120,9 +120,16 @@ input:focus {
 }
 
 .error-message {
-  color: var(--error-color);
-  margin-top: 10px;
-  font-size: 14px;
+  color: red;
+  margin-top: 5px;
+  font-size: 0.9em;
+  background-color: #ffe6e6; /* Fondo suave para el mensaje de error */
+  border: 1px solid red; /* Borde rojo */
+  padding: 10px; /* Espaciado interno */
+  border-radius: 4px; /* Bordes redondeados */
+  width: auto; /* Cambiar a auto para que se ajuste al contenido */
+  display: inline-block; /* Cambiar a inline-block para que no ocupe todo el ancho */
+  text-align: left; /* Alinear el texto a la izquierda */
 }
 
 /* Media Queries */
