@@ -323,69 +323,67 @@ const Usuario = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos del Contrato</h2>
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-11">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <input
-                type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-7">
-              <label className="form-label">Nombres:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-7">
-              <label className="form-label">Apellidos:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={newRecord.lastName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-5">
-              <label className="form-label">Fecha de Apertura:</label>
-              <input
-                type="date"
-                name="birthDate"
-                value={newRecord.birthDate}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-7">
-              <label className="form-label">N° Contrato:</label>
-              <input
-                type="text"
-                name="credito"
-                value={newRecord.credito}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit">Guardar</button>
-        </form>
-      </Modal>
-
+  <h2>Datos del Contrato</h2>
+  <form onSubmit={handleSubmit} className="modal-form">
+    <div className="form-row">
+      <div className="form-group input-col-12">
+        <label className="form-label">Cédula del Emprendedor</label>
+        <div className="input-group">
+          <input
+            type="text"
+            name="identityCard"
+            value={newRecord.identityCard}
+            onChange={handleInputChange}
+            className="form-control"
+            required
+          />
+          <button
+            type="button"
+            className="submit-button indigo"
+            onClick={() => { /* Acción del botón */ }}
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+      <div className="form-group input-col-6">
+        <label className="form-label">N° Contrato:</label>
+        <input
+          type="text"
+          name="credito"
+          value={newRecord.credito}
+          onChange={handleInputChange}
+          className="form-control"
+          required
+        />
+      </div>
+      <div className="form-group input-col-6">
+        <label className="form-label">Fecha de Apertura:</label>
+        <input
+          type="text"
+          name="fechaApertura"
+          value={newRecord.fechaApertura}
+          onChange={handleInputChange}
+          className="form-control"
+          required
+        />
+      </div>
+      <div className="form-group input-col-12">
+        <label className="form-label">Estatus</label>
+        <input
+          type="text"
+          name="condicion"
+          value="Activo(a)"
+          onChange={handleInputChange}
+          className="form-control"
+          required
+          disabled
+        />
+      </div>
+    </div>
+    <button type="submit" className="submit-button">Guardar</button>
+  </form>
+</Modal>
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de Usuario</h2>
@@ -415,7 +413,7 @@ const Usuario = () => {
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-11">
+            <div className="form-group input-col-11 ">
               <label className="form-label">Cédula del Emprendedor</label>
               <input
                 type="text"
@@ -509,4 +507,4 @@ const Usuario = () => {
   );
 };
 
-export default Usuario;
+export default Usuario; 

@@ -340,7 +340,9 @@ const Usuario = () => {
   };
 
   return (
-    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
+    <div
+      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
+    >
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
@@ -353,105 +355,131 @@ const Usuario = () => {
         <h2>Datos para la gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-11">
+            <div className="form-group input-col-12">
               <label className="form-label">N° de Contrato:</label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="contractNumber" // Cambié el nombre para que sea único
+                  value={newRecord.contractNumber} // Cambié para que use el valor correcto
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+                <button
+                  type="button"
+                  className="submit-button indigo"
+                  onClick={() => {
+                    /* Acción del botón */
+                  }}
+                >
+                  Acción
+                </button>
+              </div>
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Euros</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="amountEuros" // Cambié el nombre para que sea único
+                value={newRecord.amountEuros} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Bolivares:</label>
+              <input
+                type="text"
+                name="amountBolivares" // Cambié el nombre para que sea único
+                value={newRecord.amountBolivares} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">5% FLAT:</label>
+              <input
+                type="text"
+                name="flatRate" // Cambié el nombre para que sea único
+                value={newRecord.flatRate} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">10% de Interes:</label>
+              <input
+                type="text"
+                name="interest10" // Cambié el nombre para que sea único
+                value={newRecord.interest10} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">Interes Semanal:</label>
+              <input
+                type="text"
+                name="weeklyInterest" // Cambié el nombre para que sea único
+                value={newRecord.weeklyInterest} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">Semana Sin Interes:</label>
+              <input
+                type="text"
+                name="interestFreeWeeks" // Cambié el nombre para que sea único
+                value={newRecord.interestFreeWeeks} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Método de Pago:</label>
-              <select
-                name="accountType"
-                value={newRecord.accountType}
+              <label className="form-label">Cuota a Cancelar:</label>
+              <input
+                type="text"
+                name="installmentToPay" // Cambié el nombre para que sea único
+                value={newRecord.installmentToPay} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="Divisa">Divisa</option>
-                <option value="Transferencia">Transferencia</option>
-              </select>
+              />
             </div>
-
-            {newRecord.accountType === "Transferencia" && (
-              <>
-                <div className="form-group input-col-6">
-                  <label className="form-label">Nombre del Banco:</label>
-                  <select
-                    name="bank"
-                    value={newRecord.bank}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  >
-                    <option value="">Seleccionar Banco...</option>
-                    {bancos.map((banco, index) => (
-                      <option key={index} value={banco}>
-                        {banco}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group input-col-6">
-                  <label className="form-label">N° de Cuenta:</label>
-                  <input
-                    type="text"
-                    name="accountNumber"
-                    value={newRecord.accountNumber}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="form-group input-col-6">
-                  <label className="form-label">Monto en Dólar:</label>
-                  <input
-                    type="text"
-                    name="amountInDollars"
-                    value={newRecord.amountInDollars}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="form-group input-col-6">
-                  <label className="form-label">Cambio en Bolívares:</label>
-                  <input
-                    type="text"
-                    name="exchangeInBolivares"
-                    value={newRecord.exchangeInBolivares}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-              </>
-            )}
-
-            {newRecord.accountType === "Divisa" && (
-              <div className="form-group input-col-12">
-                <label className="form-label">Monto en Dólar:</label>
-                <input
-                  type="text"
-                  name="amountInDollars"
-                  value={newRecord.amountInDollars}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-            )}
+            <div className="form-group input-col-6">
+              <label className="form-label">Desde:</label>
+              <input
+                type="date"
+                name="installmentToPay" // Cambié el nombre para que sea único
+                value={newRecord.installmentToPay} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Hasta:</label>
+              <input
+                type="date"
+                name="installmentToPay" // Cambié el nombre para que sea único
+                value={newRecord.installmentToPay} // Cambié para que use el valor correcto
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
           </div>
           <button type="submit">Guardar</button>
         </form>
       </Modal>
-
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de crédito</h2>
@@ -610,7 +638,8 @@ const Usuario = () => {
           <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
+          {recordToDelete?.lastName}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>

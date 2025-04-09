@@ -624,6 +624,75 @@ input:focus {
 }
 
 /* ========================= */
+/* Estilos para el botón de menú desplegable */
+/* ========================= */
+.dropdown-toggle {
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  width: 100%; /* Ancho completo */
+  text-align: left; /* Alinear texto a la izquierda */
+  cursor: pointer; /* Cambiar cursor al pasar el mouse */
+  padding: 10px 15px; /* Espaciado interno */
+  color: #ffffff; /* Color del texto */
+  transition: background-color 0.3s; /* Transición suave para el fondo */
+  font-size: 15px;
+}
+
+.dropdown-toggle:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Color de fondo al pasar el mouse */
+}
+
+/* ========================= */
+/* Estilos para el submenú */
+/* ========================= */
+.submenu {
+  list-style-type: none; /* Sin viñetas */
+  padding: 0; /* Sin padding */
+  margin: 0; /* Sin margen */
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo del submenú */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para el submenú */
+  position: relative; /* Posicionar el submenú */
+}
+
+/* ========================= */
+/* Estilos para los elementos del submenú */
+/* ========================= */
+.submenu li {
+  margin: 0; /* Sin margen */
+}
+
+.submenu a {
+  display: block; /* Hacer que el área clickeable sea más grande */
+  padding: 10px 15px; /* Espaciado interno */
+  color: #ffffff; /* Color del texto */
+  text-decoration: none; /* Sin subrayado */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+.submenu a:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Color de fondo al pasar el mouse */
+}
+
+/* ========================= */
+/* Estilos para los iconos en el submenú */
+/* ========================= */
+.submenu .menu-icon {
+  color: #ffffff; /* Color del icono en el submenú */
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+}
+
+/* ========================= */
 /* En pantallas pequeñas, mantener el tamaño del dashboard */
 /* ========================= */
 @media (max-width: 599px) {
@@ -632,6 +701,12 @@ input:focus {
     position: relative; /* Cambiar a posición relativa */
     z-index: 1; /* Asegurarse de que esté detrás del menú */
   }
+}
+
+.menu a.active {
+  background-color: #858585; /* Color de fondo para el enlace activo */
+  color: white; /* Color del texto para el enlace activo */
+  border-radius: 5px; /* Bordes redondeados */
 }
 
 /* TERMINA MENU */
@@ -751,7 +826,6 @@ input:focus {
   height: 40px; /* Altura del input */
   font-size: 15px; /* Tamaño de la fuente */
 }
-
 
 .submit-button {
   padding: 10px 15px; /* Espaciado interno del botón */
@@ -1192,8 +1266,6 @@ input:focus {
   }
 }
 
-
-
 button[type="submit"] {
   background-color: #2a79a7; /* Color de fondo */
   color: white; /* Color del texto */
@@ -1394,4 +1466,28 @@ button[type="submit"]:hover {
 .styled-link:hover {
   transform: translateY(-3px); /* Eleva el enlace al pasar el mouse */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+}
+
+.form-list {
+  list-style-type: none; /* Elimina los puntos de la lista */
+  padding: 0; /* Elimina el padding por defecto */
+}
+
+.form-item {
+  margin-bottom: 15px; /* Espaciado entre los elementos de la lista */
+}
+
+.form-label {
+  display: block; /* Asegura que las etiquetas ocupen toda la línea */
+  margin-bottom: 5px; /* Espaciado entre la etiqueta y el input */
+}
+
+.radio-group {
+  display: flex; /* Utiliza flexbox para alinear los elementos en línea */
+  gap: 10px; /* Espaciado entre los botones de radio */
+}
+
+.error-message {
+  color: red; /* Color para los mensajes de error */
+  font-size: 0.9em; /* Tamaño de fuente más pequeño para los errores */
 }

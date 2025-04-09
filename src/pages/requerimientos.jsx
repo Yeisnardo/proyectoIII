@@ -14,7 +14,7 @@ import Footer from "../components/Footer";
 import Modal from "../components/Modal";
 import "../assets/styles/App.css";
 
-const Persona = () => {
+const Requerimientos = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([
@@ -197,7 +197,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Personas</h2>
+        <h2>Catálogo de Requerimientos de Emprendedor</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -355,13 +355,13 @@ const Persona = () => {
         <div className="container">{renderDataTable()}</div>
       </div>
       <Footer />
-
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos Personales</h2>
+        <h2 style={{ textAlign: "center" }}>Requerimientos del Emprendedor</h2>
         <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-12">
+          <ul className="form-list form-group">
+            {/* Cédula de Identidad */}
+            <li className="form-item input-col-12">
               <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
@@ -369,148 +369,331 @@ const Persona = () => {
                 value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
+                required // Campo requerido
               />
+              <button
+                type="button"
+                className="submit-button indigo"
+                onClick={() => {
+                  /* Acción del botón */
+                }}
+              >
+                Buscar
+              </button>
               {errors.cedula && (
                 <span className="error-message">{errors.cedula}</span>
               )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombres:</label>
-              <input
-                type="text"
-                name="nombre"
-                value={newRecord.nombre}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.nombre && (
-                <span className="error-message">{errors.nombre}</span>
+            </li>
+
+            {/* Solicitud de Crédito */}
+            <li className="form-item input-col-6">
+              <label className="form-label">Solicitud de Crédito:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="postulacionUBCH"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="postulacionUBCH"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.postulacionUBCH && (
+                <span className="error-message">{errors.postulacionUBCH}</span>
               )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Apellidos:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
+            </li>
+
+            {/* Registro de Emprender Juntos */}
+            <li className="form-item input-col-6">
+              <label className="form-label">Postulación UBCH:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="registroEmprenderJuntos"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="registroEmprenderJuntos"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.registroEmprenderJuntos && (
+                <span className="error-message">
+                  {errors.registroEmprenderJuntos}
+                </span>
               )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Estado:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
+            </li>
+
+            {/* Inspección de Emprendimiento */}
+            <li className="form-item">
+              <label className="form-label">
+                Inspección de Emprendimiento:
+              </label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="inspeccionEmprendimiento"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="inspeccionEmprendimiento"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.inspeccionEmprendimiento && (
+                <span className="error-message">
+                  {errors.inspeccionEmprendimiento}
+                </span>
               )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Municipio:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
+            </li>
+
+            {/* Carta de Aval o Emprendimiento */}
+            <li className="form-item">
+              <label className="form-label">
+                Carta de Aval o Residencia:
+              </label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="cartaAval"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="cartaAval"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.cartaAval && (
+                <span className="error-message">{errors.cartaAval}</span>
               )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Parroquia:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
+            </li>
+
+            {/* Copia de Cédula */}
+            <li className="form-item">
+              <label className="form-label">Copia de Cédula:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="copiaCedula"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="copiaCedula"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.copiaCedula && (
+                <span className="error-message">{errors.copiaCedula}</span>
               )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Direccion:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
+            </li>
+
+            {/* RIF Personal */}
+            <li className="form-item">
+              <label className="form-label">RIF Personal:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="rifPersonal"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="rifPersonal"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.rifPersonal && (
+                <span className="error-message">{errors.rifPersonal}</span>
               )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 1:</label>
-              <input
-                type="text"
-                name="telefono"
-                value={newRecord.telefono}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono && (
-                <span className="error-message">{errors.telefono}</span>
+            </li>
+
+            {/* Fotos del Emprendimiento */}
+            <li className="form-item">
+              <label className="form-label">Fotos del Emprendimiento:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="fotosEmprendimiento"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="fotosEmprendimiento"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.fotosEmprendimiento && (
+                <span className="error-message">
+                  {errors.fotosEmprendimiento}
+                </span>
               )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 2:</label>
-              <input
-                type="text"
-                name="telefono"
-                value={newRecord.telefono}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono && (
-                <span className="error-message">{errors.telefono}</span>
+            </li>
+
+            {/* RIF de Emprendimiento */}
+            <li className="form-item">
+              <label className="form-label">RIF de Emprendimiento:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="rifEmprendimiento"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí{" "}
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="rifEmprendimiento"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.rifEmprendimiento && (
+                <span className="error-message">
+                  {errors.rifEmprendimiento}
+                </span>
               )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Tipo de Persona:</label>
-              <select
-                name="tipo"
-                value={newRecord.tipo}
-                onChange={handleInputChange}
-                className="form-control"
-              >
-                <option value="">Seleccionar...</option>
-                <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">
-                  Coord. Creditos y Cobranzas
-                </option>
-                <option value="Asist. Creditos y Cobranzas">
-                  Asist. Creditos y Cobranzas
-                </option>
-                <option value="Coord. Formalizacion de Emprendimiento">
-                  Coord. Formalizacion de Emprendimiento
-                </option>
-                <option value="Coord. Nuevo Emprendimento">
-                  Coord. Nuevo Emprendimento
-                </option>
-                <option value="Emprendedor">Emprendedor</option>
-              </select>
-              {errors.tipo && (
-                <span className="error-message">{errors.tipo}</span>
+            </li>
+
+            {/* Referencia Bancaria */}
+            <li className="form-item">
+              <label className="form-label">Referencia Bancaria:</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="referenciaBancaria"
+                    value="si"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="referenciaBancaria"
+                    value="no"
+                    onChange={handleInputChange}
+                    className="form-control"
+                    required // Selección requerida
+                  />
+                  No
+                </label>
+              </div>
+              {errors.referenciaBancaria && (
+                <span className="error-message">
+                  {errors.referenciaBancaria}
+                </span>
               )}
-            </div>
-          </div>
-          <button type="submit">Guardar</button>
+            </li>
+
+            {/* Botón de registro */}
+            <li className="form-item">
+              <button type="submit">Registrar</button>
+            </li>
+          </ul>
         </form>
       </Modal>
-
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de Persona</h2>
@@ -543,7 +726,6 @@ const Persona = () => {
           </div>
         )}
       </Modal>
-
       {/* Modal para editar datos */}
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h2>Actualizar Datos Personales</h2>
@@ -633,7 +815,6 @@ const Persona = () => {
           <button type="submit">Guardar</button>
         </form>
       </Modal>
-
       {/* Modal para confirmar eliminación */}
       <Modal
         isOpen={isDeleteModalOpen}
@@ -653,7 +834,6 @@ const Persona = () => {
           <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
         </div>
       </Modal>
-
       {/* Modal para mostrar que el registro ha sido eliminado */}
       <Modal
         isOpen={isDeletedModalOpen}
@@ -665,7 +845,6 @@ const Persona = () => {
           <p>El registro ha sido eliminado con éxito.</p>
         </div>
       </Modal>
-
       {/* Modal para mostrar que el registro ha sido creado */}
       <Modal
         isOpen={isCreatedModalOpen}
@@ -679,7 +858,6 @@ const Persona = () => {
           </div>
         </div>
       </Modal>
-
       {/* Modal para mostrar que el registro ha sido actualizado */}
       <Modal
         isOpen={isUpdatedModalOpen}
@@ -697,4 +875,4 @@ const Persona = () => {
   );
 };
 
-export default Persona;
+export default Requerimientos;

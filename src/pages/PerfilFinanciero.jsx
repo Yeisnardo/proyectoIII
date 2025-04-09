@@ -197,7 +197,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Personas</h2>
+        <h2>Catálogo de Perfil Financiero</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -358,7 +358,7 @@ const Persona = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos Personales</h2>
+        <h2>Datos Perfil Financiero</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -370,12 +370,21 @@ const Persona = () => {
                 onChange={handleInputChange}
                 className="form-control"
               />
+              <button
+                type="button"
+                className="submit-button indigo"
+                onClick={() => {
+                  /* Acción del botón */
+                }}
+              >
+                Buscar
+              </button>
               {errors.cedula && (
                 <span className="error-message">{errors.cedula}</span>
               )}
             </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombres:</label>
+            <div className="form-group input-col-12">
+              <label className="form-label">Posee una cuanta Bancaria?:</label>
               <input
                 type="text"
                 name="nombre"
@@ -387,47 +396,8 @@ const Persona = () => {
                 <span className="error-message">{errors.nombre}</span>
               )}
             </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Apellidos:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Estado:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Municipio:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Parroquia:</label>
+            <div className="form-group input-col-12">
+              <label className="form-label">Seleccionar el Banco:</label>
               <input
                 type="text"
                 name="apellido"
@@ -440,7 +410,46 @@ const Persona = () => {
               )}
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Direccion:</label>
+              <label className="form-label">Metodos de Pagos:</label>
+              <input
+                type="text"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-7">
+              <label className="form-label">Tu emprendimiento cuenta con un credito?:</label>
+              <input
+                type="text"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-5">
+              <label className="form-label">N° Clientes atiendes semanal:</label>
+              <input
+                type="number"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Vendes de contado o a Credito:</label>
               <input
                 type="text"
                 name="apellido"
@@ -453,7 +462,7 @@ const Persona = () => {
               )}
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 1:</label>
+              <label className="form-label">Declaras IVA?:</label>
               <input
                 type="text"
                 name="telefono"
@@ -466,7 +475,7 @@ const Persona = () => {
               )}
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 2:</label>
+              <label className="form-label">Declaras ISLR?:</label>
               <input
                 type="text"
                 name="telefono"
@@ -479,7 +488,20 @@ const Persona = () => {
               )}
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Tipo de Persona:</label>
+              <label className="form-label">Le compras a tus proveedores de contado o credito?:</label>
+              <input
+                type="text"
+                name="telefono"
+                value={newRecord.telefono}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Meses con mas ventas?:</label>
               <select
                 name="tipo"
                 value={newRecord.tipo}
@@ -506,6 +528,35 @@ const Persona = () => {
                 <span className="error-message">{errors.tipo}</span>
               )}
             </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Exiges porcentanjes en tus ventas?:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Presidente">Presidente</option>
+                <option value="Coord. Creditos y Cobranzas">
+                  Coord. Creditos y Cobranzas
+                </option>
+                <option value="Asist. Creditos y Cobranzas">
+                  Asist. Creditos y Cobranzas
+                </option>
+                <option value="Coord. Formalizacion de Emprendimiento">
+                  Coord. Formalizacion de Emprendimiento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Nuevo Emprendimento
+                </option>
+                <option value="Emprendedor">Emprendedor</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
+            </div>
+
           </div>
           <button type="submit">Guardar</button>
         </form>

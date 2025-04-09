@@ -1,20 +1,12 @@
 import React, { useState } from "react";
-import {
-  FaEye,
-  FaEdit,
-  FaTrash,
-  FaPlus,
-  FaChevronLeft,
-  FaChevronRight,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaEye, FaEdit, FaTrash, FaPlus, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
-import Modal from "../components/Modal";
+import Modal from "../components/Modal"; 
 import "../assets/styles/App.css";
 
-const Ferias = () => {
+const UbicacionActivEmprende = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([
@@ -64,8 +56,7 @@ const Ferias = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
-  const [isRegisterAttendanceModalOpen, setIsRegisterAttendanceModalOpen] =
-    useState(false);
+  const [isRegisterAttendanceModalOpen, setIsRegisterAttendanceModalOpen] = useState(false);
   const [isSearchFairModalOpen, setIsSearchFairModalOpen] = useState(false);
   const [attendees, setAttendees] = useState([]); // Nuevo estado para almacenar asistentes
   const [limit, setLimit] = useState(5);
@@ -92,7 +83,7 @@ const Ferias = () => {
   };
 
   const [newFair, setNewFair] = useState(initialFairState);
-
+  
   // Estado para buscar ferias
   const initialSearchState = {
     searchCode: "",
@@ -133,11 +124,10 @@ const Ferias = () => {
 
   const handleSearchFairSubmit = (e) => {
     e.preventDefault();
-    const filteredAttendees = records.filter(
-      (record) =>
-        record.fairName.includes(searchData.searchCode) ||
-        record.firstName.includes(searchData.entrepreneurName) ||
-        record.attendanceDate === searchData.searchDate
+    const filteredAttendees = records.filter(record => 
+      record.fairName.includes(searchData.searchCode) || 
+      record.firstName.includes(searchData.entrepreneurName) || 
+      record.attendanceDate === searchData.searchDate
     );
     setAttendees(filteredAttendees);
     setIsSearchFairModalOpen(false);
@@ -146,11 +136,9 @@ const Ferias = () => {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    setRecords(
-      records.map((record) =>
-        record.identityCard === newRecord.identityCard ? newRecord : record
-      )
-    );
+    setRecords(records.map(record => 
+      record.identityCard === newRecord.identityCard ? newRecord : record
+    ));
     resetForm();
     setIsEditModalOpen(false);
   };
@@ -179,21 +167,16 @@ const Ferias = () => {
         record.identityCard.includes(searchTerm)
       );
     });
-
+  
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
-    const currentRecords = filteredRecords.slice(
-      startIndex,
-      startIndex + limit
-    );
-
+    const currentRecords = filteredRecords.slice(startIndex, startIndex + limit);
+  
     return (
       <div className="records-container">
-        <h2>Catálogo de Ferias</h2>
+        <h2>Catálogo de Situacion Operativa</h2>
         <div className="search-container">
-          <label htmlFor="search" className="search-label">
-            Buscar usuario
-          </label>
+          <label htmlFor="search" className="search-label">Buscar usuario</label>
           <input
             type="text"
             id="search"
@@ -202,23 +185,11 @@ const Ferias = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button
-            onClick={() => setIsRegisterAttendanceModalOpen(true)}
-            className="add-button"
-            title="Registrar Asistencia"
-          >
-            <FaPlus /> Registrar Asistencia
-          </button>
-          &nbsp;
-          <button
-            onClick={() => setIsSearchFairModalOpen(true)}
-            className="add-button"
-            title="Buscar Feria"
-          >
-            <FaPlus /> Registrar Feria
+          <button onClick={() => setIsRegisterAttendanceModalOpen(true)} className="add-button" title="Registrar Asistencia">
+            <FaPlus /> Registrar Situacion Operativa
           </button>
         </div>
-
+  
         <div className="limit-container">
           <label htmlFor="limit">Entradas de registros:</label>
           <select
@@ -236,7 +207,7 @@ const Ferias = () => {
             <option value={50}>50</option>
           </select>
         </div>
-
+  
         <div className="table-container">
           <table className="table">
             <thead>
@@ -255,22 +226,13 @@ const Ferias = () => {
                     <td>{record.fairName}</td>
                     <td>{record.attendanceDate}</td>
                     <td>
-                      <button
-                        onClick={() => handleView(record.identityCard)}
-                        title="Ver Datos"
-                      >
+                      <button onClick={() => handleView(record.identityCard)} title="Ver Datos">
                         <FaEye />
                       </button>
-                      <button
-                        onClick={() => handleEdit(record.identityCard)}
-                        title="Actualizar"
-                      >
+                      <button onClick={() => handleEdit(record.identityCard)} title="Actualizar">
                         <FaEdit />
                       </button>
-                      <button
-                        onClick={() => handleDelete(record.identityCard)}
-                        title="Eliminar"
-                      >
+                      <button onClick={() => handleDelete(record.identityCard)} title="Eliminar">
                         <FaTrash />
                       </button>
                     </td>
@@ -278,33 +240,19 @@ const Ferias = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="no-results">
-                    No se encontraron registros.
-                  </td>
+                  <td colSpan="4" className="no-results">No se encontraron registros.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-
+  
         <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="pagination-button"
-          >
+          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="pagination-button">
             <FaChevronLeft />
           </button>
-          <span>
-            Página {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
+          <span>Página {currentPage} de {totalPages}</span>
+          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="pagination-button">
             <FaChevronRight />
           </button>
         </div>
@@ -337,20 +285,14 @@ const Ferias = () => {
   };
 
   const confirmDelete = () => {
-    setRecords(
-      records.filter(
-        (record) => record.identityCard !== recordToDelete.identityCard
-      )
-    );
+    setRecords(records.filter((record) => record.identityCard !== recordToDelete.identityCard));
     setRecordToDelete(null);
     setIsDeleteModalOpen(false);
     setIsDeletedModalOpen(true);
   };
 
   return (
-    <div
-      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
-    >
+    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
@@ -360,7 +302,7 @@ const Ferias = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos de nueva formalización de Emprendimiento</h2>
+        <h2>Datos de la Situacion Operativa</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -375,7 +317,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-3">
-              <label className="form-label">Fecha de Inscripción:</label>
+              <label className="form-label">:</label>
               <input
                 type="date"
                 name="attendanceDate"
@@ -386,9 +328,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-9">
-              <label className="form-label">
-                N° de Registro del Certificado Emitido Página Emprender Juntos:
-              </label>
+              <label className="form-label">N° de Registro del Certificado Emitido Página Emprender Juntos:</label>
               <input
                 type="text"
                 name="comments"
@@ -404,17 +344,12 @@ const Ferias = () => {
       </Modal>
 
       {/* Modal para registrar asistencia a la feria */}
-      <Modal
-        isOpen={isRegisterAttendanceModalOpen}
-        onClose={() => setIsRegisterAttendanceModalOpen(false)}
-      >
-        <h2>Registro de Asistencia a la Feria</h2>
+      <Modal isOpen={isRegisterAttendanceModalOpen} onClose={() => setIsRegisterAttendanceModalOpen(false)}>
+        <h2>Datos de Situacion Operativa</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-6">
-              <label className="form-label">
-                Cédula de Identidad del Emprendedor:
-              </label>
+            <div className="form-group input-col-12">
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
                 name="identityCard"
@@ -433,8 +368,8 @@ const Ferias = () => {
                 Buscar
               </button>
             </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Código de la Feria:</label>
+            <div className="form-group input-col-7">
+              <label className="form-label">Se encuantra operativo el emprendimiento:</label>
               <input
                 type="text"
                 name="fairName"
@@ -443,18 +378,31 @@ const Ferias = () => {
                 className="form-control"
                 required
               />
-              <button
-                type="button"
-                className="submit-button indigo"
-                onClick={() => {
-                  /* Acción del botón */
-                }}
-              >
-                Buscar
-              </button>
             </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Descripcion:</label>
+            <div className="form-group input-col-5">
+              <label className="form-label">N° de Trajadores</label>
+              <input
+                type="text"
+                name="attendanceDate"
+                value={newRecord.attendanceDate}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Tiempo de operatividad del emprendimiento</label><br />
+              <input
+                type="text"
+                name="fairName"
+                value={newRecord.fairName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">El emprendimiento tiene componentes de diseño,forma de produccion o presentacion final:</label>
               <input
                 type="text"
                 name="fairName"
@@ -465,19 +413,16 @@ const Ferias = () => {
               />
             </div>
           </div>
-          <button type="submit">Registrar Asistencia</button>
+          <button type="submit">Registrar</button>
         </form>
       </Modal>
 
       {/* Modal para buscar feria */}
-      <Modal
-        isOpen={isSearchFairModalOpen}
-        onClose={() => setIsSearchFairModalOpen(false)}
-      >
+      <Modal isOpen={isSearchFairModalOpen} onClose={() => setIsSearchFairModalOpen(false)}>
         <h2>Registrar Feria</h2>
         <form onSubmit={handleSearchFairSubmit} className="modal-form">
           <div className="form-row">
-            <div className="form-group input-col-12">
+            <div className="form-group input-col-9">
               <label className="form-label">Código Identificador:</label>
               <input
                 type="text"
@@ -487,8 +432,11 @@ const Ferias = () => {
                 className="form-control"
               />
             </div>
+            <div className="form-group input-col-3"><br />
+              <button type="submit">Buscar</button>
+            </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Nombre de la Feria:</label>
+              <label className="form-label">Nombre del Emprendedor:</label>
               <input
                 type="text"
                 name="entrepreneurName"
@@ -498,7 +446,7 @@ const Ferias = () => {
               />
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Fecha a Realizar:</label>
+              <label className="form-label">Fecha de la Feria:</label>
               <input
                 type="date"
                 name="searchDate"
@@ -556,7 +504,7 @@ const Ferias = () => {
 
       {/* Modal para editar datos */}
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Ferias</h2>
+        <h2>Actualizar Datos de UbicacionActivEmprende</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -609,19 +557,11 @@ const Ferias = () => {
       </Modal>
 
       {/* Modal para confirmar eliminación */}
-      <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-      >
+      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
-        </p>
-        <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
-          {recordToDelete?.lastName}
-        </p>
+        <p><strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}</p>
+        <p><strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}</p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
           <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
@@ -629,10 +569,7 @@ const Ferias = () => {
       </Modal>
 
       {/* Modal para mostrar que el registro ha sido eliminado */}
-      <Modal
-        isOpen={isDeletedModalOpen}
-        onClose={() => setIsDeletedModalOpen(false)}
-      >
+      <Modal isOpen={isDeletedModalOpen} onClose={() => setIsDeletedModalOpen(false)}>
         <h2>Registro Eliminado</h2>
         <div className="deleted-message">
           <FaCheckCircle className="deleted-icon" />
@@ -643,4 +580,4 @@ const Ferias = () => {
   );
 };
 
-export default Ferias;
+export default UbicacionActivEmprende;

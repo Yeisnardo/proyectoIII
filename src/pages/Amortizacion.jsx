@@ -200,7 +200,7 @@ const Usuario = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Amortización</h2>
+        <h2>Catálogo de Amortización o pago</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar usuario
@@ -213,20 +213,13 @@ const Usuario = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="add-button"
-            title="Agregar Nuevo Registro"
-          >
-            <FaPlus /> Añadir tiempo de plazo
-          </button>
           &nbsp;
           <button
             onClick={() => setIsPaymentModalOpen(true)}
             className="add-button"
             title="Agregar Pagos"
           >
-            <FaPlus /> Añadir Pagos
+            <FaPlus /> Registra Pago
           </button>
         </div>
 
@@ -362,126 +355,6 @@ const Usuario = () => {
         <div className="container">{renderDataTable()}</div>
       </div>
       <Footer />
-
-      {/* Modal para agregar nuevo registro */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Agregar Usuario</h2>
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-12">
-              <label className="form-label">Cédula de Identidad:</label>
-              <input
-                type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombre:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Apellido:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={newRecord.lastName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={newRecord.email}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono:</label>
-              <input
-                type="text"
-                name="phone"
-                value={newRecord.phone}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Tipo:</label>
-              <input
-                type="text"
-                name="type"
-                value={newRecord.type}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Género:</label>
-              <input
-                type="text"
-                name="gender"
-                value={newRecord.gender}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Nacimiento:</label>
-              <input
-                type="date"
-                name="birthDate"
-                value={newRecord.birthDate}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Número de Contrato:</label>
-              <input
-                type="text"
-                name="contractNumber"
-                value={newRecord.contractNumber}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Semanas:</label>
-              <input
-                type="text"
-                name="weeks"
-                value={newRecord.weeks}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit">Guardar</button>
-        </form>
-      </Modal>
 
       {/* Modal para ver datos */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
@@ -692,8 +565,30 @@ const Usuario = () => {
         <h2>Agregar Pago</h2>
         <form onSubmit={handleAddPayment} className="modal-form">
           <div className="form-row">
+          <div className="form-group input-col-12">
+              <label className="form-label">N° de Contrato:</label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="contractNumber" // Cambié el nombre para que sea único
+                  value={newRecord.contractNumber} // Cambié para que use el valor correcto
+                  onChange={handleInputChange}
+                  className="form-control"
+                  required
+                />
+                <button
+                  type="button"
+                  className="submit-button indigo"
+                  onClick={() => {
+                    /* Acción del botón */
+                  }}
+                >
+                  Buscar
+                </button>
+              </div>
+            </div>
             <div className="form-group input-col-4">
-              <label className="form-label">Semana</label>
+              <label className="form-label">Referencia</label>
               <input
                 type="text"
                 name="week"

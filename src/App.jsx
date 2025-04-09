@@ -6,12 +6,15 @@ import Dashboard from './pages/Dashboard';
 import Persona from './pages/Persona';
 import Usuario from './pages/Usuario';
 import Ferias from './pages/Ferias';
-import Cambio from './pages/Al-cambio.jsx';
-import Credito from './pages/Credito.jsx';
-import FormalizacionEmprendimiento from './pages/FormalizacionEmprendimiento'; // Importar nuevo componente
-import NuevoEmprendimiento from './pages/NuevoEmprendimiento'; // Importar nuevo componente
-import Contrato from './pages/Contrato'; // Importar nuevo componente
-import Amortizacion from './pages/Amortizacion.jsx'; // Importar nuevo componente
+import Requerimientos from './pages/requerimientos'; 
+import Cambio from './pages/AlCambio'; // Ensure the file name matches
+import Credito from './pages/Credito'; 
+import Contrato from './pages/Contrato'; 
+import Amortizacion from './pages/Amortizacion'; 
+import PerfilFinanciero from './pages/PerfilFinanciero';
+import UbicacionActivEmprende from './pages/UbicacionActivEmprende';
+import CadenaProductiva from './pages/CadenaProductiva';
+import SituacionOperativa from './pages/SituacionOperativa';
 
 function App() {
   return (
@@ -22,13 +25,16 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/persona" element={<Persona />} />
           <Route path="/usuario" element={<Usuario />} />
+          <Route path="/requerimientos" element={<Requerimientos />} />
+          <Route path="/perfil-financiero" element={<PerfilFinanciero />} />
+          <Route path="/UbicacionActivEmprende" element={<UbicacionActivEmprende />} />
+          <Route path="/cadena-productiva" element={<CadenaProductiva />} />
+          <Route path="/situacion-operativa" element={<SituacionOperativa />} />
           <Route path="/ferias" element={<Ferias />} />
-          <Route path="/Al-cambio" element={<Cambio />} />
-          <Route path="/Credito" element={<Credito />} />
-          <Route path="/formalizacion-emprendimiento" element={<FormalizacionEmprendimiento />} /> {/* Nueva ruta */}
-          <Route path="/nuevo-emprendimiento" element={<NuevoEmprendimiento />} /> {/* Nueva ruta */}
-          <Route path="/contrato" element={<Contrato />} /> {/* Nueva ruta */}
-          <Route path="/amortizacion" element={<Amortizacion />} /> {/* Nueva ruta */}
+          <Route path="/al-cambio" element={<Cambio />} />
+          <Route path="/credito" element={<Credito />} />
+          <Route path="/contrato" element={<Contrato />} />
+          <Route path="/amortizacion" element={<Amortizacion />} />
         </Routes>
       </div>
     </BrowserRouter>

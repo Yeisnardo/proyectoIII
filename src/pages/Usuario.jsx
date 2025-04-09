@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { 
-  FaEye, 
-  FaEyeSlash, 
-  FaEdit, 
-  FaTrash, 
-  FaPlus, 
-  FaChevronLeft, 
-  FaChevronRight, 
-  FaCheckCircle 
+import {
+  FaEye,
+  FaEyeSlash,
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCheckCircle,
 } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
-import Modal from "../components/Modal"; 
+import Modal from "../components/Modal";
 import "../assets/styles/App.css";
 
 const Usuario = () => {
@@ -96,9 +96,12 @@ const Usuario = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!newRecord.identityCard) newErrors.identityCard = "La cédula es OBLIGATORIA.";
-    if (!newRecord.firstName) newErrors.firstName = "El usuario es OBLIGATORIO.";
-    if (!newRecord.lastName) newErrors.lastName = "La contraseña es OBLIGATORIA.";
+    if (!newRecord.identityCard)
+      newErrors.identityCard = "La cédula es OBLIGATORIA.";
+    if (!newRecord.firstName)
+      newErrors.firstName = "El usuario es OBLIGATORIO.";
+    if (!newRecord.lastName)
+      newErrors.lastName = "La contraseña es OBLIGATORIA.";
     if (!newRecord.status) newErrors.status = "El estado es OBLIGATORIO.";
     return newErrors;
   };
@@ -122,9 +125,11 @@ const Usuario = () => {
       setErrors(validationErrors);
       return;
     }
-    setRecords(records.map(record => 
-      record.identityCard === newRecord.identityCard ? newRecord : record
-    ));
+    setRecords(
+      records.map((record) =>
+        record.identityCard === newRecord.identityCard ? newRecord : record
+      )
+    );
     resetForm();
     setIsEditModalOpen(false);
   };
@@ -149,13 +154,18 @@ const Usuario = () => {
 
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
-    const currentRecords = filteredRecords.slice(startIndex, startIndex + limit);
+    const currentRecords = filteredRecords.slice(
+      startIndex,
+      startIndex + limit
+    );
 
     return (
       <div className="records-container">
         <h2>Catálogo de Usuario</h2>
         <div className="search-container">
-          <label htmlFor="search" className="search-label">Buscar usuario</label>
+          <label htmlFor="search" className="search-label">
+            Buscar usuario
+          </label>
           <input
             type="text"
             id="search"
@@ -164,7 +174,11 @@ const Usuario = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button onClick={() => setIsModalOpen(true)} className="add-button" title="Agregar Nuevo Registro">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="add-button"
+            title="Agregar Nuevo Registro"
+          >
             <FaPlus />
           </button>
         </div>
@@ -205,13 +219,22 @@ const Usuario = () => {
                     <td>{`${record.firstName}`}</td>
                     <td>{record.status}</td>
                     <td>
-                      <button onClick={() => handleView(record.identityCard)} title="Ver Datos">
+                      <button
+                        onClick={() => handleView(record.identityCard)}
+                        title="Ver Datos"
+                      >
                         <FaEye />
                       </button>
-                      <button onClick={() => handleEdit(record.identityCard)} title="Actualizar">
+                      <button
+                        onClick={() => handleEdit(record.identityCard)}
+                        title="Actualizar"
+                      >
                         <FaEdit />
                       </button>
-                      <button onClick={() => handleDelete(record.identityCard)} title="Eliminar">
+                      <button
+                        onClick={() => handleDelete(record.identityCard)}
+                        title="Eliminar"
+                      >
                         <FaTrash />
                       </button>
                     </td>
@@ -219,7 +242,9 @@ const Usuario = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="no-results">No se encontraron registros.</td>
+                  <td colSpan="4" className="no-results">
+                    No se encontraron registros.
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -227,11 +252,23 @@ const Usuario = () => {
         </div>
 
         <div className="pagination">
-          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="pagination-button">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-button"
+          >
             <FaChevronLeft />
           </button>
-          <span>Página {currentPage} de {totalPages}</span>
-          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="pagination-button">
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
             <FaChevronRight />
           </button>
         </div>
@@ -264,20 +301,24 @@ const Usuario = () => {
   };
 
   const confirmDelete = () => {
-    setRecords(records.filter((record) => record.identityCard !== recordToDelete.identityCard));
+    setRecords(
+      records.filter(
+        (record) => record.identityCard !== recordToDelete.identityCard
+      )
+    );
     setRecordToDelete(null);
     setIsDeleteModalOpen(false);
     setIsDeletedModalOpen(true);
   };
 
   return (
-    <div className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}>
+    <div
+      className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
+    >
       <Header />
       <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
       <div className="dashboard-content">
-        <div className="container">
-          {renderDataTable()}
-        </div>
+        <div className="container">{renderDataTable()}</div>
       </div>
       <Footer />
 
@@ -295,7 +336,18 @@ const Usuario = () => {
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.identityCard && <span className="error-message">{errors.identityCard}</span>}
+              <button
+                type="button"
+                className="submit-button indigo"
+                onClick={() => {
+                  /* Acción del botón */
+                }}
+              >
+                Buscar
+              </button>
+              {errors.identityCard && (
+                <span className="error-message">{errors.identityCard}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombre de Usuario:</label>
@@ -306,7 +358,9 @@ const Usuario = () => {
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+              {errors.firstName && (
+                <span className="error-message">{errors.firstName}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Contraseña:</label>
@@ -317,18 +371,21 @@ const Usuario = () => {
                   value={newRecord.lastName}
                   onChange={handleInputChange}
                   className="form-control"
-
                 />
                 <button
                   type="button"
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                   className="password-toggle-button"
-                  title={isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"}
+                  title={
+                    isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"
+                  }
                 >
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+              {errors.lastName && (
+                <span className="error-message">{errors.lastName}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Estado:</label>
@@ -341,7 +398,9 @@ const Usuario = () => {
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
-              {errors.status && <span className="error-message">{errors.status}</span>}
+              {errors.status && (
+                <span className="error-message">{errors.status}</span>
+              )}
             </div>
           </div>
           <button type="submit">Guardar</button>
@@ -353,9 +412,15 @@ const Usuario = () => {
         <h2>Detalles de Usuario</h2>
         {viewRecord && (
           <div className="view-record-details">
-            <p><strong>Cédula de Identidad:</strong> {viewRecord.identityCard}</p>
-            <p><strong>Usuario:</strong> {viewRecord.firstName}</p>
-            <p><strong>Estatus:</strong> {viewRecord.status}</p>
+            <p>
+              <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
+            </p>
+            <p>
+              <strong>Usuario:</strong> {viewRecord.firstName}
+            </p>
+            <p>
+              <strong>Estatus:</strong> {viewRecord.status}
+            </p>
           </div>
         )}
       </Modal>
@@ -374,7 +439,9 @@ const Usuario = () => {
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.identityCard && <span className="error-message">{errors.identityCard}</span>}
+              {errors.identityCard && (
+                <span className="error-message">{errors.identityCard}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombre de Usuario:</label>
@@ -385,7 +452,9 @@ const Usuario = () => {
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+              {errors.firstName && (
+                <span className="error-message">{errors.firstName}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Contraseña:</label>
@@ -396,18 +465,21 @@ const Usuario = () => {
                   value={newRecord.lastName}
                   onChange={handleInputChange}
                   className="form-control"
-
                 />
                 <button
                   type="button"
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                   className="password-toggle-button"
-                  title={isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"}
+                  title={
+                    isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"
+                  }
                 >
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+              {errors.lastName && (
+                <span className="error-message">{errors.lastName}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Estado:</label>
@@ -420,7 +492,9 @@ const Usuario = () => {
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
-              {errors.status && <span className="error-message">{errors.status}</span>}
+              {errors.status && (
+                <span className="error-message">{errors.status}</span>
+              )}
             </div>
           </div>
           <button type="submit">Actualizar</button>
@@ -428,11 +502,19 @@ const Usuario = () => {
       </Modal>
 
       {/* Modal para confirmar eliminación */}
-      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <p><strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}</p>
-        <p><strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}</p>
+        <p>
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
+        </p>
+        <p>
+          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
+          {recordToDelete?.lastName}
+        </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
           <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
@@ -440,7 +522,10 @@ const Usuario = () => {
       </Modal>
 
       {/* Modal para mostrar que el registro ha sido eliminado */}
-      <Modal isOpen={isDeletedModalOpen} onClose={() => setIsDeletedModalOpen(false)}>
+      <Modal
+        isOpen={isDeletedModalOpen}
+        onClose={() => setIsDeletedModalOpen(false)}
+      >
         <h2>Registro Eliminado</h2>
         <div className="deleted-message">
           <FaCheckCircle className="deleted-icon" />
