@@ -520,22 +520,25 @@ const Persona = () => {
               <strong>Cédula de Identidad:</strong> {viewRecord.cedula}
             </p>
             <p>
-              <strong>Nombre:</strong> {viewRecord.nombre}
+              <strong>Nombres:</strong> {viewRecord.nombre}
             </p>
             <p>
-              <strong>Apellido:</strong> {viewRecord.apellido}
+              <strong>Apellidos:</strong> {viewRecord.apellido}
             </p>
             <p>
-              <strong>Sexo:</strong> {viewRecord.sexo}
+              <strong>Estado:</strong> {viewRecord.sexo}
             </p>
             <p>
-              <strong>Fecha de Nacimiento:</strong> {viewRecord.f_nacimiento}
+              <strong>Municipio:</strong> {viewRecord.sexo}
             </p>
             <p>
-              <strong>Teléfono:</strong> {viewRecord.telefono}
+              <strong>Parroquia:</strong> {viewRecord.sexo}
             </p>
             <p>
-              <strong>Correo Electrónico:</strong> {viewRecord.correo}
+              <strong>Telefono 1:</strong> {viewRecord.sexo}
+            </p>
+            <p>
+              <strong>Telefono 2:</strong> {viewRecord.sexo}
             </p>
             <p>
               <strong>Tipo de Persona:</strong> {viewRecord.tipo}
@@ -548,7 +551,7 @@ const Persona = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h2>Actualizar Datos Personales</h2>
         <form onSubmit={handleUpdate} className="modal-form">
-          <div className="form-row">
+        <div className="form-row">
             <div className="form-group input-col-12">
               <label className="form-label">Cédula de Identidad:</label>
               <input
@@ -588,8 +591,73 @@ const Persona = () => {
                 <span className="error-message">{errors.apellido}</span>
               )}
             </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Estado:</label>
+              <input
+                type="text"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Municipio:</label>
+              <input
+                type="text"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Parroquia:</label>
+              <input
+                type="text"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Teléfono:</label>
+              <label className="form-label">Direccion:</label>
+              <input
+                type="text"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono 1:</label>
+              <input
+                type="text"
+                name="telefono"
+                value={newRecord.telefono}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono 2:</label>
               <input
                 type="text"
                 name="telefono"
