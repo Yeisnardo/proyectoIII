@@ -327,69 +327,87 @@ const UbicacionActivEmprende = () => {
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Actividad Economica:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Agriculta, ganaderia y Pesca">Agriculta, ganaderia y Pesca</option>
+                <option value="Servicio de Alimentos y Bebidas, Restaurantes y Puestos de Comida">Servicio de Alimentos y Bebidas, Restaurantes y Puestos de Comida</option>
+                <option value="Manufactura">Manufactura</option>
+                <option value="Transporte de Almacenamiento">Transporte de Almacenamiento</option>
+                <option value="Entretenimiento, Recreacion y Arte">Entretenimiento, Recreacion y Arte</option>
+              </select>
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Division Actividad Economica</label>
-              <input
-                type="text"
-                name="attendanceDate"
-                value={newRecord.attendanceDate}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Restaurantes">Restaurantes</option>
+                <option value="Servicio de Comida En Unidades curriculares">Servicio de Comida En Unidades curriculares</option>
+              </select>
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Grupo Economico</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Servicio Movil de Comidas">Servicio Movil de Comidas</option>
+              </select>
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Clase de Actividad Economica:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Food Trucks">Food Trucks</option>
+                <option value="Carros o Puestos de Comida Ambulante">Carros o Puestos de Comida Ambulante</option>
+                <option value="Otro Tipo de Comidad">Otro Tipo de Comidad</option>
+              </select>
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Forma de vender Productos:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Al Mayor">Al Mayor</option>
+                <option value="Al detal">Al detal</option>
+                <option value="Ambos">Ambos</option>
+              </select>
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Procedencia de los materiales/insumos:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Nacionales">Nacionales</option>
+                <option value="Importados">Importados</option>
+                <option value="Ambos">Ambos</option>
+                <option value="No Aplica">No Aplica</option>
+              </select>
             </div>
           </div>
           <button type="submit">Registrar</button>

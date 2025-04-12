@@ -385,21 +385,27 @@ const Persona = () => {
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Posee una cuanta Bancaria?:</label>
-              <input
-                type="text"
-                name="nombre"
-                value={newRecord.nombre}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Si">Si</option>
+                <option value="No">
+                  No
+                </option>
+              </select>
               {errors.nombre && (
                 <span className="error-message">{errors.nombre}</span>
               )}
             </div>
-            <div className="form-group input-col-12">
+            <div className="form-group input-col-2">
               <label className="form-label">Seleccionar el Banco:</label>
+              <label htmlFor="">Banco de Venezuela</label>
               <input
-                type="text"
+                type="checkbox"
                 name="apellido"
                 value={newRecord.apellido}
                 onChange={handleInputChange}
@@ -409,10 +415,90 @@ const Persona = () => {
                 <span className="error-message">{errors.apellido}</span>
               )}
             </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Metodos de Pagos:</label>
+            <div className="form-group input-col-3"><br /><br />
+              <label htmlFor="">Banco Nacional de Credito</label>
               <input
-                type="text"
+                type="checkbox"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-2"><br /><br />
+              <label htmlFor="">Banco Bicentenario</label>
+              <input
+                type="checkbox"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-2"><br /><br />
+              <label htmlFor="">Banco del Tesoro</label>
+              <input
+                type="checkbox"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-2"><br /><br />
+              <label htmlFor="">Banco Fondo Comun</label>
+              <input
+                type="checkbox"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <br /><br />
+            <div className="form-group input-col-2">
+              <label className="form-label">Metodos de Pagos:</label>
+              <label htmlFor="">Pago Movil</label>
+              <input
+                type="checkbox"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-3"><br /><br />
+              <label htmlFor="">Punto de Venta</label>
+              <input
+                type="checkbox"
+                name="apellido"
+                value={newRecord.apellido}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-2"><br /><br />
+              <label htmlFor="">Efectivo</label>
+              <input
+                type="checkbox"
                 name="apellido"
                 value={newRecord.apellido}
                 onChange={handleInputChange}
@@ -424,13 +510,18 @@ const Persona = () => {
             </div>
             <div className="form-group input-col-7">
               <label className="form-label">Tu emprendimiento cuenta con un credito?:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Si">Si</option>
+                <option value="No">
+                  No
+                </option>
+              </select>
               {errors.apellido && (
                 <span className="error-message">{errors.apellido}</span>
               )}
@@ -450,58 +541,6 @@ const Persona = () => {
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Vendes de contado o a Credito:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={newRecord.apellido}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellido && (
-                <span className="error-message">{errors.apellido}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Declaras IVA?:</label>
-              <input
-                type="text"
-                name="telefono"
-                value={newRecord.telefono}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono && (
-                <span className="error-message">{errors.telefono}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Declaras ISLR?:</label>
-              <input
-                type="text"
-                name="telefono"
-                value={newRecord.telefono}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono && (
-                <span className="error-message">{errors.telefono}</span>
-              )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Le compras a tus proveedores de contado o credito?:</label>
-              <input
-                type="text"
-                name="telefono"
-                value={newRecord.telefono}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono && (
-                <span className="error-message">{errors.telefono}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Meses con mas ventas?:</label>
               <select
                 name="tipo"
                 value={newRecord.tipo}
@@ -509,20 +548,85 @@ const Persona = () => {
                 className="form-control"
               >
                 <option value="">Seleccionar...</option>
-                <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">
-                  Coord. Creditos y Cobranzas
-                </option>
-                <option value="Asist. Creditos y Cobranzas">
-                  Asist. Creditos y Cobranzas
-                </option>
-                <option value="Coord. Formalizacion de Emprendimiento">
-                  Coord. Formalizacion de Emprendimiento
-                </option>
-                <option value="Coord. Nuevo Emprendimento">
-                  Coord. Nuevo Emprendimento
-                </option>
-                <option value="Emprendedor">Emprendedor</option>
+                <option value="contado">contado</option>
+                <option value="Credito">Credito</option>
+                <option value="Ambos">Ambos</option>
+              </select>
+              {errors.apellido && (
+                <span className="error-message">{errors.apellido}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Declaras IVA?:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+              </select>
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Declaras ISLR?:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+              </select>
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Le compras a tus proveedores de contado o credito?:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Contado">Contado</option>
+                <option value="Credito">Credito</option>
+                <option value="Ambos">Ambos</option>
+              </select>
+              {errors.telefono && (
+                <span className="error-message">{errors.telefono}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Mes con mas ventas?:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Enero">Enero</option>
+                <option value="Febrero">Febrero</option>
+                <option value="Marzo">Marzo</option>
+                <option value="Abril">Abril</option>
+                <option value="Mayo">Mayo</option>
+                <option value="junio">junio</option>
+                <option value="Julio">Julio</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Septiembre">Septiembre</option>
+                <option value="Octubre">Octubre</option>
+                <option value="Noviembre">Noviembre</option>
+                <option value="Diciembre">Diciembre</option>
+
               </select>
               {errors.tipo && (
                 <span className="error-message">{errors.tipo}</span>
@@ -537,20 +641,8 @@ const Persona = () => {
                 className="form-control"
               >
                 <option value="">Seleccionar...</option>
-                <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">
-                  Coord. Creditos y Cobranzas
-                </option>
-                <option value="Asist. Creditos y Cobranzas">
-                  Asist. Creditos y Cobranzas
-                </option>
-                <option value="Coord. Formalizacion de Emprendimiento">
-                  Coord. Formalizacion de Emprendimiento
-                </option>
-                <option value="Coord. Nuevo Emprendimento">
-                  Coord. Nuevo Emprendimento
-                </option>
-                <option value="Emprendedor">Emprendedor</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
               </select>
               {errors.tipo && (
                 <span className="error-message">{errors.tipo}</span>

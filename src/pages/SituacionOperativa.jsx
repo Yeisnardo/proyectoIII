@@ -370,14 +370,17 @@ const UbicacionActivEmprende = () => {
             </div>
             <div className="form-group input-col-7">
               <label className="form-label">Se encuantra operativo el emprendimiento:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+
+              </select>
             </div>
             <div className="form-group input-col-5">
               <label className="form-label">N° de Trajadores</label>
@@ -392,25 +395,31 @@ const UbicacionActivEmprende = () => {
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Tiempo de operatividad del emprendimiento</label><br />
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Menos de 1 Año">Menos de 1 Año</option>
+                <option value="Entre 1 y 2 años">Entre 1 y 2 años</option>
+                <option value="Entre 2 y 5 años">Entre 2 y 5 años</option>
+                <option value="Mas de 5 años">Mas de 5 años</option>
+              </select>
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">El emprendimiento tiene componentes de diseño,forma de produccion o presentacion final:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+              </select>
             </div>
           </div>
           <button type="submit">Registrar</button>

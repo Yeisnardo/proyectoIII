@@ -370,58 +370,68 @@ const UbicacionActivEmprende = () => {
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Donde Realizas tu actividad Emprendedora:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="En el Hogar">En el Hogar</option>
+                <option value="Fuera del Hora">Fuera del Hora</option>
+              </select>
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">El espacio es?:</label><br />
-              <input
-                type="text"
-                name="attendanceDate"
-                value={newRecord.attendanceDate}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Alquilado">Alquilado</option>
+                <option value="Comodato">Comodato</option>
+                <option value="Propio">Propio</option>
+                <option value="Cedido">Cedido</option>
+              </select>
             </div>
             <div className="form-group input-col-4">
               <label className="form-label">Estado:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Yaracuy">Yaracuy</option>
+              </select>
             </div>
             <div className="form-group input-col-4">
               <label className="form-label">Municipio:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Independencia">Independencia</option>
+              </select>
             </div>
             <div className="form-group input-col-4">
               <label className="form-label">Parroquia:</label>
-              <input
-                type="text"
-                name="fairName"
-                value={newRecord.fairName}
+              <select
+                name="tipo"
+                value={newRecord.tipo}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Parroquia 1">Parroquia 1</option>
+                <option value="Parroquia 2">Parroquia 2</option>
+              </select>
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Ubicacion:</label>
