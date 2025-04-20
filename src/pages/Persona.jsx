@@ -191,7 +191,7 @@ const Persona = () => {
             className="add-button"
             title="Agregar Nuevo Registro"
           >
-            <FaPlus />  Nuevo
+            <FaPlus /> Nuevo
           </button>
         </div>
 
