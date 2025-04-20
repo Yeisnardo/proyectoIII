@@ -8,11 +8,16 @@ import {
   FaChevronRight,
   FaCheckCircle,
 } from "react-icons/fa";
-import axios from "axios";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import Modal from "../components/Modal";
+import {
+  fetchRecords,
+  createRecord,
+  updateRecord,
+  deleteRecord,
+} from "../services/personaService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
 const Persona = () => {
@@ -26,7 +31,11 @@ const Persona = () => {
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
   const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
   const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
-
+  const [viewRecord, setViewRecord] = useState(null);
+  const [recordToDelete, setRecordToDelete] = useState(null);
+  const [limit, setLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
     cedula: "",
     nombres: "",
@@ -40,26 +49,18 @@ const Persona = () => {
     tipo: "",
   });
 
-  const [viewRecord, setViewRecord] = useState(null);
-  const [recordToDelete, setRecordToDelete] = useState(null);
-  const [limit, setLimit] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [errors, setErrors] = useState({});
-
-  
   useEffect(() => {
-    const fetchRecords = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/personas");
-        setRecords(response.data);
+        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        setRecords(data);
       } catch (error) {
         console.error("Error al obtener los registros:", error);
       }
     };
 
-    fetchRecords();
+    fetchData();
   }, []);
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +69,6 @@ const Persona = () => {
       [name]: value,
     }));
   };
-
 
   const validateForm = () => {
     const errors = {};
@@ -85,7 +85,6 @@ const Persona = () => {
     return errors;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
@@ -100,11 +99,8 @@ const Persona = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/personas",
-        newRecord
-      );
-      setRecords([...records, response.data]);
+      const response = await createRecord(newRecord); // Usar el servicio para crear un registro
+      setRecords([...records, response]);
       resetForm();
       setIsModalOpen(false);
       setIsCreatedModalOpen(true);
@@ -113,7 +109,6 @@ const Persona = () => {
       alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
     }
   };
-
 
   const handleUpdate = async (event) => {
     event.preventDefault();
@@ -124,12 +119,9 @@ const Persona = () => {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/personas/${newRecord.cedula}`,
-        newRecord
-      );
+      const response = await updateRecord(newRecord.cedula, newRecord); // Usar el servicio para actualizar
       const updatedRecords = records.map((record) =>
-        record.cedula === response.data.cedula ? response.data : record
+        record.cedula === response.cedula ? response : record
       );
       setRecords(updatedRecords);
       resetForm();
@@ -140,7 +132,6 @@ const Persona = () => {
       alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
     }
   };
-
 
   const resetForm = () => {
     setNewRecord({
@@ -158,11 +149,9 @@ const Persona = () => {
     setErrors({});
   };
 
-
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   };
-
 
   const renderDataTable = () => {
     const filteredRecords = records.filter((record) => {
@@ -202,8 +191,7 @@ const Persona = () => {
             className="add-button"
             title="Agregar Nuevo Registro"
           >
-            <FaPlus />
-            &nbsp; Nuevo
+            <FaPlus />  Nuevo
           </button>
         </div>
 
@@ -286,7 +274,7 @@ const Persona = () => {
           <span>
             Página {currentPage} de {totalPages}
           </span>
-          < button
+          <button
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
@@ -326,9 +314,7 @@ const Persona = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/personas/${recordToDelete.cedula}`
-      );
+      await deleteRecord(recordToDelete.cedula); // Usar el servicio para eliminar
       setRecords(
         records.filter((record) => record.cedula !== recordToDelete.cedula)
       );
@@ -364,195 +350,6 @@ const Persona = () => {
                 value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
-              />
-              {errors.cedula && (
-                <span className="error-message">{errors.cedula}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombres:</label>
-              <input
-                type="text"
-                name="nombres"
-                value={newRecord.nombres}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.nombres && (
-                <span className="error-message">{errors.nombres}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Apellidos:</label>
-              <input
-                type="text"
-                name="apellidos"
-                value={newRecord.apellidos}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellidos && (
-                <span className="error-message">{errors.apellidos}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Estado:</label>
-              <input
-                type="text"
-                name="estado"
-                value={newRecord.estado}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.estado && (
-                <span className="error-message">{errors.estado}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Municipio:</label>
-              <input
-                type="text"
-                name="municipio"
-                value={newRecord.municipio}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.municipio && (
-                <span className="error-message">{errors.municipio}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Parroquia:</label>
-              <input
-                type="text"
-                name="parro quia"
-                value={newRecord.parroquia}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.parroquia && (
-                <span className="error-message">{errors.parroquia}</span>
-              )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Dirección:</label>
-              <input
-                type="text"
-                name="direccion"
-                value={newRecord.direccion}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.direccion && (
-                <span className="error-message">{errors.direccion}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 1:</label>
-              <input
-                type="text"
-                name="telefono1"
-                value={newRecord.telefono1}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono1 && (
-                <span className="error-message">{errors.telefono1}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 2:</label>
-              <input
-                type="text"
-                name="telefono2"
-                value={newRecord.telefono2}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono2 && (
-                <span className="error-message">{errors.telefono2}</span>
-              )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Tipo de Persona:</label>
-              <select
-                name="tipo"
-                value={newRecord.tipo}
-                onChange={handleInputChange}
-                className="form-control"
-              >
-                <option value="">Seleccionar...</option>
-                <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">
-                  Coord. Creditos y Cobranzas
-                </option>
-                <option value="Asist. Creditos y Cobranzas">
-                  Asist. Creditos y Cobranzas
-                </option>
-                <option value="Coord. Formalizacion de Emprendimiento">
-                  Coord. Formalizacion de Emprendimiento
-                </option>
-                <option value="Coord. Nuevo Emprendimento">
-                  Coord. Nuevo Emprendimento
-                </option>
-                <option value="Emprendedor">Emprendedor</option>
-              </select>
-              {errors.tipo && (
-                <span className="error-message">{errors.tipo}</span>
-              )}
-            </div>
-          </div>
-          <button type="submit">Guardar</button>
-        </form>
-      </Modal>
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Persona</h2>
-        {viewRecord && (
-          <div className="view-record-details">
-            <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.cedula}
-            </p>
-            <p>
-              <strong>Nombres:</strong> {viewRecord.nombres}
-            </p>
-            <p>
-              <strong>Apellidos:</strong> {viewRecord.apellidos}
-            </p>
-            <p>
-              <strong>Estado:</strong> {viewRecord.estado}
-            </p>
-            <p>
-              <strong>Municipio:</strong> {viewRecord.municipio}
-            </p>
-            <p>
-              <strong>Parroquia:</strong> {viewRecord.parroquia}
-            </p>
-            <p>
-              <strong>Teléfono 1:</strong> {viewRecord.telefono1}
-            </p>
-            <p>
-              <strong>Teléfono 2:</strong> {viewRecord.telefono2}
-            </p>
-            <p>
-              <strong>Tipo de Persona:</strong> {viewRecord.tipo}
-            </p>
-          </div>
-        )}
-      </Modal>
-
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos Personales</h2>
-        <form onSubmit={handleUpdate} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-12">
-              <label className="form-label">Cédula de Identidad:</label>
-              <input
-                type="text"
-                name="cedula"
-                value={newRecord.cedula}
-                onChange={handleInputChange}
-                className="form-control"
-                read only // Campo de solo lectura
               />
               {errors.cedula && (
                 <span className="error-message">{errors.cedula}</span>
@@ -672,10 +469,209 @@ const Persona = () => {
               >
                 <option value="">Seleccionar...</option>
                 <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">Coord. Creditos y Cobranzas</option>
-                <option value="Asist. Creditos y Cobranzas">Asist. Creditos y Cobranzas</option>
-                <option value="Coord. Formalizacion de Emprendimiento">Coord. Formalizacion de Emprendimiento</option>
-                <option value="Coord. Nuevo Emprendimento">Coord. Nuevo Emprendimento</option>
+                <option value="Coord. Creditos y Cobranzas">
+                  Coord. Creditos y Cobranzas
+                </option>
+                <option value="Asist. Creditos y Cobranzas">
+                  Asist. Creditos y Cobranzas
+                </option>
+                <option value="Coord. Formalizacion de Emprendimiento">
+                  Coord. Formalizacion de Emprendimiento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Nuevo Emprendimento
+                </option>
+                <option value="Emprendedor">Emprendedor</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
+            </div>
+          </div>
+          <button type="submit">Guardar</button>
+        </form>
+      </Modal>
+
+      
+      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
+        <h2>Detalles de Persona</h2>
+        {viewRecord && (
+          <div className="view-record-details">
+            <p>
+              <strong>Cédula de Identidad:</strong> {viewRecord.cedula}
+            </p>
+            <p>
+              <strong>Nombress:</strong> {viewRecord.nombres}
+            </p>
+            <p>
+              <strong>Apellidos:</strong> {viewRecord.apellidos}
+            </p>
+            <p>
+              <strong>Estado:</strong> {viewRecord.estado}
+            </p>
+            <p>
+              <strong>Municipio:</strong> {viewRecord.municipio}
+            </p>
+            <p>
+              <strong>Parroquia:</strong> {viewRecord.parroquia}
+            </p>
+            <p>
+              <strong>Teléfono 1:</strong> {viewRecord.telefono1}
+            </p>
+            <p>
+              <strong>Teléfono 2:</strong> {viewRecord.telefono2}
+            </p>
+            <p>
+              <strong>Tipo de Persona:</strong> {viewRecord.tipo}
+            </p>
+          </div>
+        )}
+      </Modal>
+
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <h2>Actualizar Datos Personales</h2>
+        <form onSubmit={handleUpdate} className="modal-form">
+          <div className="form-row">
+            <div className="form-group input-col-12">
+              <label className="form-label">Cédula de Identidad:</label>
+              <input
+                type="text"
+                name="cedula"
+                value={newRecord.cedula}
+                onChange={handleInputChange}
+                className="form-control"
+                readOnly // Campo de solo lectura
+              />
+              {errors.cedula && (
+                <span className="error-message">{errors.cedula}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Nombres:</label>
+              <input
+                type="text"
+                name="nombres"
+                value={newRecord.nombres}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.nombres && (
+                <span className="error-message">{errors.nombres}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Apellidos:</label>
+              <input
+                type="text"
+                name="apellidos"
+                value={newRecord.apellidos}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellidos && (
+                <span className="error-message">{errors.apellidos}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Estado:</label>
+              <input
+                type="text"
+                name="estado"
+                value={newRecord.estado}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.estado && (
+                <span className="error-message">{errors.estado}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Municipio:</label>
+              <input
+                type="text"
+                name="municipio"
+                value={newRecord.municipio}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.municipio && (
+                <span className="error-message">{errors.municipio}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Parroquia:</label>
+              <input
+                type="text"
+                name="parroquia"
+                value={newRecord.parroquia}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.parroquia && (
+                <span className="error-message">{errors.parroquia}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Dirección:</label>
+              <input
+                type="text"
+                name="direccion"
+                value={newRecord.direccion}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.direccion && (
+                <span className="error-message">{errors.direccion}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono 1:</label>
+              <input
+                type="text"
+                name="telefono1"
+                value={newRecord.telefono1}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.telefono1 && (
+                <span className="error-message">{errors.telefono1}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono 2:</label>
+              <input
+                type="text"
+                name="telefono2"
+                value={newRecord.telefono2}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.telefono2 && (
+                <span className="error-message">{errors.telefono2}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Tipo de Persona:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Presidente">Presidente</option>
+                <option value="Coord. Creditos y Cobranzas">
+                  Coord. Creditos y Cobranzas
+                </option>
+                <option value="Asist. Creditos y Cobranzas">
+                  Asist. Creditos y Cobranzas
+                </option>
+                <option value="Coord. Formalizacion de Emprendimiento">
+                  Coord. Formalizacion de Emprendimiento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Nuevo Emprendimento
+                </option>
                 <option value="Emprendedor">Emprendedor</option>
               </select>
               {errors.tipo && (
@@ -697,7 +693,8 @@ const Persona = () => {
           <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.nombres} {recordToDelete?.apellidos}
+          <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
+          {recordToDelete?.apellidos}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>

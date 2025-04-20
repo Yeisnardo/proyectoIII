@@ -1,12 +1,12 @@
 /* INICIO LOGIN */
 :root {
-  --primary-color: #003366; /* Azul oscuro */
+  --primary-color: #105192; /* Azul oscuro */
   --primary-hover-color: #002244; /* Azul más oscuro */
   --form-background: #ffffff; /* Fondo blanco */
-  --border-color: #ccc; /* Color de borde gris claro */
+  --border-color: #000000; /* Color de borde gris claro */
   --error-color: #e74c3c; /* Color rojo para errores */
   --text-color: #333; /* Color de texto */
-  --label-color: #555; /* Color de texto de las etiquetas */
+  --label-color: #080707; /* Color de texto de las etiquetas */
 }
 
 html,
@@ -56,7 +56,7 @@ h2 {
   flex-direction: column;
   background-color: var(--form-background);
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(204, 203, 203, 0.1);
   padding: 40px;
   max-width: 400px;
   width: 100%;
@@ -73,6 +73,7 @@ label {
   margin-bottom: 5px;
   text-align: left;
   font-size: 16px;
+
 }
 
 .input-wrapper {
@@ -84,7 +85,7 @@ label {
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #aaa;
+  color: #000000;
 }
 
 input {
@@ -93,6 +94,8 @@ input {
   border-radius: 5px;
   width: 100%;
   font-size: 16px;
+  background-color: rgb(255, 255, 255);
+  color: black;
 }
 
 input:focus {
@@ -825,6 +828,8 @@ input:focus {
   box-sizing: border-box; /* Incluye padding y border en el ancho total */
   height: 40px; /* Altura del input */
   font-size: 15px; /* Tamaño de la fuente */
+  background-color: white;
+  color: black;
 }
 
 .submit-button {
@@ -1157,6 +1162,8 @@ input:focus {
   border: none;
   cursor: pointer;
   margin-left: 8px; /* Espacio entre el input y el botón */
+  color: black;
+  font-size: 19px;
 }
 
 /* Modales */
@@ -1404,6 +1411,7 @@ button[type="submit"]:hover {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  color: black;
 }
 
 .modal-actions {
@@ -1490,4 +1498,55 @@ button[type="submit"]:hover {
 .error-message {
   color: red; /* Color para los mensajes de error */
   font-size: 0.9em; /* Tamaño de fuente más pequeño para los errores */
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.record-item strong {
+  color: #333;
+}
+
+.record-item span {
+  color: #555;
+}
+
+.view-record-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.record-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-item strong {
+  display: block;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+}
+
+.radio-group label {
+  margin-right: 15px;
+  font-size: 16px;
+  color: #444;
+}
+
+input[type="radio"] {
+  margin-right: 5px;
+  cursor: pointer;
 }

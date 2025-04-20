@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a8b21794.css",
+    "main.js": "/static/js/main.e7b688c2.js",
+    "static/js/453.37f5700e.chunk.js": "/static/js/453.37f5700e.chunk.js",
+    "static/media/ifemi.jpg": "/static/media/ifemi.4ff630224a7c61c92a5b.jpg",
+    "static/media/logo.jpg": "/static/media/logo.436b2962773dd923c174.jpg",
+    "index.html": "/index.html",
+    "main.a8b21794.css.map": "/static/css/main.a8b21794.css.map",
+    "main.e7b688c2.js.map": "/static/js/main.e7b688c2.js.map",
+    "453.37f5700e.chunk.js.map": "/static/js/453.37f5700e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a8b21794.css",
+    "static/js/main.e7b688c2.js"
+  ]
+}

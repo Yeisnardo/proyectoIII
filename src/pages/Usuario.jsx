@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEye,
   FaEyeSlash,
@@ -9,6 +9,12 @@ import {
   FaChevronRight,
   FaCheckCircle,
 } from "react-icons/fa";
+import {
+  getAllUsuarios,
+  createUsuario,
+  updateUsuario,
+  deleteUsuario,
+} from "../services/usuarioService"; // Importar funciones del servicio
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
@@ -18,124 +24,110 @@ import "../assets/styles/App.css";
 const Usuario = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([
-    {
-      identityCard: "12345678",
-      firstName: "Juan",
-      lastName: "Pérez",
-      email: "juan.perez@example.com",
-      birthDate: "1990-01-01",
-      phone: "123456789",
-      status: "activo",
-    },
-    {
-      identityCard: "87654321",
-      firstName: "María",
-      lastName: "Gómez",
-      email: "maria.gomez@example.com",
-      birthDate: "1985-05-15",
-      phone: "987654321",
-      status: "inactivo",
-    },
-    {
-      identityCard: "11223344",
-      firstName: "Carlos",
-      lastName: "López",
-      email: "carlos.lopez@example.com",
-      birthDate: "1992-03-20",
-      phone: "456789123",
-      status: "activo",
-    },
-    {
-      identityCard: "44332211",
-      firstName: "Ana",
-      lastName: "Martínez",
-      email: "ana.martinez@example.com",
-      birthDate: "1995-07-30",
-      phone: "321654987",
-      status: "activo",
-    },
-    {
-      identityCard: "55667788",
-      firstName: "Luis",
-      lastName: "Fernández",
-      email: "luis.fernandez@example.com",
-      birthDate: "1988-11-11",
-      phone: "654321789",
-      status: "inactivo",
-    },
-  ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
-  const [limit, setLimit] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [records, setRecords] = useState([]);
+  const [modals, setModals] = useState({
+    isModalOpen: false,
+    isViewModalOpen: false,
+    isEditModalOpen: false,
+    isDeleteModalOpen: false,
+    isDeletedModalOpen: false,
+    isCreatedModalOpen: false,
+    isUpdatedModalOpen: false,
+  });
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
+  const [limit, setLimit] = useState(5);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [errors, setErrors] = useState({});
+  const [newRecord, setNewRecord] = useState({
+    cedula_usuario: "",
+    usuario: "",
+    contrasena: "",
+    estatus: "",
+  });
 
-  const initialRecordState = {
-    identityCard: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    birthDate: "",
-    phone: "",
-    status: "activo",
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllUsuarios(); // Usar el servicio para obtener registros
+        setRecords(data);
+      } catch (error) {
+        console.error("Error al obtener los registros:", error);
+      }
+    };
 
-  const [newRecord, setNewRecord] = useState(initialRecordState);
+    fetchData();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRecord({ ...newRecord, [name]: value });
+    setNewRecord((prevRecord) => ({ ...prevRecord, [name]: value }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!newRecord.identityCard)
-      newErrors.identityCard = "La cédula es OBLIGATORIA.";
-    if (!newRecord.firstName)
-      newErrors.firstName = "El usuario es OBLIGATORIO.";
-    if (!newRecord.lastName)
-      newErrors.lastName = "La contraseña es OBLIGATORIA.";
-    if (!newRecord.status) newErrors.status = "El estado es OBLIGATORIO.";
+    if (!newRecord.cedula_usuario)
+      newErrors.cedula_usuario = "La cédula es OBLIGATORIA.";
+    if (!newRecord.usuario) newErrors.usuario = "El usuario es OBLIGATORIO.";
+    if (!newRecord.contrasena)
+      newErrors.contrasena = "La contraseña es OBLIGATORIA.";
+    if (!newRecord.estatus) newErrors.estatus = "El estado es OBLIGATORIO.";
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setRecords([...records, newRecord]);
-    resetForm();
-    setIsModalOpen(false);
+
+    try {
+      const response = await createUsuario(newRecord);
+      setRecords((prevRecords) => [...prevRecords, response]); // Actualizar el estado de los registros
+      resetForm();
+      setModals({ ...modals, isModalOpen: false, isCreatedModalOpen: true });
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      alert("Hubo un problema al registrar el usuario. Inténtalo de nuevo.");
+    }
   };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+  const handleUpdate = async (event) => {
+    event.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setRecords(
-      records.map((record) =>
-        record.identityCard === newRecord.identityCard ? newRecord : record
-      )
-    );
-    resetForm();
-    setIsEditModalOpen(false);
+
+    try {
+      const response = await updateUsuario(newRecord.cedula_usuario, newRecord);
+      const updatedRecords = records.map((record) =>
+        record.cedula_usuario === response.cedula_usuario ? response : record
+      );
+      setRecords(updatedRecords);
+      resetForm();
+      setModals({
+        ...modals,
+        isEditModalOpen: false,
+        isUpdatedModalOpen: true,
+      });
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      alert("Hubo un problema al actualizar el usuario. Inténtalo de nuevo.");
+    }
   };
 
   const resetForm = () => {
-    setNewRecord(initialRecordState);
+    setNewRecord({
+      cedula_usuario: "",
+      usuario: "",
+      contrasena: "",
+      estatus: "",
+    });
     setErrors({});
   };
 
@@ -144,13 +136,11 @@ const Usuario = () => {
   };
 
   const renderDataTable = () => {
-    const filteredRecords = records.filter((record) => {
-      return (
-        record.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.identityCard.includes(searchTerm)
-      );
-    });
+    const filteredRecords = records.filter(
+      (record) =>
+        record.usuario.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        record.cedula_usuario.includes(searchTerm)
+    );
 
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
@@ -161,7 +151,7 @@ const Usuario = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Usuario</h2>
+        <h2>Catálogo de Usuarios</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar usuario
@@ -175,7 +165,7 @@ const Usuario = () => {
             className="search-input"
           />
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setModals({ ...modals, isModalOpen: true })}
             className="add-button"
             title="Agregar Nuevo Registro"
           >
@@ -194,10 +184,11 @@ const Usuario = () => {
             }}
             className="limit-select"
           >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
+            {[5, 10, 20, 50].map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -214,25 +205,25 @@ const Usuario = () => {
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.identityCard}>
-                    <td>{record.identityCard}</td>
-                    <td>{`${record.firstName}`}</td>
-                    <td>{record.status}</td>
+                  <tr key={record.cedula_usuario}>
+                    <td>{record.cedula_usuario}</td>
+                    <td>{record.usuario}</td>
+                    <td>{record.estatus}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.identityCard)}
+                        onClick={() => handleView(record.cedula_usuario)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.identityCard)}
+                        onClick={() => handleEdit(record.cedula_usuario)}
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(record.identityCard)}
+                        onClick={() => handleDelete(record.cedula_usuario)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -277,40 +268,42 @@ const Usuario = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.identityCard === id);
+    const recordToView = records.find((record) => record.cedula_usuario === id);
     if (recordToView) {
       setViewRecord(recordToView);
-      setIsViewModalOpen(true);
+      setModals({ ...modals, isViewModalOpen: true });
     }
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.identityCard === id);
+    const recordToEdit = records.find((record) => record.cedula_usuario === id);
     if (recordToEdit) {
-      setNewRecord(recordToEdit);
-      setIsEditModalOpen(true);
+      setNewRecord({ ...recordToEdit }); // Clonar el objeto para evitar mutaciones
+      setModals({ ...modals, isEditModalOpen: true });
     }
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.identityCard === id);
+    const recordToDelete = records.find(
+      (record) => record.cedula_usuario === id
+    );
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
-      setIsDeleteModalOpen(true);
+      setModals({ ...modals, isDeleteModalOpen: true });
     }
   };
 
-  const confirmDelete = () => {
-    setRecords(
-      records.filter(
-        (record) => record.identityCard !== recordToDelete.identityCard
-      )
-    );
-    setRecordToDelete(null);
-    setIsDeleteModalOpen(false);
-    setIsDeletedModalOpen(true);
-  };
-
+  const confirmDelete = async () => {
+    try {
+        await deleteUsuario(recordToDelete.cedula_usuario);
+        setRecords(records.filter((record) => record.cedula_usuario !== recordToDelete.cedula_usuario));
+        setRecordToDelete(null);
+        setModals({ ...modals, isDeleteModalOpen: false, isDeletedModalOpen: true });
+    } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        alert("Hubo un problema al eliminar el usuario. Inténtalo de nuevo.");
+    }
+};
   return (
     <div
       className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
@@ -322,8 +315,11 @@ const Usuario = () => {
       </div>
       <Footer />
 
-      {/* Modal para agregar nuevo registro */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {/* Modals for various actions */}
+      <Modal
+        isOpen={modals.isModalOpen}
+        onClose={() => setModals({ ...modals, isModalOpen: false })}
+      >
         <h2>Datos de Usuario</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
@@ -331,35 +327,26 @@ const Usuario = () => {
               <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="cedula_usuario"
+                value={newRecord.cedula_usuario}
                 onChange={handleInputChange}
                 className="form-control"
               />
-              <button
-                type="button"
-                className="submit-button indigo"
-                onClick={() => {
-                  /* Acción del botón */
-                }}
-              >
-                Buscar
-              </button>
-              {errors.identityCard && (
-                <span className="error-message">{errors.identityCard}</span>
+              {errors.cedula_usuario && (
+                <span className="error-message">{errors.cedula_usuario}</span>
               )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombre de Usuario:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="usuario"
+                value={newRecord.usuario}
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.firstName && (
-                <span className="error-message">{errors.firstName}</span>
+              {errors.usuario && (
+                <span className="error-message">{errors.usuario}</span>
               )}
             </div>
             <div className="form-group input-col-6">
@@ -367,8 +354,8 @@ const Usuario = () => {
               <div className="password-container">
                 <input
                   type={isPasswordVisible ? "text" : "password"}
-                  name="lastName" // Cambia esto si es necesario
-                  value={newRecord.lastName}
+                  name="contrasena"
+                  value={newRecord.contrasena}
                   onChange={handleInputChange}
                   className="form-control"
                 />
@@ -383,23 +370,25 @@ const Usuario = () => {
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.lastName && (
-                <span className="error-message">{errors.lastName}</span>
+              {errors.contrasena && (
+                <span className="error-message">{errors.contrasena}</span>
               )}
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Estado:</label>
+              <label className="form-label">Estatus:</label>
               <select
-                name="status"
-                value={newRecord.status}
+                name="estatus"
+                value={newRecord.estatus}
                 onChange={handleInputChange}
                 className="form-control"
+                required
               >
+                <option value="">Seleccionar Estatus</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
-              {errors.status && (
-                <span className="error-message">{errors.status}</span>
+              {errors.estatus && (
+                <span className="error-message">{errors.estatus}</span>
               )}
             </div>
           </div>
@@ -407,26 +396,30 @@ const Usuario = () => {
         </form>
       </Modal>
 
-      {/* Modal para ver datos */}
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
+      <Modal
+        isOpen={modals.isViewModalOpen}
+        onClose={() => setModals({ ...modals, isViewModalOpen: false })}
+      >
         <h2>Detalles de Usuario</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
+              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_usuario}
             </p>
             <p>
-              <strong>Usuario:</strong> {viewRecord.firstName}
+              <strong>Usuario:</strong> {viewRecord.usuario}
             </p>
             <p>
-              <strong>Estatus:</strong> {viewRecord.status}
+              <strong>Estatus:</strong> {viewRecord.estatus}
             </p>
           </div>
         )}
       </Modal>
 
-      {/* Modal para editar datos */}
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      <Modal
+        isOpen={modals.isEditModalOpen}
+        onClose={() => setModals({ ...modals, isEditModalOpen: false })}
+      >
         <h2>Actualizar Datos de Usuario</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
@@ -434,26 +427,26 @@ const Usuario = () => {
               <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="cedula_usuario"
+                value={newRecord.cedula_usuario}
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.identityCard && (
-                <span className="error-message">{errors.identityCard}</span>
+              {errors.cedula_usuario && (
+                <span className="error-message">{errors.cedula_usuario}</span>
               )}
             </div>
             <div className="form-group input-col-6">
               <label className="form-label">Nombre de Usuario:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
+                name="usuario"
+                value={newRecord.usuario}
                 onChange={handleInputChange}
                 className="form-control"
               />
-              {errors.firstName && (
-                <span className="error-message">{errors.firstName}</span>
+              {errors.usuario && (
+                <span className="error-message">{errors.usuario}</span>
               )}
             </div>
             <div className="form-group input-col-6">
@@ -461,8 +454,8 @@ const Usuario = () => {
               <div className="password-container">
                 <input
                   type={isPasswordVisible ? "text" : "password"}
-                  name="lastName" // Cambia esto si es necesario
-                  value={newRecord.lastName}
+                  name="contrasena"
+                  value={newRecord.contrasena}
                   onChange={handleInputChange}
                   className="form-control"
                 />
@@ -477,54 +470,52 @@ const Usuario = () => {
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.lastName && (
-                <span className="error-message">{errors.lastName}</span>
+              {errors.contrasena && (
+                <span className="error-message">{errors.contrasena}</span>
               )}
             </div>
             <div className="form-group input-col-12">
               <label className="form-label">Estado:</label>
               <select
-                name="status"
-                value={newRecord.status}
+                name="estatus"
+                value={newRecord.estatus}
                 onChange={handleInputChange}
                 className="form-control"
               >
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
-              {errors.status && (
-                <span className="error-message">{errors.status}</span>
-              )}
             </div>
           </div>
           <button type="submit">Actualizar</button>
         </form>
       </Modal>
 
-      {/* Modal para confirmar eliminación */}
       <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        isOpen={modals.isDeleteModalOpen}
+        onClose={() => setModals({ ...modals, isDeleteModalOpen: false })}
       >
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula_usuario}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
-          {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.usuario}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
-          <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
+          <button
+            onClick={() => setModals({ ...modals, isDeleteModalOpen: false })}
+          >
+            Cancelar
+          </button>
         </div>
       </Modal>
 
-      {/* Modal para mostrar que el registro ha sido eliminado */}
       <Modal
-        isOpen={isDeletedModalOpen}
-        onClose={() => setIsDeletedModalOpen(false)}
+        isOpen={modals.isDeletedModalOpen}
+        onClose={() => setModals({ ...modals, isDeletedModalOpen: false })}
       >
         <h2>Registro Eliminado</h2>
         <div className="deleted-message">

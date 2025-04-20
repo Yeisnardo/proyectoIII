@@ -57,6 +57,7 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Ingresa tu usuario"
+              autoComplete="off"
             />
           </div>
         </div>
@@ -71,6 +72,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Ingresa tu contraseña"
+              autoComplete="off"
             />
           </div>
         </div>
