@@ -492,7 +492,6 @@ const Persona = () => {
         </form>
       </Modal>
 
-      
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de Persona</h2>
         {viewRecord && (
