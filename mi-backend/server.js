@@ -7,7 +7,8 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const requerimientosRoutes = require('./routes/routes_requerimientos'); // Nueva línea para requerimientos
 const perfilFinancieroRoutes = require('./routes/routes_perfil_financiero'); // Nueva línea para perfil financiero
 const UbicacionActivEmprende = require('./routes/routes_ubicacion_actividad'); // Nueva línea para ubicacion actividad
-const cadenaProductiva = require('./routes/routes_cadena_productiva')
+const cadenaProductiva = require('./routes/routes_cadena_productiva');
+const situacionOperativa = require('./routes/routes_situacionOperativa');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,7 +23,9 @@ app.use('/api/usuario', usuarioRoutes);
 app.use('/api/requerimientos', requerimientosRoutes); // Nueva línea para requerimientos
 app.use('/api/perfil_financiero', perfilFinancieroRoutes); // Nueva línea para perfil financiero
 app.use('/api/UbicacionActivEmprende', UbicacionActivEmprende); // Nueva línea para ubicacion actividad
-app.use('/api/CadenaProductiva', cadenaProductiva)
+app.use('/api/CadenaProductiva', cadenaProductiva);
+app.use('/api/situacionOperativa', situacionOperativa);
+
 
 // Manejo de errores
 app.use((err, req, res, next) => {

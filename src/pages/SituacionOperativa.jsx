@@ -20,7 +20,7 @@ import {
 } from "../services/situacionOperativaService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
-const Persona = () => {
+const situacionOperativa = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -41,7 +41,7 @@ const Persona = () => {
     operativo_e: "",
     n_trabajadores: "",
     tiempo_opercional_e: "",
-    muestra_producto_f: ""
+    muestra_producto_f: "",
   });
 
   useEffect(() => {
@@ -67,18 +67,25 @@ const Persona = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!newRecord.cedula_datos_situacion_operativa) errors.cedula_datos_situacion_operativa = "La cédula es requerida";
-    if (!newRecord.nombres) errors.nombres = "Los nombres son requeridos";
-    if (!newRecord.apellidos) errors.apellidos = "Los apellidos son requeridos";
-    if (!newRecord.estado) errors.estado = "El estado es requerido";
-    if (!newRecord.municipio) errors.municipio = "El municipio es requerido";
-    if (!newRecord.parroquia) errors.parroquia = "La parroquia es requerida";
-    if (!newRecord.direccion) errors.direccion = "La dirección es requerida";
-    if (!newRecord.telefono1) errors.telefono1 = "El teléfono 1 es requerido";
-    if (!newRecord.telefono2) errors.telefono2 = "El teléfono 2 es requerido";
-    if (!newRecord.tipo) errors.tipo = "El tipo de persona es requerido";
+    
+    // Validate required fields
+    if (!newRecord.cedula_datos_situacion_operativa) 
+        errors.cedula_datos_situacion_operativa = "La cédula es requerida";
+    
+    if (!newRecord.operativo_e) 
+        errors.operativo_e = "El estado operativo es requerido";
+    
+    if (!newRecord.n_trabajadores) 
+        errors.n_trabajadores = "El número de trabajadores es requerido";
+    
+    if (!newRecord.tiempo_opercional_e) 
+        errors.tiempo_opercional_e = "El tiempo operacional es requerido";
+    
+    if (!newRecord.muestra_producto_f) 
+        errors.muestra_producto_f = "La muestra del producto es requerida";
+
     return errors;
-  };
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,7 +95,13 @@ const Persona = () => {
       return;
     }
 
-    if (records.some((record) => record.cedula_datos_situacion_operativa === newRecord.cedula_datos_situacion_operativa)) {
+    if (
+      records.some(
+        (record) =>
+          record.cedula_datos_situacion_operativa ===
+          newRecord.cedula_datos_situacion_operativa
+      )
+    ) {
       alert("La cédula ya existe.");
       return;
     }
@@ -114,9 +127,15 @@ const Persona = () => {
     }
 
     try {
-      const response = await updateRecord(newRecord.cedula_datos_situacion_operativa, newRecord); // Usar el servicio para actualizar
+      const response = await updateRecord(
+        newRecord.cedula_datos_situacion_operativa,
+        newRecord
+      ); // Usar el servicio para actualizar
       const updatedRecords = records.map((record) =>
-        record.cedula_datos_situacion_operativa === response.cedula_datos_situacion_operativa ? response : record
+        record.cedula_datos_situacion_operativa ===
+        response.cedula_datos_situacion_operativa
+          ? response
+          : record
       );
       setRecords(updatedRecords);
       resetForm();
@@ -134,7 +153,7 @@ const Persona = () => {
       operativo_e: "",
       n_trabajadores: "",
       tiempo_opercional_e: "",
-      muestra_producto_f: ""
+      muestra_producto_f: "",
     });
     setErrors({});
   };
@@ -150,7 +169,8 @@ const Persona = () => {
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.apellidos &&
           record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.cedula_datos_situacion_operativa && record.cedula_datos_situacion_operativa.includes(searchTerm))
+        (record.cedula_datos_situacion_operativa &&
+          record.cedula_datos_situacion_operativa.includes(searchTerm))
       );
     });
 
@@ -163,7 +183,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Personas</h2>
+        <h2>Catálogo de situacionOperativas</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -209,7 +229,7 @@ const Persona = () => {
               <tr>
                 <th>C.I</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de Persona</th>
+                <th>Tipo de situacionOperativa</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -222,19 +242,25 @@ const Persona = () => {
                     <td>{record.tipo}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.cedula_datos_situacion_operativa)}
+                        onClick={() =>
+                          handleView(record.cedula_datos_situacion_operativa)
+                        }
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.cedula_datos_situacion_operativa)}
+                        onClick={() =>
+                          handleEdit(record.cedula_datos_situacion_operativa)
+                        }
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(record.cedula_datos_situacion_operativa)}
+                        onClick={() =>
+                          handleDelete(record.cedula_datos_situacion_operativa)
+                        }
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -279,7 +305,9 @@ const Persona = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.cedula_datos_situacion_operativa === id);
+    const recordToView = records.find(
+      (record) => record.cedula_datos_situacion_operativa === id
+    );
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -287,7 +315,9 @@ const Persona = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.cedula_datos_situacion_operativa === id);
+    const recordToEdit = records.find(
+      (record) => record.cedula_datos_situacion_operativa === id
+    );
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -295,7 +325,9 @@ const Persona = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.cedula_datos_situacion_operativa === id);
+    const recordToDelete = records.find(
+      (record) => record.cedula_datos_situacion_operativa === id
+    );
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -306,7 +338,11 @@ const Persona = () => {
     try {
       await deleteRecord(recordToDelete.cedula_datos_situacion_operativa); // Usar el servicio para eliminar
       setRecords(
-        records.filter((record) => record.cedula_datos_situacion_operativa !== recordToDelete.cedula_datos_situacion_operativa)
+        records.filter(
+          (record) =>
+            record.cedula_datos_situacion_operativa !==
+            recordToDelete.cedula_datos_situacion_operativa
+        )
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
@@ -329,15 +365,15 @@ const Persona = () => {
       <Footer />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      <h2>Datos de Situacion Operativa</h2>
+        <h2>Datos de Situacion Operativa</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
               <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="cedula_datos_situacion_operativa"
+                value={newRecord.cedula_datos_situacion_operativa}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -353,35 +389,39 @@ const Persona = () => {
               </button>
             </div>
             <div className="form-group input-col-7">
-              <label className="form-label">Se encuantra operativo el emprendimiento:</label>
+              <label className="form-label">
+                Se encuantra operativo el emprendimiento:
+              </label>
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="operativo_e"
+                value={newRecord.operativo_e}
                 onChange={handleInputChange}
                 className="form-control"
               >
                 <option value="">Seleccionar...</option>
                 <option value="Si">Si</option>
                 <option value="No">No</option>
-
               </select>
             </div>
             <div className="form-group input-col-5">
               <label className="form-label">N° de Trajadores</label>
               <input
                 type="text"
-                name="attendanceDate"
-                value={newRecord.attendanceDate}
+                name="n_trabajadores"
+                value={newRecord.n_trabajadores}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Tiempo de operatividad del emprendimiento</label><br />
+              <label className="form-label">
+                Tiempo de operatividad del emprendimiento
+              </label>
+              <br />
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="tiempo_opercional_e"
+                value={newRecord.tiempo_opercional_e}
                 onChange={handleInputChange}
                 className="form-control"
               >
@@ -393,10 +433,13 @@ const Persona = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">El emprendimiento tiene componentes de diseño,forma de produccion o presentacion final:</label>
+              <label className="form-label">
+                El emprendimiento tiene componentes de diseño,forma de
+                produccion o presentacion final:
+              </label>
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="muestra_producto_f"
+                value={newRecord.muestra_producto_f}
                 onChange={handleInputChange}
                 className="form-control"
               >
@@ -411,11 +454,12 @@ const Persona = () => {
       </Modal>
 
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Persona</h2>
+        <h2>Detalles de situacionOperativa</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_datos_situacion_operativa}
+              <strong>Cédula de Identidad:</strong>{" "}
+              {viewRecord.cedula_datos_situacion_operativa}
             </p>
             <p>
               <strong>Nombress:</strong> {viewRecord.nombres}
@@ -439,22 +483,22 @@ const Persona = () => {
               <strong>Teléfono 2:</strong> {viewRecord.telefono2}
             </p>
             <p>
-              <strong>Tipo de Persona:</strong> {viewRecord.tipo}
+              <strong>Tipo de situacionOperativa:</strong> {viewRecord.tipo}
             </p>
           </div>
         )}
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-      <h2>Datos de Situacion Operativa</h2>
-        <form onSubmit={handleSubmit} className="modal-form">
+        <h2>Datos de Situacion Operativa</h2>
+        <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
               <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
+                name="cedula_datos_situacion_operativa"
+                value={newRecord.cedula_datos_situacion_operativa}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -470,17 +514,18 @@ const Persona = () => {
               </button>
             </div>
             <div className="form-group input-col-7">
-              <label className="form-label">Se encuantra operativo el emprendimiento:</label>
+              <label className="form-label">
+                Se encuantra operativo el emprendimiento:
+              </label>
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="operativo_e"
+                value={newRecord.operativo_e}
                 onChange={handleInputChange}
                 className="form-control"
               >
                 <option value="">Seleccionar...</option>
                 <option value="Si">Si</option>
                 <option value="No">No</option>
-
               </select>
             </div>
             <div className="form-group input-col-5">
@@ -495,10 +540,13 @@ const Persona = () => {
               />
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Tiempo de operatividad del emprendimiento</label><br />
+              <label className="form-label">
+                Tiempo de operatividad del emprendimiento
+              </label>
+              <br />
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="tiempo_opercional_e"
+                value={newRecord.tiempo_opercional_e}
                 onChange={handleInputChange}
                 className="form-control"
               >
@@ -510,10 +558,13 @@ const Persona = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">El emprendimiento tiene componentes de diseño,forma de produccion o presentacion final:</label>
+              <label className="form-label">
+                El emprendimiento tiene componentes de diseño,forma de
+                produccion o presentacion final:
+              </label>
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="muestra_producto_f"
+                value={newRecord.muestra_producto_f}
                 onChange={handleInputChange}
                 className="form-control"
               >
@@ -523,8 +574,9 @@ const Persona = () => {
               </select>
             </div>
           </div>
-          <button type="submit">Registrar</button>
-        </form>      </Modal>
+          <button type="submit">Actualizar</button>
+        </form>
+      </Modal>
 
       <Modal
         isOpen={isDeleteModalOpen}
@@ -533,7 +585,8 @@ const Persona = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula_datos_situacion_operativa}
+          <strong>Cédula de Identidad:</strong>{" "}
+          {recordToDelete?.cedula_datos_situacion_operativa}
         </p>
         <p>
           <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
@@ -585,4 +638,4 @@ const Persona = () => {
   );
 };
 
-export default Persona;
+export default situacionOperativa;
