@@ -10,10 +10,10 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import {
-  getAllUsuarios,
-  createUsuario,
-  updateUsuario,
-  deleteUsuario,
+  fetchRecords,
+  createRecord,
+  updateRecord,
+  deleteRecord,
 } from "../services/usuarioService"; // Importar funciones del servicio
 import Header from "../components/Header";
 import Menu from "../components/Menu";
@@ -50,7 +50,7 @@ const Usuario = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllUsuarios(); // Usar el servicio para obtener registros
+        const data = await fetchRecords(); // Usar el servicio para obtener registros
         setRecords(data);
       } catch (error) {
         console.error("Error al obtener los registros:", error);
@@ -85,7 +85,7 @@ const Usuario = () => {
     }
 
     try {
-      const response = await createUsuario(newRecord);
+      const response = await createRecord(newRecord);
       setRecords((prevRecords) => [...prevRecords, response]); // Actualizar el estado de los registros
       resetForm();
       setModals({ ...modals, isModalOpen: false, isCreatedModalOpen: true });
@@ -104,7 +104,7 @@ const Usuario = () => {
     }
 
     try {
-      const response = await updateUsuario(newRecord.cedula_usuario, newRecord);
+      const response = await updateRecord(newRecord.cedula_usuario, newRecord);
       const updatedRecords = records.map((record) =>
         record.cedula_usuario === response.cedula_usuario ? response : record
       );
@@ -295,7 +295,7 @@ const Usuario = () => {
 
   const confirmDelete = async () => {
     try {
-        await deleteUsuario(recordToDelete.cedula_usuario);
+        await deleteRecord(recordToDelete.cedula_usuario);
         setRecords(records.filter((record) => record.cedula_usuario !== recordToDelete.cedula_usuario));
         setRecordToDelete(null);
         setModals({ ...modals, isDeleteModalOpen: false, isDeletedModalOpen: true });

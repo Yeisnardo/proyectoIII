@@ -1,13 +1,12 @@
-// routes/SituacionOperativa.js
 const express = require('express');
-const SituacionOperativa = require('../models/models_SituacionOperativa'); // Asegúrate de que la ruta esté correcta
+const SituacionOperativa = require('../models/models_SituacionOperativa'); // Correct import
 const router = express.Router();
 
 // Obtener todos los registros
 router.get('/', async (req, res) => {
     try {
-        const SituacionOperativa = await SituacionOperativa.findAll(); // This line causes the error
-        res.json(SituacionOperativa);
+        const situacionOperativas = await SituacionOperativa.findAll(); // Use the correct model
+        res.json(situacionOperativas);
     } catch (error) {
         console.error('Error al obtener las SituacionOperativa:', error);
         res.status(500).json({ error: 'Error al obtener las SituacionOperativa' });
@@ -46,7 +45,7 @@ router.put('/:cedula_datos_situacion_operativa', async (req, res) => {
 // Eliminar un registro
 router.delete('/:cedula_datos_situacion_operativa', async (req, res) => {
     try {
-        const deleted = await SituacionOperativa.destroy({
+        const deleted = await SituacionOperativa.destroy ({
             where: { cedula_datos_situacion_operativa: req.params.cedula_datos_situacion_operativa }
         });
         if (deleted) {

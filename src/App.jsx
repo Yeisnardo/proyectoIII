@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Persona from './pages/Persona';
 import Usuario from './pages/Usuario';
 import Ferias from './pages/Ferias';
+import Aprobacion from './pages/Aprobacion';
 import Requerimientos from './pages/requerimientos'; 
 import Cambio from './pages/AlCambio'; // Ensure the file name matches
 import Credito from './pages/Credito'; 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/cadena-productiva" element={<CadenaProductiva />} />
           <Route path="/situacion-operativa" element={<SituacionOperativa />} />
           <Route path="/ferias" element={<Ferias />} />
+          <Route path="/Aprobacion" element={<Aprobacion />} />
           <Route path="/al-cambio" element={<Cambio />} />
           <Route path="/credito" element={<Credito />} />
           <Route path="/contrato" element={<Contrato />} />

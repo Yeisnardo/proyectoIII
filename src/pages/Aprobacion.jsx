@@ -17,7 +17,7 @@ import {
   createRecord,
   updateRecord,
   deleteRecord,
-} from "../services/contratoService"; // Importa las funciones del servicio
+} from "../services/aprobacionService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
 const Persona = () => {
@@ -37,9 +37,7 @@ const Persona = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
-    cedula_contrato: "",
-    contrato: "",
-    fecha_apertura: "",
+    cedula_emprendedor_emprendedor: "",
     estatus: ""
   });
 
@@ -66,24 +64,10 @@ const Persona = () => {
 
   const validateForm = () => {
     const errors = {};
-    
-    // Example validation rules
-    if (!newRecord.cedula_contrato) {
-      errors.cedula_contrato = "La cédula del contrato es requerida.";
-    }
-    if (!newRecord.contrato) {
-      errors.contrato = "El número de contrato es requerido.";
-    }
-    if (!newRecord.fecha_apertura) {
-      errors.fecha_apertura = "La fecha de apertura es requerida.";
-    }
-    if (!newRecord.estatus) {
-      errors.estatus = "El estatus es requerido.";
-    }
-  
+    if (!newRecord.cedula_emprendedor) errors.cedula_emprendedor = "La cédula es requerida";
+    if (!newRecord.estatus) errors.estatus = "Los estatus son requeridos";
     return errors;
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +77,7 @@ const Persona = () => {
       return;
     }
 
-    if (records.some((record) => record.cedula_contrato === newRecord.cedula_contrato)) {
+    if (records.some((record) => record.cedula_emprendedor === newRecord.cedula_emprendedor)) {
       alert("La cédula ya existe.");
       return;
     }
@@ -119,9 +103,9 @@ const Persona = () => {
     }
 
     try {
-      const response = await updateRecord(newRecord.cedula_contrato, newRecord); // Usar el servicio para actualizar
+      const response = await updateRecord(newRecord.cedula_emprendedor, newRecord); // Usar el servicio para actualizar
       const updatedRecords = records.map((record) =>
-        record.cedula_contrato === response.cedula_contrato ? response : record
+        record.cedula_emprendedor === response.cedula_emprendedor ? response : record
       );
       setRecords(updatedRecords);
       resetForm();
@@ -135,10 +119,8 @@ const Persona = () => {
 
   const resetForm = () => {
     setNewRecord({
-          cedula_contrato: "",
-          contrato: "",
-          fecha_apertura: "",
-          estatus: ""
+      cedula_emprendedor: "",
+    estatus: ""
     });
     setErrors({});
   };
@@ -154,7 +136,7 @@ const Persona = () => {
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.apellidos &&
           record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.cedula_contrato && record.cedula_contrato.includes(searchTerm))
+        (record.cedula_emprendedor && record.cedula_emprendedor.includes(searchTerm))
       );
     });
 
@@ -167,7 +149,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Contrato</h2>
+        <h2>Catálogo de Aprobacion de Credito</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -213,30 +195,32 @@ const Persona = () => {
               <tr>
                 <th>C.I</th>
                 <th>Nombre y Apellido</th>
+                <th>Tipo de Persona</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.cedula_contrato}>
-                    <td>{record.cedula_contrato}</td>
+                  <tr key={record.cedula_emprendedor}>
+                    <td>{record.cedula_emprendedor}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
+                    <td>{record.tipo}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.cedula_contrato)}
+                        onClick={() => handleView(record.cedula_emprendedor)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.cedula_contrato)}
+                        onClick={() => handleEdit(record.cedula_emprendedor)}
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(record.cedula_contrato)}
+                        onClick={() => handleDelete(record.cedula_emprendedor)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -281,7 +265,7 @@ const Persona = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.cedula_contrato === id);
+    const recordToView = records.find((record) => record.cedula_emprendedor === id);
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -289,7 +273,7 @@ const Persona = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.cedula_contrato === id);
+    const recordToEdit = records.find((record) => record.cedula_emprendedor === id);
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -297,7 +281,7 @@ const Persona = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.cedula_contrato === id);
+    const recordToDelete = records.find((record) => record.cedula_emprendedor === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -306,9 +290,9 @@ const Persona = () => {
 
   const confirmDelete = async () => {
     try {
-      await deleteRecord(recordToDelete.cedula_contrato); // Usar el servicio para eliminar
+      await deleteRecord(recordToDelete.cedula_emprendedor); // Usar el servicio para eliminar
       setRecords(
-        records.filter((record) => record.cedula_contrato !== recordToDelete.cedula_contrato)
+        records.filter((record) => record.cedula_emprendedor !== recordToDelete.cedula_emprendedor)
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
@@ -331,153 +315,102 @@ const Persona = () => {
       <Footer />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      <h2>Datos del Contrato</h2>
+        <h2>Datos Personales</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="cedula_contrato"
-                  value={newRecord.cedula_contrato}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">N° Contrato:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="contrato"
-                value={newRecord.contrato}
+                name="cedula_emprendedor"
+                value={newRecord.cedula_emprendedor}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Apertura:</label>
-              <input
-                type="date"
-                name="fecha_apertura"
-                value={newRecord.fecha_apertura}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
+              {errors.cedula && (
+                <span className="error-message">{errors.cedula}</span>
+              )}
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Estatus</label>
-              <input
-                type="text"
+              <label className="form-label">Estatus:</label>
+              <select
                 name="estatus"
                 value={newRecord.estatus}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Desaprobado">Desaprobado</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
             </div>
           </div>
-          <button type="submit" className="submit-button">
-            Registrar
-          </button>
+          <button type="submit">Guardar</button>
         </form>
       </Modal>
 
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Contrato</h2>
+        <h2>Detalles de Persona</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_contrato}
+              <strong>Cédula de Identidad:</strong>{" "}
+              {viewRecord.cedula_emprendedor}
             </p>
             <p>
-              <strong>contrato:</strong> {viewRecord.contrato}
+              <strong>Nombress:</strong> {viewRecord.nombres}
             </p>
             <p>
-              <strong>Fecha de Apertura:</strong> {viewRecord.fecha_apertura}
+              <strong>Apellidos:</strong> {viewRecord.apellidos}
             </p>
             <p>
-              <strong>Estatus:</strong> {viewRecord.estatus}
+              <strong>Tipo de Persona:</strong> {viewRecord.estatus}
             </p>
           </div>
         )}
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Contrato</h2>
+        <h2>Actualizar Datos Personales</h2>
         <form onSubmit={handleUpdate} className="modal-form">
-        <div className="form-row">
+          <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="cedula_contrato"
-                  value={newRecord.cedula_contrato}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">N° Contrato:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="contrato"
-                value={newRecord.contrato}
+                name="cedula_emprendedor"
+                value={newRecord.cedula_emprendedor}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Apertura:</label>
-              <input
-                type="date"
-                name="fecha_apertura"
-                value={newRecord.fecha_apertura}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
+              {errors.cedula_emprendedor && (
+                <span className="error-message">
+                  {errors.cedula_emprendedor}
+                </span>
+              )}
             </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Estatus</label>
-              <input
-                type="text"
+              <label className="form-label">Estatus:</label>
+              <select
                 name="estatus"
                 value={newRecord.estatus}
                 onChange={handleInputChange}
                 className="form-control"
-                required
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Desaprobado">Desaprobado</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
             </div>
           </div>
 
-          <button type="submit">Actualizar</button>
+          <button type="submit">Guardar</button>
         </form>
       </Modal>
 
@@ -488,7 +421,7 @@ const Persona = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula_emprendedor}
         </p>
         <p>
           <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}

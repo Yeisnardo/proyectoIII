@@ -11,11 +11,11 @@ const DatosCadenaP = sequelize.define('datos_cadena_p', {
             key: 'cedula_ubicacion_actividad_e', // Key in the referenced model
         },
     },
-    actividadeconomica: {
+    actividad_e: {
         type: DataTypes.STRING(20),
         allowNull: true, // Assuming this can be null
     },
-    divisionactividadeconomica: {
+    division_actividad_e: {
         type: DataTypes.STRING(20),
         allowNull: true, // Assuming this can be null
     },

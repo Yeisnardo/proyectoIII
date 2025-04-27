@@ -36,9 +36,9 @@ const CadenaProductiva = () => {
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [newRecord, setNewRecord] = useState({
     cedula_datos_cadena_p: "",
-    actividadeconomica: "",
-    divisionactividadeconomica: "",
-    claseactividadeconomica: "",
+    actividad_e: "",
+    division_actividad_e: "",
+    claseactividad_e: "",
   });
 
   useEffect(() => {
@@ -120,9 +120,9 @@ const CadenaProductiva = () => {
   const resetForm = () => {
     setNewRecord({
       cedula_datos_cadena_p: "",
-      actividadeconomica: "",
-      divisionactividadeconomica: "",
-      claseactividadeconomica: "",
+      actividad_e: "",
+      division_actividad_e: "",
+      claseactividad_e: "",
     });
   };
 
@@ -273,7 +273,7 @@ const CadenaProductiva = () => {
   };
 
   const renderDivisionOptions = () => {
-    switch (newRecord.actividadeconomica) {
+    switch (newRecord.actividad_e) {
       case "Agricultura, ganadería y Pesca":
         return (
           <>
@@ -396,7 +396,7 @@ const CadenaProductiva = () => {
   };
 
   const renderClaseOptions = () => {
-    switch (newRecord.divisionactividadeconomica) {
+    switch (newRecord.division_actividad_e) {
       case "Agricultura":
         return (
           <>
@@ -660,8 +660,8 @@ const CadenaProductiva = () => {
               <div className="form-group input-col-12">
                 <label className="form-label">Actividad Economica:</label>
                 <select
-                  name="actividadeconomica"
-                  value={newRecord.actividadeconomica}
+                  name="actividad_e"
+                  value={newRecord.actividad_e}
                   onChange={handleInputChange}
                   className="form-control"
                 >
@@ -722,12 +722,12 @@ const CadenaProductiva = () => {
                 </select>
               </div>
 
-              {newRecord.actividadeconomica && (
+              {newRecord.actividad_e && (
                 <div className="form-group input-col-12">
                   <label className="form-label">División Actividad Económica:</label>
                   <select
-                    name="divisionactividadeconomica"
-                    value={newRecord.divisionactividadeconomica}
+                    name="division_actividad_e"
+                    value={newRecord.division_actividad_e}
                     onChange={handleInputChange}
                     className="form-control"
                   >
@@ -737,11 +737,11 @@ const CadenaProductiva = () => {
                 </div>
               )}
 
-              {newRecord.divisionactividadeconomica && (
+              {newRecord.division_actividad_e && (
                 <div className="form-group input-col-12">
                   <label className="form-label">Clase de Actividad Económica:</label>
                   <select
-                    name="claseactividadeconomica"
+                    name="claseactividad_e"
                     value={newRecord.claseActividadEconomeconomica}
                     onChange={handleInputChange}
                     className="form-control"

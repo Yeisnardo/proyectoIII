@@ -1,35 +1,31 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const SituacionOperativa = sequelize.define('datos_situacion_operativa', {
-    cedula_datos_situacion_operativa: {
+const Contrato = sequelize.define('contrato', {
+    cedula_contrato: {
         type: DataTypes.STRING(20),
         primaryKey: true,
         allowNull: false,
         references: {
-            model: 'datos_cadena_p', // Ensure this model is defined elsewhere
-            key: 'cedula_datos_cadena_p',
+            model: 'requerimientos_e', // Ensure this model is defined elsewhere
+            key: 'cedula_requerimientos_e',
         },
     },
-    operativo_e: {
+    contrato: {
         type: DataTypes.STRING(20),
         allowNull: true, // Assuming this can be null based on the SQL definition
     },
-    n_trabajadores: {
+    fecha_apertura: {
         type: DataTypes.STRING(20),
         allowNull: true, // Assuming this can be null based on the SQL definition
     },
-    tiempo_opercional_e: {
-        type: DataTypes.STRING(15),
-        allowNull: true, // Assuming this can be null based on the SQL definition
-    },
-    muestra_producto_f: {
-        type: DataTypes.STRING(15),
+    estatus: {
+        type: DataTypes.STRING(20),
         allowNull: true, // Assuming this can be null based on the SQL definition
     },
 }, {
-    tableName: 'datos_situacion_operativa',
+    tableName: 'contrato',
     timestamps: false,
 });
 
-module.exports = SituacionOperativa;
+module.exports = Contrato;

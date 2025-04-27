@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEye,
   FaEdit,
@@ -12,170 +12,154 @@ import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import Modal from "../components/Modal";
+import {
+  fetchRecords,
+  createRecord,
+  updateRecord,
+  deleteRecord,
+} from "../services/CreditoService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
-const Usuario = () => {
-  // State management
+const Credito = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([
-    {
-      identityCard: "12345678",
-      firstName: "Juan",
-      lastName: "Pérez",
-      email: "juan.perez@example.com",
-      type: "Cliente",
-      gender: "Masculino",
-      birthDate: "1990-01-01",
-      phone: "0412-3456789",
-      payments: [
-        {
-          accountType: "Transferencia",
-          bank: "Banesco Banco Universal S.A.C.A.",
-          accountNumber: "1234567890",
-          amountInDollars: "1000",
-          exchangeInBolivares: "2000000",
-        },
-        {
-          accountType: "Divisa",
-          amountInDollars: "500",
-          exchangeInBolivares: "",
-        },
-      ],
-    },
-    {
-      identityCard: "87654321",
-      firstName: "María",
-      lastName: "González",
-      email: "maria.gonzalez@example.com",
-      type: "Cliente",
-      gender: "Femenino",
-      birthDate: "1985-05-15",
-      phone: "0414-9876543",
-      payments: [
-        {
-          accountType: "Divisa",
-          amountInDollars: "500",
-          exchangeInBolivares: "",
-        },
-      ],
-    },
-    {
-      identityCard: "11223344",
-      firstName: "Carlos",
-      lastName: "Ramírez",
-      email: "carlos.ramirez@example.com",
-      type: "Cliente",
-      gender: "Masculino",
-      birthDate: "1992-03-20",
-      phone: "0416-1234567",
-      payments: [
-        {
-          accountType: "Transferencia",
-          bank: "Banco de Venezuela S.A.C.A.",
-          accountNumber: "0987654321",
-          amountInDollars: "750",
-          exchangeInBolivares: "1500000",
-        },
-      ],
-    },
-  ]);
-
+  const [records, setRecords] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
-  const [limit, setLimit] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
+  const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
   const [viewRecord, setViewRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
+  const [limit, setLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [errors, setErrors] = useState({});
+  const [newRecord, setNewRecord] = useState({
+    n_contrato: "",
+    euro: "",
+    bolivares: "",
+    cincoflax: "",
+    diezinteres: "",
+    interes_semanal: "",
+    semanal_sin_interes: "",
+    couta: "",
+    desde: "",
+    hasta: "",
+  });
 
-  // Bank options
-  const bancos = [
-    "Banco Central de Venezuela",
-    "Banco de Venezuela S.A.C.A.",
-    "Venezolano de Crédito, S.A.",
-    "Banco Mercantil, C.A.",
-    "Banco Provincial, S.A.",
-    "Bancaribe C.A.",
-    "Banco Exterior C.A.",
-    "Banco Occidental de Descuento, C.A.",
-    "Banco Caroní C.A.",
-    "Banesco Banco Universal S.A.C.A.",
-    "Banco Sofitasa, C.A.",
-    "Banco Plaza, C.A.",
-    "Banco de la Gente Emprendedora C.A.",
-    "BFC Banco Fondo Común C.A.",
-    "100% Banco, C.A.",
-    "DelSur Banco Universal C.A.",
-    "Banco del Tesoro, C.A.",
-    "Banco Agrícola de Venezuela, C.A.",
-    "Bancrecer, S.A.",
-    "Mi Banco, C.A.",
-    "Banco Activo, C.A.",
-    "Bancamiga, C.A.",
-    "Banco Internacional de Desarrollo, C.A.",
-    "Banplus Banco Universal, C.A.",
-    "Banco Bicentenario del Pueblo de la Clase Obrera, Mujer y Comunas B.U.",
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        setRecords(data);
+      } catch (error) {
+        console.error("Error al obtener los registros:", error);
+      }
+    };
 
-  // Initial record state
-  const initialRecordState = {
-    identityCard: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    type: "",
-    gender: "",
-    birthDate: "",
-    phone: "",
-    payments: [],
-  };
+    fetchData();
+  }, []);
 
-  const [newRecord, setNewRecord] = useState(initialRecordState);
-
-  // Input change handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRecord({ ...newRecord, [name]: value });
+    setNewRecord((prevRecord) => ({
+      ...prevRecord,
+      [name]: value,
+    }));
   };
 
-  // Form submission handlers
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setRecords([...records, newRecord]);
-    resetForm();
-    setIsModalOpen(false);
+  const validateForm = () => {
+    const errors = {};
+    // Aquí puedes agregar tus validaciones
+    if (!newRecord.n_contrato) {
+      errors.n_contrato = "El número de contrato es obligatorio.";
+    }
+    if (!newRecord.euro) {
+      errors.euro = "El monto en euros es obligatorio.";
+    }
+    // Agrega más validaciones según sea necesario
+  
+    return errors;
   };
 
-  const handleUpdate = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setRecords(
-      records.map((record) =>
-        record.identityCard === newRecord.identityCard ? newRecord : record
-      )
-    );
-    resetForm();
-    setIsEditModalOpen(false);
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    if (records.some((record) => record.n_contrato === newRecord.n_contrato)) {
+      alert("La cédula ya existe.");
+      return;
+    }
+
+    try {
+      const response = await createRecord(newRecord); // Usar el servicio para crear un registro
+      setRecords([...records, response]);
+      resetForm();
+      setIsModalOpen(false);
+      setIsCreatedModalOpen(true);
+    } catch (error) {
+      console.error("Error al registrar la persona:", error);
+      alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
+    }
+  };
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    try {
+      const response = await updateRecord(newRecord.n_contrato, newRecord); // Usar el servicio para actualizar
+      const updatedRecords = records.map((record) =>
+        record.n_contrato === response.n_contrato ? response : record
+      );
+      setRecords(updatedRecords);
+      resetForm();
+      setIsEditModalOpen(false);
+      setIsUpdatedModalOpen(true);
+    } catch (error) {
+      console.error("Error al actualizar la persona:", error);
+      alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
+    }
   };
 
   const resetForm = () => {
-    setNewRecord(initialRecordState);
+    setNewRecord({
+      n_contrato: "",
+      euro: "",
+      bolivares: "",
+      cincoflax: "",
+      diezinteres: "",
+      interes_semanal: "",
+      semanal_sin_interes: "",
+      couta: "",
+      desde: "",
+      hasta: "",
+    });
+    setErrors({});
   };
 
-  // Menu toggle
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   };
 
-  // Data table rendering
   const renderDataTable = () => {
     const filteredRecords = records.filter((record) => {
       return (
-        record.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.identityCard.includes(searchTerm)
+        (record.nombres &&
+          record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (record.apellidos &&
+          record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (record.n_contrato && record.n_contrato.includes(searchTerm))
       );
     });
 
@@ -188,10 +172,10 @@ const Usuario = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Gestión de Crédito</h2>
+        <h2>Catálogo de Credito</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
-            Buscar usuario
+            Buscar persona
           </label>
           <input
             type="text"
@@ -206,7 +190,7 @@ const Usuario = () => {
             className="add-button"
             title="Agregar Nuevo Registro"
           >
-            <FaPlus />
+            <FaPlus /> Nuevo
           </button>
         </div>
 
@@ -232,34 +216,34 @@ const Usuario = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
+                <th>N° Contrato</th>
+                <th>Nombre y Apellido</th>
+                <th>Tipo de Credito</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.identityCard}>
-                    <td>{record.identityCard}</td>
-                    <td>{record.firstName}</td>
-                    <td>{record.lastName}</td>
+                  <tr key={record.n_contrato}>
+                    <td>{record.n_contrato}</td>
+                    <td>{`${record.nombres} ${record.apellidos}`}</td>
+                    <td>{record.tipo}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.identityCard)}
+                        onClick={() => handleView(record.n_contrato)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.identityCard)}
+                        onClick={() => handleEdit(record.n_contrato)}
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(record.identityCard)}
+                        onClick={() => handleDelete(record.n_contrato)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -269,7 +253,7 @@ const Usuario = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="no-results">
+                  <td colSpan="4" className="no-results">
                     No se encontraron registros.
                   </td>
                 </tr>
@@ -303,9 +287,8 @@ const Usuario = () => {
     );
   };
 
-  // Record handling functions
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.identityCard === id);
+    const recordToView = records.find((record) => record.n_contrato === id);
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -313,7 +296,7 @@ const Usuario = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.identityCard === id);
+    const recordToEdit = records.find((record) => record.n_contrato === id);
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -321,22 +304,26 @@ const Usuario = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.identityCard === id);
+    const recordToDelete = records.find((record) => record.n_contrato === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
     }
   };
 
-  const confirmDelete = () => {
-    setRecords(
-      records.filter(
-        (record) => record.identityCard !== recordToDelete.identityCard
-      )
-    );
-    setRecordToDelete(null);
-    setIsDeleteModalOpen(false);
-    setIsDeletedModalOpen(true);
+  const confirmDelete = async () => {
+    try {
+      await deleteRecord(recordToDelete.n_contrato); // Usar el servicio para eliminar
+      setRecords(
+        records.filter((record) => record.n_contrato !== recordToDelete.n_contrato)
+      );
+      setRecordToDelete(null);
+      setIsDeleteModalOpen(false);
+      setIsDeletedModalOpen(true);
+    } catch (error) {
+      console.error("Error al eliminar el registro:", error);
+      alert("Hubo un problema al eliminar el registro. Inténtalo de nuevo.");
+    }
   };
 
   return (
@@ -350,9 +337,8 @@ const Usuario = () => {
       </div>
       <Footer />
 
-      {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos para la gestión de crédito</h2>
+      <h2>Datos para la gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -360,8 +346,8 @@ const Usuario = () => {
               <div className="input-group">
                 <input
                   type="text"
-                  name="contractNumber" // Cambié el nombre para que sea único
-                  value={newRecord.contractNumber} // Cambié para que use el valor correcto
+                  name="n_contrato" // Cambié el nombre para que sea único
+                  value={newRecord.n_contrato} // Cambié para que use el valor correcto
                   onChange={handleInputChange}
                   className="form-control"
                   required
@@ -381,8 +367,8 @@ const Usuario = () => {
               <label className="form-label">Monto en Euros</label>
               <input
                 type="text"
-                name="amountEuros" // Cambié el nombre para que sea único
-                value={newRecord.amountEuros} // Cambié para que use el valor correcto
+                name="euro" // Cambié el nombre para que sea único
+                value={newRecord.euro} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -392,8 +378,8 @@ const Usuario = () => {
               <label className="form-label">Monto en Bolivares:</label>
               <input
                 type="text"
-                name="amountBolivares" // Cambié el nombre para que sea único
-                value={newRecord.amountBolivares} // Cambié para que use el valor correcto
+                name="bolivares" // Cambié el nombre para que sea único
+                value={newRecord.bolivares} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -403,8 +389,8 @@ const Usuario = () => {
               <label className="form-label">5% FLAT:</label>
               <input
                 type="text"
-                name="flatRate" // Cambié el nombre para que sea único
-                value={newRecord.flatRate} // Cambié para que use el valor correcto
+                name="cincoflax" // Cambié el nombre para que sea único
+                value={newRecord.cincoflax} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -414,8 +400,8 @@ const Usuario = () => {
               <label className="form-label">10% de Interes:</label>
               <input
                 type="text"
-                name="interest10" // Cambié el nombre para que sea único
-                value={newRecord.interest10} // Cambié para que use el valor correcto
+                name="diezinteres" // Cambié el nombre para que sea único
+                value={newRecord.diezinteres} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -425,8 +411,8 @@ const Usuario = () => {
               <label className="form-label">Interes Semanal:</label>
               <input
                 type="text"
-                name="weeklyInterest" // Cambié el nombre para que sea único
-                value={newRecord.weeklyInterest} // Cambié para que use el valor correcto
+                name="interes_semanal" // Cambié el nombre para que sea único
+                value={newRecord.interes_semanal} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -436,8 +422,8 @@ const Usuario = () => {
               <label className="form-label">Semana Sin Interes:</label>
               <input
                 type="text"
-                name="interestFreeWeeks" // Cambié el nombre para que sea único
-                value={newRecord.interestFreeWeeks} // Cambié para que use el valor correcto
+                name="semanal_sin_interes" // Cambié el nombre para que sea único
+                value={newRecord.semanal_sin_interes} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -447,8 +433,8 @@ const Usuario = () => {
               <label className="form-label">Cuota a Cancelar:</label>
               <input
                 type="text"
-                name="installmentToPay" // Cambié el nombre para que sea único
-                value={newRecord.installmentToPay} // Cambié para que use el valor correcto
+                name="couta" // Cambié el nombre para que sea único
+                value={newRecord.couta} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -458,8 +444,8 @@ const Usuario = () => {
               <label className="form-label">Desde:</label>
               <input
                 type="date"
-                name="installmentToPay" // Cambié el nombre para que sea único
-                value={newRecord.installmentToPay} // Cambié para que use el valor correcto
+                name="desde" // Cambié el nombre para que sea único
+                value={newRecord.desde} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -469,165 +455,215 @@ const Usuario = () => {
               <label className="form-label">Hasta:</label>
               <input
                 type="date"
-                name="installmentToPay" // Cambié el nombre para que sea único
-                value={newRecord.installmentToPay} // Cambié para que use el valor correcto
+                name="hasta" // Cambié el nombre para que sea único
+                value={newRecord.hasta} // Cambié para que use el valor correcto
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
+            </div>
+          </div>
+          <button type="submit">Registrar</button>
+        </form>
+      </Modal>
+
+      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
+        <h2>Detalles de crédito</h2>
+                {viewRecord && (
+                  <div className="table-container">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>Método de Pago</th>
+                          {viewRecord.payments.map((payment, index) => (
+                            <React.Fragment key={index}>
+                              {payment.accountType === "Transferencia" && (
+                                <>
+                                  <th>Banco</th>
+                                  <th>N° de Cuenta</th>
+                                </>
+                              )}
+                            </React.Fragment>
+                          ))}
+                          <th>Monto en Dólar</th>
+                          <th>Cambio en Bolívares</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {viewRecord.payments.map((payment, index) => (
+                          <tr key={index}>
+                            <td>{payment.accountType}</td>
+                            {payment.accountType === "Transferencia" && (
+                              <>
+                                <td>{payment.bank}</td>
+                                <td>{payment.accountNumber}</td>
+                              </>
+                            )}
+                            <td>{payment.amountInDollars}</td>
+                            <td>{payment.exchangeInBolivares || "-"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+      </Modal>
+
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <h2>Actualizar Datos Creditoles</h2>
+        <form onSubmit={handleUpdate} className="modal-form">
+          <div className="form-row">
+            <div className="form-group input-col-12">
+              <label className="form-label">Cédula de Identidad:</label>
+              <input
+                type="text"
+                name="n_contrato"
+                value={newRecord.n_contrato}
+                onChange={handleInputChange}
+                className="form-control"
+                readOnly // Campo de solo lectura
+              />
+              {errors.n_contrato && (
+                <span className="error-message">{errors.n_contrato}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Nombres:</label>
+              <input
+                type="text"
+                name="nombres"
+                value={newRecord.nombres}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.nombres && (
+                <span className="error-message">{errors.nombres}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Apellidos:</label>
+              <input
+                type="text"
+                name="apellidos"
+                value={newRecord.apellidos}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.apellidos && (
+                <span className="error-message">{errors.apellidos}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Estado:</label>
+              <input
+                type="text"
+                name="estado"
+                value={newRecord.estado}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.estado && (
+                <span className="error-message">{errors.estado}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Municipio:</label>
+              <input
+                type="text"
+                name="municipio"
+                value={newRecord.municipio}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.municipio && (
+                <span className="error-message">{errors.municipio}</span>
+              )}
+            </div>
+            <div className="form-group input-col-4">
+              <label className="form-label">Parroquia:</label>
+              <input
+                type="text"
+                name="parroquia"
+                value={newRecord.parroquia}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.parroquia && (
+                <span className="error-message">{errors.parroquia}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Dirección:</label>
+              <input
+                type="text"
+                name="direccion"
+                value={newRecord.direccion}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.direccion && (
+                <span className="error-message">{errors.direccion}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono 1:</label>
+              <input
+                type="text"
+                name="telefono1"
+                value={newRecord.telefono1}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.telefono1 && (
+                <span className="error-message">{errors.telefono1}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Teléfono 2:</label>
+              <input
+                type="text"
+                name="telefono2"
+                value={newRecord.telefono2}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.telefono2 && (
+                <span className="error-message">{errors.telefono2}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Tipo de Credito:</label>
+              <select
+                name="tipo"
+                value={newRecord.tipo}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Presidente">Presidente</option>
+                <option value="Coord. Creditos y Cobranzas">
+                  Coord. Creditos y Cobranzas
+                </option>
+                <option value="Asist. Creditos y Cobranzas">
+                  Asist. Creditos y Cobranzas
+                </option>
+                <option value="Coord. Formalizacion de Emprendimiento">
+                  Coord. Formalizacion de Emprendimiento
+                </option>
+                <option value="Coord. Nuevo Emprendimento">
+                  Coord. Nuevo Emprendimento
+                </option>
+                <option value="Emprendedor">Emprendedor</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
             </div>
           </div>
           <button type="submit">Guardar</button>
         </form>
       </Modal>
-      {/* Modal para ver datos */}
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de crédito</h2>
-        {viewRecord && (
-          <div className="table-container">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Método de Pago</th>
-                  {viewRecord.payments.map((payment, index) => (
-                    <React.Fragment key={index}>
-                      {payment.accountType === "Transferencia" && (
-                        <>
-                          <th>Banco</th>
-                          <th>N° de Cuenta</th>
-                        </>
-                      )}
-                    </React.Fragment>
-                  ))}
-                  <th>Monto en Dólar</th>
-                  <th>Cambio en Bolívares</th>
-                </tr>
-              </thead>
-              <tbody>
-                {viewRecord.payments.map((payment, index) => (
-                  <tr key={index}>
-                    <td>{payment.accountType}</td>
-                    {payment.accountType === "Transferencia" && (
-                      <>
-                        <td>{payment.bank}</td>
-                        <td>{payment.accountNumber}</td>
-                      </>
-                    )}
-                    <td>{payment.amountInDollars}</td>
-                    <td>{payment.exchangeInBolivares || "-"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Modal>
 
-      {/* Modal para editar datos */}
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Usuario</h2>
-        <form onSubmit={handleUpdate} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-11">
-              <label className="form-label">N° de Contrato:</label>
-              <input
-                type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Método de Pago:</label>
-              <select
-                name="accountType"
-                value={newRecord.accountType}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar...</option>
-                <option value="Divisa">Divisa</option>
-                <option value="Transferencia">Transferencia</option>
-              </select>
-            </div>
-
-            {newRecord.accountType === "Transferencia" && (
-              <>
-                <div className="form-group input-col-6">
-                  <label className="form-label">Nombre del Banco:</label>
-                  <select
-                    name="bank"
-                    value={newRecord.bank}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  >
-                    <option value="">Seleccionar Banco...</option>
-                    {bancos.map((banco, index) => (
-                      <option key={index} value={banco}>
-                        {banco}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group input-col-6">
-                  <label className="form-label">N° de Cuenta:</label>
-                  <input
-                    type="text"
-                    name="accountNumber"
-                    value={newRecord.accountNumber}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="form-group input-col-6">
-                  <label className="form-label">Monto en Dólar:</label>
-                  <input
-                    type="text"
-                    name="amountInDollars"
-                    value={newRecord.amountInDollars}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="form-group input-col-6">
-                  <label className="form-label">Cambio en Bolívares:</label>
-                  <input
-                    type="text"
-                    name="exchangeInBolivares"
-                    value={newRecord.exchangeInBolivares}
-                    onChange={handleInputChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-              </>
-            )}
-
-            {newRecord.accountType === "Divisa" && (
-              <div className="form-group input-col-12">
-                <label className="form-label">Monto en Dólar:</label>
-                <input
-                  type="text"
-                  name="amountInDollars"
-                  value={newRecord.amountInDollars}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-            )}
-          </div>
-          <button type="submit">Actualizar</button>
-        </form>
-      </Modal>
-
-      {/* Modal para confirmar eliminación */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -635,11 +671,11 @@ const Usuario = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.n_contrato}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName}{" "}
-          {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
+          {recordToDelete?.apellidos}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
@@ -647,7 +683,6 @@ const Usuario = () => {
         </div>
       </Modal>
 
-      {/* Modal para mostrar que el registro ha sido eliminado */}
       <Modal
         isOpen={isDeletedModalOpen}
         onClose={() => setIsDeletedModalOpen(false)}
@@ -658,8 +693,34 @@ const Usuario = () => {
           <p>El registro ha sido eliminado con éxito.</p>
         </div>
       </Modal>
+
+      <Modal
+        isOpen={isCreatedModalOpen}
+        onClose={() => setIsCreatedModalOpen(false)}
+      >
+        <h2>Registro Creado</h2>
+        <div className="confirmation-modal">
+          <div className="confirmation-message">
+            <FaCheckCircle className="confirmation-icon" />
+            <p>El registro ha sido creado con éxito.</p>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isUpdatedModalOpen}
+        onClose={() => setIsUpdatedModalOpen(false)}
+      >
+        <h2>Registro Actualizado</h2>
+        <div className="confirmation-modal">
+          <div className="confirmation-message">
+            <FaCheckCircle className="confirmation-icon" />
+            <p>El registro ha sido actualizado con éxito.</p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-export default Usuario;
+export default Credito;

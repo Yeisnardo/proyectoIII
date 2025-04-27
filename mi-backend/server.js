@@ -9,6 +9,12 @@ const perfilFinancieroRoutes = require('./routes/routes_perfil_financiero'); // 
 const UbicacionActivEmprende = require('./routes/routes_ubicacion_actividad'); // Nueva línea para ubicacion actividad
 const cadenaProductiva = require('./routes/routes_cadena_productiva');
 const situacionOperativa = require('./routes/routes_situacionOperativa');
+const feria = require('./routes/routes_feria');
+const aprobacion = require('./routes/routes_aprobacion');
+const asistencia_feria = require('./routes/routes_asistencia_feria');
+const contrato = require('./routes/routes_contrato');
+const Credito = require('./routes/routes_credito');
+const pago = require('./routes/routes_pago');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,7 +31,12 @@ app.use('/api/perfil_financiero', perfilFinancieroRoutes); // Nueva línea para 
 app.use('/api/UbicacionActivEmprende', UbicacionActivEmprende); // Nueva línea para ubicacion actividad
 app.use('/api/CadenaProductiva', cadenaProductiva);
 app.use('/api/situacionOperativa', situacionOperativa);
-
+app.use('/api/contrato', contrato);
+app.use('/api/feria', feria);
+app.use('/api/aprobacion', aprobacion);
+app.use('/api/asistencia_feria', asistencia_feria);
+app.use('/api/Credito', Credito);
+app.use('/api/pago', pago);
 
 // Manejo de errores
 app.use((err, req, res, next) => {

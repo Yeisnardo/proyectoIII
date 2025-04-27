@@ -30,6 +30,7 @@ CREATE TABLE requerimientos_e (
     rif_personal VARCHAR(2) NOT NULL,
     foto_e VARCHAR(2) NOT NULL,
     rif_e VARCHAR(2) NOT NULL,
+    ceryifcado_ej VARCHAR (2),
     referencia_bancaria VARCHAR(2) NOT NULL,
     FOREIGN KEY (cedula_requerimientos_e) REFERENCES personas(cedula)
 );
@@ -61,12 +62,11 @@ CREATE TABLE ubicacion_actividad_e (
 );
 
 CREATE TABLE datos_cadena_p (
-    
     cedula_datos_cadena_p VARCHAR(20) NOT NULL PRIMARY KEY,
-    actividad_e VARCHAR(20),
-    division_actividad_e VARCHAR(20),
-    grupo_e VARCHAR(15),
-    clase_actividad_e VARCHAR(15),
+    actividad_e VARCHAR(100),
+    division_actividad_e VARCHAR(100),
+    grupo_e VARCHAR(100),
+    clase_actividad_e VARCHAR(100),
     forma_vender_p VARCHAR(15),
     procedencia_materiales VARCHAR(15),
     FOREIGN KEY (cedula_datos_cadena_p) REFERENCES ubicacion_actividad_e(cedula_ubicacion_actividad_e)
@@ -76,21 +76,69 @@ CREATE TABLE datos_situacion_operativa (
     cedula_datos_situacion_operativa VARCHAR(20) NOT NULL PRIMARY KEY,
     operativo_e VARCHAR(20),
     n_trabajadores VARCHAR(20),
-    tiempo_opercional_e VARCHAR(15),
+    tiempo_opercional_e VARCHAR(50),
     muestra_producto_f VARCHAR(15),
     FOREIGN KEY (cedula_datos_situacion_operativa) REFERENCES datos_cadena_p(cedula_datos_cadena_p)
 );
 
 CREATE TABLE feria (  
-    codigo_i VARCHAR(20) NOT NULL PRIMARY KEY,
+    id VARCHAR(20) NOT NULL PRIMARY KEY,
     nombre_f VARCHAR(20),
     fecha_r DATE
 );
 
 CREATE TABLE asistencia_feria (
-    cedula_datos_situacion_operativa VARCHAR(20) NOT NULL  PRIMARY KEY,
-    codigo_asistencia_feria VARCHAR(20),
+    cedula_asistencia_feria VARCHAR(20) PRIMARY KEY,
+    codigo_f VARCHAR(20) ,
     descripcion TEXT,
-    FOREIGN KEY (cedula_datos_situacion_operativa) REFERENCES datos_situacion_operativa(cedula_datos_situacion_operativa),
-    FOREIGN KEY (codigo_asistencia_feria) REFERENCES feria(codigo_i)
+    FOREIGN KEY (cedula_asistencia_feria) REFERENCES feria(id),
+    FOREIGN KEY (codigo_f) REFERENCES personas(cedula)
+);
+
+CREATE TABLE aprobacion (
+    cedula_emprendedor VARCHAR(20) NOT NULL PRIMARY KEY,
+    condicion VARCHAR(20),
+    FOREIGN KEY (cedula_emprendedor) REFERENCES requerimientos_e(cedula_requerimientos_e)
+);
+
+CREATE TABLE contrato (
+    contrato VARCHAR(20) NOT NULL PRIMARY KEY, 
+    cedula_contrato VARCHAR(20) NOT NULL,
+    fecha_apertura VARCHAR(20),
+    estatus VARCHAR(20),    
+    FOREIGN KEY (cedula_contrato) REFERENCES aprobacion(cedula_emprendedor)
+);
+
+CREATE TABLE credito (
+    n_contrato VARCHAR(20) PRIMARY KEY,
+    metodo_pago VARCHAR(20),
+    euro VARCHAR(20),
+    bolivares VARCHAR(20),
+    cincoflax VARCHAR(20),
+    diezinteres VARCHAR(20),
+    interes_semanal VARCHAR(20),
+    semanal_sin_interes VARCHAR(20),
+    couta VARCHAR(20),
+    desde VARCHAR(20),
+    hasta VARCHAR(20),
+    estado VARCHAR(20),
+    FOREIGN KEY (n_contrato) REFERENCES contrato(contrato)
+);
+
+CREATE TABLE pago (
+    id SERIAL PRIMARY KEY,
+    contrato_e VARCHAR(20) NOT NULL,
+    referencia VARCHAR(20),
+    fecha VARCHAR(20),
+    monto VARCHAR(20),
+    dueda VARCHAR(20),
+    estatus VARCHAR(20),  
+    FOREIGN KEY (contrato_e) REFERENCES credito(n_contrato)
+);
+
+CREATE TABLE cuenta_bancaria (
+    cedula_emprendedor VARCHAR(20) NOT NULL PRIMARY KEY,
+    Banco VARCHAR(20),
+    numero_cuenta VARCHAR(20),
+    FOREIGN KEY (cedula_emprendedor) REFERENCES personas(cedula)
 );

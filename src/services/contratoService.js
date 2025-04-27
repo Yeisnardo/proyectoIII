@@ -1,7 +1,7 @@
 // src/services/personaService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/usuario";
+const API_URL = "http://localhost:5000/api/contrato";
 
 export const fetchRecords = async () => {
   const response = await axios.get(API_URL);
@@ -13,11 +13,11 @@ export const createRecord = async (newRecord) => {
   return response.data;
 };
 
-export const updateRecord = async (cedula, updatedRecord) => {
-  const response = await axios.put(`${API_URL}/${cedula}`, updatedRecord);
+export const updateRecord = async (cedula_contrato, updatedRecord) => {
+  const response = await axios.put(`${API_URL}/${cedula_contrato}`, updatedRecord);
   return response.data;
 };
 
-export const deleteRecord = async (cedula) => {
-  await axios.delete(`${API_URL}/${cedula}`);
+export const deleteRecord = async (cedula_contrato) => {
+  await axios.delete(`${API_URL}/${cedula_contrato}`);
 };

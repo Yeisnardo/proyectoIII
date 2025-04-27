@@ -370,9 +370,6 @@ const Usuario = () => {
             <p>
               <strong>Número de Contrato:</strong> {viewRecord.contractNumber}
             </p>
-            <p>
-              <strong>Semanas Limite:</strong> {viewRecord.weeks}
-            </p>
             <h3>Detalles de Pagos</h3>
             <table className="table">
               <thead>

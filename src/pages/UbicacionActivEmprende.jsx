@@ -164,7 +164,7 @@ const UbicacionActivEmprende = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de UbicacionActivEmprendes</h2>
+        <h2>Catálogo de Ubicacion de Actividad Emprendedora</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar ubicación

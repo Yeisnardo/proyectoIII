@@ -268,7 +268,6 @@ const Requerimientos = () => {
               <tr>
                 <th>C.I</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de Persona</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -278,7 +277,6 @@ const Requerimientos = () => {
                   <tr key={record.cedula_requerimientos_e}>
                     <td>{record.cedula_requerimientos_e}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
-                    <td>{record.tipo}</td>
                     <td>
                       <button
                         onClick={() =>

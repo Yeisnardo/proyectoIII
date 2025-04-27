@@ -1,12 +1,12 @@
 // routes/personas.js
 const express = require('express');
-const Persona = require('../models/models_persona'); // Asegúrate de que la ruta esté correcta
+const Contrato = require('../models/models_contrato'); // Asegúrate de que la ruta esté correcta
 const router = express.Router();
 
 // Obtener todos los registros
 router.get('/', async (req, res) => {
     try {
-        const personas = await Persona.findAll();
+        const personas = await Contrato.findAll();
         res.json(personas);
     } catch (error) {
         console.error('Error al obtener las personas:', error);
@@ -17,8 +17,8 @@ router.get('/', async (req, res) => {
 // Crear un nuevo registro
 router.post('/', async (req, res) => {
     try {
-        const nuevaPersona = await Persona.create(req.body);
-        res.status(201).json(nuevaPersona);
+        const nuevaContrato = await Contrato.create(req.body);
+        res.status(201).json(nuevaContrato);
     } catch (error) {
         console.error('Error al crear la persona:', error);
         res.status(500).json({ error: 'Error al crear la persona' });
@@ -28,14 +28,14 @@ router.post('/', async (req, res) => {
 // Actualizar un registro
 router.put('/:cedula_contrato', async (req, res) => {
     try {
-        const [updated] = await Persona.update(req.body, {
+        const [updated] = await Contrato.update(req.body, {
             where: { cedula_contrato: req.params.cedula_contrato }
         });
         if (updated) {
-            const updatedPersona = await Persona.findOne({ where: { cedula_contrato: req.params.cedula_contrato } });
-            res.json(updatedPersona);
+            const updatedContrato = await Contrato.findOne({ where: { cedula_contrato: req.params.cedula_contrato } });
+            res.json(updatedContrato);
         } else {
-            res.status(404).json({ error: 'Persona no encontrada' });
+            res.status(404).json({ error: 'Contrato no encontrada' });
         }
     } catch (error) {
         console.error('Error al actualizar la persona:', error);
@@ -46,13 +46,13 @@ router.put('/:cedula_contrato', async (req, res) => {
 // Eliminar un registro
 router.delete('/:cedula_contrato', async (req, res) => {
     try {
-        const deleted = await Persona.destroy({
+        const deleted = await Contrato.destroy({
             where: { cedula_contrato: req.params.cedula_contrato }
         });
         if (deleted) {
-            res.status(204).json({ message: 'Persona eliminada' });
+            res.status(204).json({ message: 'Contrato eliminada' });
         } else {
-            res.status(404).json({ error: 'Persona no encontrada' });
+            res.status(404).json({ error: 'Contrato no encontrada' });
         }
     } catch (error) {
         console.error('Error al eliminar la persona:', error);

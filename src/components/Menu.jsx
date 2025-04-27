@@ -122,6 +122,11 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/aprobacion" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaFileContract className="menu-icon" /> Aprobar de Credito
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/contrato" className={({ isActive }) => (isActive ? "active" : "")}>
               <FaFileContract className="menu-icon" /> Gestión de Contrato
             </NavLink>

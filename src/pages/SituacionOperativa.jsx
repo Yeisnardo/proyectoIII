@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+                                                                                          import React, { useState, useEffect } from "react";
 import {
   FaEye,
   FaEdit,
@@ -20,7 +20,7 @@ import {
 } from "../services/situacionOperativaService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
-const situacionOperativa = () => {
+const Persona = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -38,10 +38,10 @@ const situacionOperativa = () => {
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
     cedula_datos_situacion_operativa: "",
-    operativo_e: "",
-    n_trabajadores: "",
-    tiempo_opercional_e: "",
-    muestra_producto_f: "",
+        operativo_e: "",
+        n_trabajadores: "",
+        tiempo_opercional_e: "",
+        muestra_producto_f: "",
   });
 
   useEffect(() => {
@@ -87,73 +87,74 @@ const situacionOperativa = () => {
     return errors;
 };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
 
-    if (
-      records.some(
-        (record) =>
-          record.cedula_datos_situacion_operativa ===
-          newRecord.cedula_datos_situacion_operativa
-      )
-    ) {
-      alert("La cédula ya existe.");
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validateForm();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
 
-    try {
-      const response = await createRecord(newRecord); // Usar el servicio para crear un registro
-      setRecords([...records, response]);
-      resetForm();
-      setIsModalOpen(false);
-      setIsCreatedModalOpen(true);
-    } catch (error) {
-      console.error("Error al registrar la persona:", error);
-      alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
-    }
-  };
-
-  const handleUpdate = async (event) => {
-    event.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    try {
-      const response = await updateRecord(
-        newRecord.cedula_datos_situacion_operativa,
-        newRecord
-      ); // Usar el servicio para actualizar
-      const updatedRecords = records.map((record) =>
+  if (
+    records.some(
+      (record) =>
         record.cedula_datos_situacion_operativa ===
-        response.cedula_datos_situacion_operativa
-          ? response
-          : record
-      );
-      setRecords(updatedRecords);
-      resetForm();
-      setIsEditModalOpen(false);
-      setIsUpdatedModalOpen(true);
-    } catch (error) {
-      console.error("Error al actualizar la persona:", error);
-      alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
-    }
-  };
+        newRecord.cedula_datos_situacion_operativa
+    )
+  ) {
+    alert("La cédula ya existe.");
+    return;
+  }
+
+  try {
+    const response = await createRecord(newRecord); // Usar el servicio para crear un registro
+    setRecords([...records, response]);
+    resetForm();
+    setIsModalOpen(false);
+    setIsCreatedModalOpen(true);
+  } catch (error) {
+    console.error("Error al registrar la persona:", error);
+    alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
+  }
+};
+
+const handleUpdate = async (event) => {
+  event.preventDefault();
+  const validationErrors = validateForm();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
+
+  try {
+    const response = await updateRecord(
+      newRecord.cedula_datos_situacion_operativa,
+      newRecord
+    ); // Usar el servicio para actualizar
+    const updatedRecords = records.map((record) =>
+      record.cedula_datos_situacion_operativa ===
+      response.cedula_datos_situacion_operativa
+        ? response
+        : record
+    );
+    setRecords(updatedRecords);
+    resetForm();
+    setIsEditModalOpen(false);
+    setIsUpdatedModalOpen(true);
+  } catch (error) {
+    console.error("Error al actualizar la persona:", error);
+    alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
+  }
+};
 
   const resetForm = () => {
     setNewRecord({
       cedula_datos_situacion_operativa: "",
-      operativo_e: "",
-      n_trabajadores: "",
-      tiempo_opercional_e: "",
-      muestra_producto_f: "",
+        operativo_e: "",
+        n_trabajadores: "",
+        tiempo_opercional_e: "",
+        muestra_producto_f: "",
     });
     setErrors({});
   };
@@ -169,8 +170,7 @@ const situacionOperativa = () => {
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.apellidos &&
           record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.cedula_datos_situacion_operativa &&
-          record.cedula_datos_situacion_operativa.includes(searchTerm))
+        (record.cedula_datos_situacion_operativa && record.cedula_datos_situacion_operativa.includes(searchTerm))
       );
     });
 
@@ -183,7 +183,7 @@ const situacionOperativa = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de situacionOperativas</h2>
+        <h2>Catálogo de Situacion Operativa</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -229,7 +229,6 @@ const situacionOperativa = () => {
               <tr>
                 <th>C.I</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de situacionOperativa</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -239,28 +238,21 @@ const situacionOperativa = () => {
                   <tr key={record.cedula_datos_situacion_operativa}>
                     <td>{record.cedula_datos_situacion_operativa}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
-                    <td>{record.tipo}</td>
                     <td>
                       <button
-                        onClick={() =>
-                          handleView(record.cedula_datos_situacion_operativa)
-                        }
+                        onClick={() => handleView(record.cedula_datos_situacion_operativa)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() =>
-                          handleEdit(record.cedula_datos_situacion_operativa)
-                        }
+                        onClick={() => handleEdit(record.cedula_datos_situacion_operativa)}
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() =>
-                          handleDelete(record.cedula_datos_situacion_operativa)
-                        }
+                        onClick={() => handleDelete(record.cedula_datos_situacion_operativa)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -305,9 +297,7 @@ const situacionOperativa = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find(
-      (record) => record.cedula_datos_situacion_operativa === id
-    );
+    const recordToView = records.find((record) => record.cedula_datos_situacion_operativa === id);
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -315,9 +305,7 @@ const situacionOperativa = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find(
-      (record) => record.cedula_datos_situacion_operativa === id
-    );
+    const recordToEdit = records.find((record) => record.cedula_datos_situacion_operativa === id);
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -325,9 +313,7 @@ const situacionOperativa = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find(
-      (record) => record.cedula_datos_situacion_operativa === id
-    );
+    const recordToDelete = records.find((record) => record.cedula_datos_situacion_operativa === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -338,11 +324,7 @@ const situacionOperativa = () => {
     try {
       await deleteRecord(recordToDelete.cedula_datos_situacion_operativa); // Usar el servicio para eliminar
       setRecords(
-        records.filter(
-          (record) =>
-            record.cedula_datos_situacion_operativa !==
-            recordToDelete.cedula_datos_situacion_operativa
-        )
+        records.filter((record) => record.cedula_datos_situacion_operativa !== recordToDelete.cedula_datos_situacion_operativa)
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
@@ -365,7 +347,7 @@ const situacionOperativa = () => {
       <Footer />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos de Situacion Operativa</h2>
+      <h2>Datos de Situacion Operativa</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -451,46 +433,35 @@ const situacionOperativa = () => {
           </div>
           <button type="submit">Registrar</button>
         </form>
+
       </Modal>
 
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de situacionOperativa</h2>
+        <h2>Detalles de Situacion Operativa</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
-              <strong>Cédula de Identidad:</strong>{" "}
-              {viewRecord.cedula_datos_situacion_operativa}
+              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_datos_situacion_operativa}
             </p>
             <p>
-              <strong>Nombress:</strong> {viewRecord.nombres}
+              <strong>Se encuantra operativo el emprendimiento:</strong> {viewRecord.operativo_e}
             </p>
             <p>
-              <strong>Apellidos:</strong> {viewRecord.apellidos}
+              <strong>N° de Trajadores:</strong> {viewRecord.n_trabajadores}
             </p>
             <p>
-              <strong>Estado:</strong> {viewRecord.estado}
+              <strong>Tiempo de operatividad del emprendimiento:</strong> {viewRecord.tiempo_opercional_e}
             </p>
             <p>
-              <strong>Municipio:</strong> {viewRecord.municipio}
-            </p>
-            <p>
-              <strong>Parroquia:</strong> {viewRecord.parroquia}
-            </p>
-            <p>
-              <strong>Teléfono 1:</strong> {viewRecord.telefono1}
-            </p>
-            <p>
-              <strong>Teléfono 2:</strong> {viewRecord.telefono2}
-            </p>
-            <p>
-              <strong>Tipo de situacionOperativa:</strong> {viewRecord.tipo}
+              <strong>El emprendimiento tiene componentes de diseño,forma de
+              produccion o presentacion final:</strong> {viewRecord.muestra_producto_f}
             </p>
           </div>
         )}
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Datos de Situacion Operativa</h2>
+      <h2>Datos de Situacion Operativa</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -532,8 +503,8 @@ const situacionOperativa = () => {
               <label className="form-label">N° de Trajadores</label>
               <input
                 type="text"
-                name="attendanceDate"
-                value={newRecord.attendanceDate}
+                name="n_trabajadores"
+                value={newRecord.n_trabajadores}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -585,8 +556,7 @@ const situacionOperativa = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong>{" "}
-          {recordToDelete?.cedula_datos_situacion_operativa}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula}
         </p>
         <p>
           <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
@@ -638,4 +608,4 @@ const situacionOperativa = () => {
   );
 };
 
-export default situacionOperativa;
+export default Persona;

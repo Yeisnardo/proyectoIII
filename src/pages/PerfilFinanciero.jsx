@@ -249,7 +249,6 @@ const PerfilFinanciero = () => {
               <tr>
                 <th>C.I</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de perfil Financiero</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -261,7 +260,6 @@ const PerfilFinanciero = () => {
                     <td>{`${record.nombres || ""} ${
                       record.apellidos || ""
                     }`}</td>
-                    <td>{record.tipo || "N/A"}</td>
                     <td>
                       <button
                         onClick={() =>

@@ -64,8 +64,8 @@ CREATE TABLE ubicacion_actividad_e (
 
 CREATE TABLE datos_cadena_p (
     cedula_datos_cadena_p VARCHAR(20) NOT NULL PRIMARY KEY,
-    actividadeconomica VARCHAR(100),
-    divisionactividadeconomica VARCHAR(100),
+    actividad_e VARCHAR(100),
+    division_actividad_e VARCHAR(100),
     clase_actividad_e VARCHAR(100),
     FOREIGN KEY (cedula_datos_cadena_p) REFERENCES ubicacion_actividad_e(cedula_ubicacion_actividad_e)
 );
