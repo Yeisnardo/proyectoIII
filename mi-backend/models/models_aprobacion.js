@@ -1,24 +1,20 @@
-// models/usuario.js
+// models/aprobacion.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database'); // Asegúrate de que la ruta sea correcta
 
-const aprobacion = sequelize.define('aprobacion', { // Cambié 'aprobacion' a 'usuario' para seguir la convención de nombres
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
+const aprobacion = sequelize.define('aprobacion', { // Cambié 'aprobacion' a 'aprobacion' para seguir la convención de nombres
     cedula_emprendedor: {
-        type: DataTypes.STRING(20), // Definido como STRING(20) para coincidir con la definición SQL
+        type: DataTypes.STRING(20),
         allowNull: false,
-        unique: true, // Asegúrate de que este campo sea único si es necesario
+        unique: true,
+        primaryKey: true, // Set as primary key
         references: {
-            model: 'requerimientos_e', // Asegúrate de que este modelo esté definido
+            model: 'requerimientos_e',
             key: 'cedula_requerimientos_e',
         },
     },
-    estatus: {
-        type: DataTypes.STRING(20), // Definido como STRING(15) para coincidir con la definición SQL
+    condicion: {
+        type: DataTypes.STRING(20), // Definido como STRING(20) para coincidir con la definición SQL
         allowNull: false,
     },
 }, {

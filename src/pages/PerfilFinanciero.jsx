@@ -50,6 +50,8 @@ const PerfilFinanciero = () => {
     exiges_ventas: "",
   });
 
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -450,12 +452,16 @@ const PerfilFinanciero = () => {
                   "Banesco",
                   "Banco Caroní",
                 ].map((banco) => (
-                  <option key={banco} value={banco}>
+                  <option
+                    key={banco}
+                    value={banco}
+                    selected={newRecord.banco_seleccionado.includes(banco)}
+                  >
                     {banco}
                   </option>
                 ))}
               </select>
-            </div>
+            </div>{" "}
             <div className="form-group input-col-12">
               <label className="form-label">Métodos de Pagos:</label>
               <div style={{ display: "flex" }}>
@@ -701,33 +707,37 @@ const PerfilFinanciero = () => {
               )}
             </div>
             <div className="form-group input-col-12">
-  <label className="form-label">Seleccionar el Banco:</label>
-  <select
-    name="banco_seleccionado"
-    className="form-control"
-    multiple
-    onChange={handleInputChange}
-    style={{ height: "150px" }}
-  >
-    {[
-      "Banco de Venezuela",
-      "Banco Bicentenario",
-      "BBVA Provincial",
-      "Banco Mercantil",
-      "Bancamiga",
-      "Banco Exterior",
-      "Banpro (Banco Provincial)",
-      "Banco del Tesoro",
-      "Banco Nacional de Crédito (BNC)",
-      "Banesco",
-      "Banco Caroní",
-    ].map((banco) => (
-      <option key={banco} value={banco} selected={newRecord.banco_seleccionado.includes(banco)}>
-        {banco}
-      </option>
-    ))}
-  </select>
-</div>
+              <label className="form-label">Seleccionar el Banco:</label>
+              <select
+                name="banco_seleccionado"
+                className="form-control"
+                multiple
+                onChange={handleInputChange}
+                style={{ height: "150px" }}
+              >
+                {[
+                  "Banco de Venezuela",
+                  "Banco Bicentenario",
+                  "BBVA Provincial",
+                  "Banco Mercantil",
+                  "Bancamiga",
+                  "Banco Exterior",
+                  "Banpro (Banco Provincial)",
+                  "Banco del Tesoro",
+                  "Banco Nacional de Crédito (BNC)",
+                  "Banesco",
+                  "Banco Caroní",
+                ].map((banco) => (
+                  <option
+                    key={banco}
+                    value={banco}
+                    selected={newRecord.banco_seleccionado.includes(banco)}
+                  >
+                    {banco}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="form-group input-col-12">
               <label className="form-label">Métodos de Pagos:</label>
               <div style={{ display: "flex" }}>
@@ -741,7 +751,6 @@ const PerfilFinanciero = () => {
                         value={metodo}
                         onChange={handleInputChange}
                         checked={newRecord.metodo_pago.includes(metodo)} // Verifica si está seleccionado
-
                       />
                       <label htmlFor="">{metodo}</label>
                     </div>

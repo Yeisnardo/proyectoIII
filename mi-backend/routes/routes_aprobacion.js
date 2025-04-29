@@ -6,11 +6,11 @@ const router = express.Router();
 // Obtener todos los registros
 router.get('/', async (req, res) => {
     try {
-        const aprobacion = await aprobacion.findAll();
-        res.json(aprobacion);
+        const aprobaciones = await aprobacion.findAll(); // Asegúrate de que 'aprobacion' esté definido
+        res.json(aprobaciones);
     } catch (error) {
-        console.error('Error al obtener las aprobacion:', error);
-        res.status(500).json({ error: 'Error al obtener las personas' });
+        console.error('Error al obtener las aprobaciones:', error);
+        res.status(500).json({ error: 'Error al obtener las aprobaciones' });
     }
 });
 

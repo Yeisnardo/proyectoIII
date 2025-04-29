@@ -30,7 +30,7 @@ CREATE TABLE requerimientos_e (
     rif_personal VARCHAR(2) NOT NULL,
     foto_e VARCHAR(2) NOT NULL,
     rif_e VARCHAR(2) NOT NULL,
-    ceryifcado_ej VARCHAR (2),
+    certificado_ej VARCHAR (2),
     referencia_bancaria VARCHAR(2) NOT NULL,
     FOREIGN KEY (cedula_requerimientos_e) REFERENCES personas(cedula)
 );

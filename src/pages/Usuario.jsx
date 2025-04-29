@@ -16,6 +16,7 @@ import {
   deleteRecord,
 } from "../services/usuarioService"; // Importar funciones del servicio
 import Header from "../components/Header";
+import axios from "axios";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import Modal from "../components/Modal";
@@ -39,6 +40,8 @@ const Usuario = () => {
   const [limit, setLimit] = useState(5);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
+  const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
     cedula_usuario: "",
@@ -46,6 +49,10 @@ const Usuario = () => {
     contrasena: "",
     estatus: "",
   });
+
+  // New state to store the found person
+  const [foundPerson, setFoundPerson] = useState(null);
+  const [isUserExists, setIsUserExists] = useState(false); // Estado para verificar si el usuario existe
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,6 +125,39 @@ const Usuario = () => {
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
       alert("Hubo un problema al actualizar el usuario. Inténtalo de nuevo.");
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      // Buscar en la tabla personas
+      const response = await axios.get(
+        `http://localhost:5000/api/personas/${newRecord.cedula_usuario}`
+      );
+      console.log("Persona encontrada:", response.data);
+      setFoundPerson(response.data); // Almacena la persona encontrada
+
+      // Ahora verificar si la persona existe en la tabla usuario
+      const userResponse = await axios.get(
+        `http://localhost:5000/api/usuario/${newRecord.cedula_usuario}`
+      );
+
+      if (userResponse.data) {
+        // Si existe en la tabla usuario, deshabilitar campos
+        setIsUserExists(true);
+      } else {
+        // Si no existe, habilitar campos
+        setIsUserExists(false);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("Usuario no encontrado pulse aceptar para crear usuario");
+        setFoundPerson(null); // Reinicia el estado si no se encuentra
+        setIsUserExists(false); // Habilitar campos si no se encuentra
+      } else {
+        console.error("Error al buscar la persona:", error);
+        alert("Hubo un problema al buscar la persona. Inténtalo de nuevo.");
+      }
     }
   };
 
@@ -208,7 +248,13 @@ const Usuario = () => {
                   <tr key={record.cedula_usuario}>
                     <td>{record.cedula_usuario}</td>
                     <td>{record.usuario}</td>
-                    <td>{record.estatus}</td>
+                    <td
+                      className={
+                        record.estatus === "Activo" ? "activo" : "inactivo"
+                      }
+                    >
+                      {record.estatus}
+                    </td>
                     <td>
                       <button
                         onClick={() => handleView(record.cedula_usuario)}
@@ -295,15 +341,23 @@ const Usuario = () => {
 
   const confirmDelete = async () => {
     try {
-        await deleteRecord(recordToDelete.cedula_usuario);
-        setRecords(records.filter((record) => record.cedula_usuario !== recordToDelete.cedula_usuario));
-        setRecordToDelete(null);
-        setModals({ ...modals, isDeleteModalOpen: false, isDeletedModalOpen: true });
+      await deleteRecord(recordToDelete.cedula_usuario);
+      setRecords(
+        records.filter(
+          (record) => record.cedula_usuario !== recordToDelete.cedula_usuario
+        )
+      );
+      setRecordToDelete(null);
+      setModals({
+        ...modals,
+        isDeleteModalOpen: false,
+        isDeletedModalOpen: true,
+      });
     } catch (error) {
-        console.error("Error al eliminar el usuario:", error);
-        alert("Hubo un problema al eliminar el usuario. Inténtalo de nuevo.");
+      console.error("Error al eliminar el usuario:", error);
+      alert("Hubo un problema al eliminar el usuario. Inténtalo de nuevo.");
     }
-};
+  };
   return (
     <div
       className={`dashboard-container ${isMenuVisible ? "" : "menu-hidden"}`}
@@ -317,84 +371,86 @@ const Usuario = () => {
 
       {/* Modals for various actions */}
       <Modal
-        isOpen={modals.isModalOpen}
-        onClose={() => setModals({ ...modals, isModalOpen: false })}
-      >
-        <h2>Datos de Usuario</h2>
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-row">
+    isOpen={modals.isModalOpen}
+    onClose={() => setModals({ ...modals, isModalOpen: false })}
+>
+    <h2>Datos de Usuario</h2>
+    <form onSubmit={handleSubmit} className="modal-form">
+        <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula de Identidad:</label>
-              <input
-                type="text"
-                name="cedula_usuario"
-                value={newRecord.cedula_usuario}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.cedula_usuario && (
-                <span className="error-message">{errors.cedula_usuario}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombre de Usuario:</label>
-              <input
-                type="text"
-                name="usuario"
-                value={newRecord.usuario}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.usuario && (
-                <span className="error-message">{errors.usuario}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Contraseña:</label>
-              <div className="password-container">
+                <label className="form-label">Cédula de Identidad:</label>
                 <input
-                  type={isPasswordVisible ? "text" : "password"}
-                  name="contrasena"
-                  value={newRecord.contrasena}
-                  onChange={handleInputChange}
-                  className="form-control"
+                    type="text"
+                    name="cedula_usuario"
+                    value={newRecord.cedula_usuario}
+                    onChange={handleInputChange}
+                    className="form-control"
                 />
                 <button
-                  type="button"
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                  className="password-toggle-button"
-                  title={
-                    isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"
-                  }
+                    type="button"
+                    className="submit-button indigo"
+                    onClick={handleSearch}
                 >
-                  {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                    Buscar
                 </button>
-              </div>
-              {errors.contrasena && (
-                <span className="error-message">{errors.contrasena}</span>
-              )}
+                {errors.cedula_usuario && (
+                    <span className="error-message">{errors.cedula_usuario}</span>
+                )}
             </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Estatus:</label>
-              <select
-                name="estatus"
-                value={newRecord.estatus}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              >
-                <option value="">Seleccionar Estatus</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-              </select>
-              {errors.estatus && (
-                <span className="error-message">{errors.estatus}</span>
-              )}
+
+            {/* Mostrar alerta con el resultado de la búsqueda */}
+            {foundPerson && (
+                <div className="alert alert-success">
+                    <span className="alert-icon">✔️</span>
+                    <strong>Persona encontrada:</strong> {foundPerson.nombres} {foundPerson.apellidos}
+                    <button className="close-btn" onClick={() => setFoundPerson(null)}>✖️</button>
+                </div>
+            )}
+
+            <div className="form-group input-col-6">
+                <label className="form-label">Nombre de Usuario:</label>
+                <input
+                    type="text"
+                    name="usuario"
+                    value={newRecord.usuario}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    disabled={isUserExists} // Deshabilitar si el usuario existe
+                />
+                {errors.usuario && (
+                    <span className="error-message">{errors.usuario}</span>
+                )}
             </div>
-          </div>
-          <button type="submit">Guardar</button>
-        </form>
-      </Modal>
+            <div className="form-group input-col-6">
+                <label className="form-label">Contraseña:</label>
+                <div className="password-container">
+                    <input
+                        type={isPasswordVisible ? "text" : "password"}
+                        name="contrasena"
+                        value={newRecord.contrasena}
+                        onChange={ handleInputChange}
+                        className="form-control"
+                        disabled={isUserExists} // Deshabilitar si el usuario existe
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                        className="password-toggle-button"
+                        title={
+                            isPasswordVisible ? "Ocultar Contraseña" : "Ver Contraseña"
+                        }
+                    >
+                        {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                </div>
+                {errors.contrasena && (
+                    <span className="error-message">{errors.contrasena}</span>
+                )}
+            </div>
+        </div>
+        <button type="submit" className="submit-button">Guardar</button>
+    </form>
+</Modal>
 
       <Modal
         isOpen={modals.isViewModalOpen}
@@ -482,8 +538,8 @@ const Usuario = () => {
                 onChange={handleInputChange}
                 className="form-control"
               >
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
+                <option value="Activo(a)">Activo(a)</option>
+                <option value="Inactivo(a)">Inactivo(a)</option>
               </select>
             </div>
           </div>
@@ -521,6 +577,32 @@ const Usuario = () => {
         <div className="deleted-message">
           <FaCheckCircle className="deleted-icon" />
           <p>El registro ha sido eliminado con éxito.</p>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isCreatedModalOpen}
+        onClose={() => setIsCreatedModalOpen(false)}
+      >
+        <h2>Registro Creado</h2>
+        <div className="confirmation-modal">
+          <div className="confirmation-message">
+            <FaCheckCircle className="confirmation-icon" />
+            <p>El registro ha sido creado con éxito.</p>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isUpdatedModalOpen}
+        onClose={() => setIsUpdatedModalOpen(false)}
+      >
+        <h2>Registro Actualizado</h2>
+        <div className="confirmation-modal">
+          <div className="confirmation-message">
+            <FaCheckCircle className="confirmation-icon" />
+            <p>El registro ha sido actualizado con éxito.</p>
+          </div>
         </div>
       </Modal>
     </div>

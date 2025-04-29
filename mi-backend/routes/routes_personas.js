@@ -14,6 +14,23 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Buscar una persona por cédula
+router.get('/:cedula', async (req, res) => {
+    try {
+        const persona = await Persona.findOne({
+            where: { cedula: req.params.cedula } // Asegúrate de que el campo sea 'cedula'
+        });
+        if (persona) {
+            res.json(persona);
+        } else {
+            res.status(404).json({ error: 'Persona no encontrada' });
+        }
+    } catch (error) {
+        console.error('Error al buscar la persona:', error);
+        res.status(500).json({ error: 'Error al buscar la persona' });
+    }
+});
+
 // Crear un nuevo registro
 router.post('/', async (req, res) => {
     try {

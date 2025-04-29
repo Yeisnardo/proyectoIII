@@ -17,7 +17,8 @@ import {
   createRecord,
   updateRecord,
   deleteRecord,
-} from "../services/CreditoService"; // Importa las funciones del servicio
+} from "../services/CreditoService";
+import axios from "axios";
 import "../assets/styles/App.css";
 
 const Credito = () => {
@@ -49,38 +50,101 @@ const Credito = () => {
     hasta: "",
   });
 
+  const [exchangeRate, setExchangeRate] = useState(0);
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+
+  const fetchExchangeRate = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.exchangerate-api.com/v4/latest/EUR"
+      );
+      setExchangeRate(response.data.rates.VES);
+    } catch (error) {
+      console.error("Error fetching exchange rate:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        const data = await fetchRecords();
         setRecords(data);
+        fetchExchangeRate();
       } catch (error) {
-        console.error("Error al obtener los registros:", error);
+        console.error("Error fetching records:", error);
       }
     };
-
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOnline(window.navigator.onLine);
+      if (window.navigator.onLine) fetchExchangeRate();
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
   }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRecord((prevRecord) => ({
-      ...prevRecord,
-      [name]: value,
-    }));
+
+    setNewRecord((prevRecord) => {
+      const updatedRecord = {
+        ...prevRecord,
+        [name]: value,
+      };
+
+      // Realizar cálculos automáticos
+      if (name === "euro") {
+        const euroAmount = parseFloat(value) || 0;
+        const bolivaresAmount = (euroAmount * exchangeRate).toFixed(2);
+
+        // Actualizar el monto en bolívares
+        updatedRecord.bolivares = bolivaresAmount;
+
+        // Calcular el 5% flat
+        updatedRecord.cincoflax = (parseFloat(bolivaresAmount) * 0.05).toFixed(
+          2
+        );
+        // Calcular el 10% de interés
+        updatedRecord.diezinteres = (euroAmount * 0.1).toFixed(2);
+        // Calcular el interés semanal
+        const diezInteres = parseFloat(updatedRecord.diezinteres) || 0;
+        updatedRecord.interes_semanal = (diezInteres / 14).toFixed(2);
+        // Calcular la semana sin interés
+        updatedRecord.semanal_sin_interes = (euroAmount / 14).toFixed(2);
+        // Calcular la cuota a cancelar
+        const semanalSinInteres =
+          parseFloat(updatedRecord.semanal_sin_interes) || 0;
+        updatedRecord.couta = (
+          semanalSinInteres + parseFloat(updatedRecord.interes_semanal)
+        ).toFixed(2);
+      }
+
+      // Actualizar la fecha "hasta" en función de la fecha "desde"
+      if (name === "desde") {
+        const startDate = new Date(value);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 98); // Agregar 14 semanas
+        updatedRecord.hasta = endDate.toISOString().split("T")[0]; // Formato para el input de tipo date
+      }
+
+      return updatedRecord;
+    });
   };
 
   const validateForm = () => {
     const errors = {};
-    // Aquí puedes agregar tus validaciones
-    if (!newRecord.n_contrato) {
+    if (!newRecord.n_contrato)
       errors.n_contrato = "El número de contrato es obligatorio.";
-    }
-    if (!newRecord.euro) {
-      errors.euro = "El monto en euros es obligatorio.";
-    }
-    // Agrega más validaciones según sea necesario
-  
+    if (!newRecord.euro) errors.euro = "El monto en euros es obligatorio.";
     return errors;
   };
 
@@ -93,24 +157,26 @@ const Credito = () => {
     }
 
     if (records.some((record) => record.n_contrato === newRecord.n_contrato)) {
-      alert("La cédula ya existe.");
+      alert("El número de contrato ya existe.");
       return;
     }
 
     try {
-      const response = await createRecord(newRecord); // Usar el servicio para crear un registro
+      const response = await createRecord(newRecord);
       setRecords([...records, response]);
       resetForm();
       setIsModalOpen(false);
       setIsCreatedModalOpen(true);
     } catch (error) {
-      console.error("Error al registrar la persona:", error);
-      alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
+      console.error("Error creating record:", error);
+      alert(
+        "Hubo un problema al registrar el nuevo registro. Inténtalo de nuevo."
+      );
     }
   };
 
-  const handleUpdate = async (event) => {
-    event.preventDefault();
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -118,7 +184,7 @@ const Credito = () => {
     }
 
     try {
-      const response = await updateRecord(newRecord.n_contrato, newRecord); // Usar el servicio para actualizar
+      const response = await updateRecord(newRecord.n_contrato, newRecord);
       const updatedRecords = records.map((record) =>
         record.n_contrato === response.n_contrato ? response : record
       );
@@ -127,8 +193,8 @@ const Credito = () => {
       setIsEditModalOpen(false);
       setIsUpdatedModalOpen(true);
     } catch (error) {
-      console.error("Error al actualizar la persona:", error);
-      alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
+      console.error("Error updating record:", error);
+      alert("Hubo un problema al actualizar el registro. Inténtalo de nuevo.");
     }
   };
 
@@ -148,20 +214,17 @@ const Credito = () => {
     setErrors({});
   };
 
-  const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible);
-  };
+  const toggleMenu = () => setIsMenuVisible(!isMenuVisible);
 
   const renderDataTable = () => {
-    const filteredRecords = records.filter((record) => {
-      return (
+    const filteredRecords = records.filter(
+      (record) =>
         (record.nombres &&
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.apellidos &&
           record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.n_contrato && record.n_contrato.includes(searchTerm))
-      );
-    });
+    );
 
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
@@ -172,7 +235,7 @@ const Credito = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Credito</h2>
+        <h2>Catálogo de Crédito</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -218,7 +281,7 @@ const Credito = () => {
               <tr>
                 <th>N° Contrato</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de Credito</th>
+                <th>Tipo de Crédito</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -313,15 +376,17 @@ const Credito = () => {
 
   const confirmDelete = async () => {
     try {
-      await deleteRecord(recordToDelete.n_contrato); // Usar el servicio para eliminar
+      await deleteRecord(recordToDelete.n_contrato);
       setRecords(
-        records.filter((record) => record.n_contrato !== recordToDelete.n_contrato)
+        records.filter(
+          (record) => record.n_contrato !== recordToDelete.n_contrato
+        )
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
       setIsDeletedModalOpen(true);
     } catch (error) {
-      console.error("Error al eliminar el registro:", error);
+      console.error("Error deleting record:", error);
       alert("Hubo un problema al eliminar el registro. Inténtalo de nuevo.");
     }
   };
@@ -337,50 +402,62 @@ const Credito = () => {
       </div>
       <Footer />
 
+      {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      <h2>Datos para la gestión de crédito</h2>
+        <h2>Datos para la gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
               <label className="form-label">N° de Contrato:</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="n_contrato" // Cambié el nombre para que sea único
-                  value={newRecord.n_contrato} // Cambié para que use el valor correcto
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Acción
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Monto en Euros</label>
               <input
                 type="text"
-                name="euro" // Cambié el nombre para que sea único
-                value={newRecord.euro} // Cambié para que use el valor correcto
+                name="n_contrato"
+                value={newRecord.n_contrato}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
+              {errors.n_contrato && (
+                <span className="error-message">{errors.n_contrato}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Metodo de Pago:</label>
+              <select
+                name="metodo_pago"
+                value={newRecord.metodo_pago}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Divisas">Divisas</option>
+                <option value="Transferencia">Transferencia</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Monto en Bolivares:</label>
+              <label className="form-label">Monto en Euros:</label>
+              <input
+                type="number"
+                name="euro"
+                value={newRecord.euro}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+              {errors.euro && (
+                <span className="error-message">{errors.euro}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Bolívares:</label>
               <input
                 type="text"
-                name="bolivares" // Cambié el nombre para que sea único
-                value={newRecord.bolivares} // Cambié para que use el valor correcto
-                onChange={handleInputChange}
+                name="bolivares"
+                value={newRecord.bolivares}
+                readOnly
                 className="form-control"
                 required
               />
@@ -389,41 +466,41 @@ const Credito = () => {
               <label className="form-label">5% FLAT:</label>
               <input
                 type="text"
-                name="cincoflax" // Cambié el nombre para que sea único
-                value={newRecord.cincoflax} // Cambié para que use el valor correcto
+                name="cincoflax"
+                value={newRecord.cincoflax}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-3">
-              <label className="form-label">10% de Interes:</label>
+              <label className="form-label">10% de Interés:</label>
               <input
                 type="text"
-                name="diezinteres" // Cambié el nombre para que sea único
-                value={newRecord.diezinteres} // Cambié para que use el valor correcto
+                name="diezinteres"
+                value={newRecord.diezinteres}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-3">
-              <label className="form-label">Interes Semanal:</label>
+              <label className="form-label">Interés Semanal:</label>
               <input
                 type="text"
-                name="interes_semanal" // Cambié el nombre para que sea único
-                value={newRecord.interes_semanal} // Cambié para que use el valor correcto
+                name="interes_semanal"
+                value={newRecord.interes_semanal}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-3">
-              <label className="form-label">Semana Sin Interes:</label>
+              <label className="form-label">Semana Sin Interés:</label>
               <input
                 type="text"
-                name="semanal_sin_interes" // Cambié el nombre para que sea único
-                value={newRecord.semanal_sin_interes} // Cambié para que use el valor correcto
+                name="semanal_sin_interes"
+                value={newRecord.semanal_sin_interes}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -433,8 +510,8 @@ const Credito = () => {
               <label className="form-label">Cuota a Cancelar:</label>
               <input
                 type="text"
-                name="couta" // Cambié el nombre para que sea único
-                value={newRecord.couta} // Cambié para que use el valor correcto
+                name="couta"
+                value={newRecord.couta}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -444,8 +521,8 @@ const Credito = () => {
               <label className="form-label">Desde:</label>
               <input
                 type="date"
-                name="desde" // Cambié el nombre para que sea único
-                value={newRecord.desde} // Cambié para que use el valor correcto
+                name="desde"
+                value={newRecord.desde}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -455,8 +532,8 @@ const Credito = () => {
               <label className="form-label">Hasta:</label>
               <input
                 type="date"
-                name="hasta" // Cambié el nombre para que sea único
-                value={newRecord.hasta} // Cambié para que use el valor correcto
+                name="hasta"
+                value={newRecord.hasta}
                 onChange={handleInputChange}
                 className="form-control"
                 required
@@ -467,46 +544,47 @@ const Credito = () => {
         </form>
       </Modal>
 
+      {/* Modales para visualizar, editar, y confirmar eliminación */}
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
         <h2>Detalles de crédito</h2>
-                {viewRecord && (
-                  <div className="table-container">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th>Método de Pago</th>
-                          {viewRecord.payments.map((payment, index) => (
-                            <React.Fragment key={index}>
-                              {payment.accountType === "Transferencia" && (
-                                <>
-                                  <th>Banco</th>
-                                  <th>N° de Cuenta</th>
-                                </>
-                              )}
-                            </React.Fragment>
-                          ))}
-                          <th>Monto en Dólar</th>
-                          <th>Cambio en Bolívares</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {viewRecord.payments.map((payment, index) => (
-                          <tr key={index}>
-                            <td>{payment.accountType}</td>
-                            {payment.accountType === "Transferencia" && (
-                              <>
-                                <td>{payment.bank}</td>
-                                <td>{payment.accountNumber}</td>
-                              </>
-                            )}
-                            <td>{payment.amountInDollars}</td>
-                            <td>{payment.exchangeInBolivares || "-"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+        {viewRecord && (
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Método de Pago</th>
+                  {viewRecord.payments.map((payment, index) => (
+                    <React.Fragment key={index}>
+                      {payment.accountType === "Transferencia" && (
+                        <>
+                          <th>Banco</th>
+                          <th>N° de Cuenta</th>
+                        </>
+                      )}
+                    </React.Fragment>
+                  ))}
+                  <th>Monto en Dólar</th>
+                  <th>Cambio en Bolívares</th>
+                </tr>
+              </thead>
+              <tbody>
+                {viewRecord.payments.map((payment, index) => (
+                  <tr key={index}>
+                    <td>{payment.accountType}</td>
+                    {payment.accountType === "Transferencia" && (
+                      <>
+                        <td>{payment.bank}</td>
+                        <td>{payment.accountNumber}</td>
+                      </>
+                    )}
+                    <td>{payment.amountInDollars}</td>
+                    <td>{payment.exchangeInBolivares || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
@@ -519,148 +597,133 @@ const Credito = () => {
                 type="text"
                 name="n_contrato"
                 value={newRecord.n_contrato}
-                onChange={handleInputChange}
                 className="form-control"
-                readOnly // Campo de solo lectura
+                readOnly
               />
               {errors.n_contrato && (
                 <span className="error-message">{errors.n_contrato}</span>
               )}
             </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombres:</label>
-              <input
-                type="text"
-                name="nombres"
-                value={newRecord.nombres}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.nombres && (
-                <span className="error-message">{errors.nombres}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Apellidos:</label>
-              <input
-                type="text"
-                name="apellidos"
-                value={newRecord.apellidos}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.apellidos && (
-                <span className="error-message">{errors.apellidos}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Estado:</label>
-              <input
-                type="text"
-                name="estado"
-                value={newRecord.estado}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.estado && (
-                <span className="error-message">{errors.estado}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Municipio:</label>
-              <input
-                type="text"
-                name="municipio"
-                value={newRecord.municipio}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.municipio && (
-                <span className="error-message">{errors.municipio}</span>
-              )}
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Parroquia:</label>
-              <input
-                type="text"
-                name="parroquia"
-                value={newRecord.parroquia}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.parroquia && (
-                <span className="error-message">{errors.parroquia}</span>
-              )}
-            </div>
             <div className="form-group input-col-12">
-              <label className="form-label">Dirección:</label>
-              <input
-                type="text"
-                name="direccion"
-                value={newRecord.direccion}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.direccion && (
-                <span className="error-message">{errors.direccion}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 1:</label>
-              <input
-                type="text"
-                name="telefono1"
-                value={newRecord.telefono1}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono1 && (
-                <span className="error-message">{errors.telefono1}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono 2:</label>
-              <input
-                type="text"
-                name="telefono2"
-                value={newRecord.telefono2}
-                onChange={handleInputChange}
-                className="form-control"
-              />
-              {errors.telefono2 && (
-                <span className="error-message">{errors.telefono2}</span>
-              )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Tipo de Credito:</label>
+              <label className="form-label">Metodo de Pago:</label>
               <select
-                name="tipo"
-                value={newRecord.tipo}
+                name="metodo_pago"
+                value={newRecord.metodo_pago}
                 onChange={handleInputChange}
                 className="form-control"
               >
                 <option value="">Seleccionar...</option>
-                <option value="Presidente">Presidente</option>
-                <option value="Coord. Creditos y Cobranzas">
-                  Coord. Creditos y Cobranzas
-                </option>
-                <option value="Asist. Creditos y Cobranzas">
-                  Asist. Creditos y Cobranzas
-                </option>
-                <option value="Coord. Formalizacion de Emprendimiento">
-                  Coord. Formalizacion de Emprendimiento
-                </option>
-                <option value="Coord. Nuevo Emprendimento">
-                  Coord. Nuevo Emprendimento
-                </option>
-                <option value="Emprendedor">Emprendedor</option>
+                <option value="Divisas">Divisas</option>
+                <option value="Transferencia">Transferencia</option>
               </select>
               {errors.tipo && (
                 <span className="error-message">{errors.tipo}</span>
               )}
             </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Euros:</label>
+              <input
+                type="number"
+                name="euro"
+                value={newRecord.euro}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+              {errors.euro && (
+                <span className="error-message">{errors.euro}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Bolívares:</label>
+              <input
+                type="text"
+                name="bolivares"
+                value={newRecord.bolivares}
+                readOnly
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">5% FLAT:</label>
+              <input
+                type="text"
+                name="cincoflax"
+                value={newRecord.cincoflax}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">10% de Interés:</label>
+              <input
+                type="text"
+                name="diezinteres"
+                value={newRecord.diezinteres}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">Interés Semanal:</label>
+              <input
+                type="text"
+                name="interes_semanal"
+                value={newRecord.interes_semanal}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">Semana Sin Interés:</label>
+              <input
+                type="text"
+                name="semanal_sin_interes"
+                value={newRecord.semanal_sin_interes}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Cuota a Cancelar:</label>
+              <input
+                type="text"
+                name="couta"
+                value={newRecord.couta}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Desde:</label>
+              <input
+                type="date"
+                name="desde"
+                value={newRecord.desde}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Hasta:</label>
+              <input
+                type="date"
+                name="hasta"
+                value={newRecord.hasta}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <button type="submit">Guardar</button>
           </div>
-          <button type="submit">Guardar</button>
         </form>
       </Modal>
 
@@ -700,10 +763,8 @@ const Credito = () => {
       >
         <h2>Registro Creado</h2>
         <div className="confirmation-modal">
-          <div className="confirmation-message">
-            <FaCheckCircle className="confirmation-icon" />
-            <p>El registro ha sido creado con éxito.</p>
-          </div>
+          <FaCheckCircle className="confirmation-icon" />
+          <p>El registro ha sido creado con éxito.</p>
         </div>
       </Modal>
 
@@ -713,10 +774,8 @@ const Credito = () => {
       >
         <h2>Registro Actualizado</h2>
         <div className="confirmation-modal">
-          <div className="confirmation-message">
-            <FaCheckCircle className="confirmation-icon" />
-            <p>El registro ha sido actualizado con éxito.</p>
-          </div>
+          <FaCheckCircle className="confirmation-icon" />
+          <p>El registro ha sido actualizado con éxito.</p>
         </div>
       </Modal>
     </div>

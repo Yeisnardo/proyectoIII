@@ -20,7 +20,7 @@ import {
 } from "../services/aprobacionService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
-const Persona = () => {
+const Aprobacion = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -38,19 +38,20 @@ const Persona = () => {
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
     cedula_emprendedor_emprendedor: "",
-    estatus: ""
+    condicion: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        const data = await fetchRecords();
+        console.log("Datos obtenidos:", data); // Agrega este log
         setRecords(data);
       } catch (error) {
         console.error("Error al obtener los registros:", error);
       }
     };
-
+  
     fetchData();
   }, []);
 
@@ -64,8 +65,9 @@ const Persona = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!newRecord.cedula_emprendedor) errors.cedula_emprendedor = "La cédula es requerida";
-    if (!newRecord.estatus) errors.estatus = "Los estatus son requeridos";
+    if (!newRecord.cedula_emprendedor)
+      errors.cedula_emprendedor = "La cédula es requerida";
+    if (!newRecord.condicion) errors.condicion = "Los condicion son requeridos";
     return errors;
   };
 
@@ -77,7 +79,11 @@ const Persona = () => {
       return;
     }
 
-    if (records.some((record) => record.cedula_emprendedor === newRecord.cedula_emprendedor)) {
+    if (
+      records.some(
+        (record) => record.cedula_emprendedor === newRecord.cedula_emprendedor
+      )
+    ) {
       alert("La cédula ya existe.");
       return;
     }
@@ -103,9 +109,14 @@ const Persona = () => {
     }
 
     try {
-      const response = await updateRecord(newRecord.cedula_emprendedor, newRecord); // Usar el servicio para actualizar
+      const response = await updateRecord(
+        newRecord.cedula_emprendedor,
+        newRecord
+      ); // Usar el servicio para actualizar
       const updatedRecords = records.map((record) =>
-        record.cedula_emprendedor === response.cedula_emprendedor ? response : record
+        record.cedula_emprendedor === response.cedula_emprendedor
+          ? response
+          : record
       );
       setRecords(updatedRecords);
       resetForm();
@@ -120,7 +131,7 @@ const Persona = () => {
   const resetForm = () => {
     setNewRecord({
       cedula_emprendedor: "",
-    estatus: ""
+      condicion: "",
     });
     setErrors({});
   };
@@ -136,7 +147,8 @@ const Persona = () => {
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.apellidos &&
           record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.cedula_emprendedor && record.cedula_emprendedor.includes(searchTerm))
+        (record.cedula_emprendedor &&
+          record.cedula_emprendedor.includes(searchTerm))
       );
     });
 
@@ -195,7 +207,7 @@ const Persona = () => {
               <tr>
                 <th>C.I</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de Persona</th>
+                <th>Tipo de Aprobacion</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -265,7 +277,9 @@ const Persona = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.cedula_emprendedor === id);
+    const recordToView = records.find(
+      (record) => record.cedula_emprendedor === id
+    );
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -273,7 +287,9 @@ const Persona = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.cedula_emprendedor === id);
+    const recordToEdit = records.find(
+      (record) => record.cedula_emprendedor === id
+    );
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -281,7 +297,9 @@ const Persona = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.cedula_emprendedor === id);
+    const recordToDelete = records.find(
+      (record) => record.cedula_emprendedor === id
+    );
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -292,7 +310,10 @@ const Persona = () => {
     try {
       await deleteRecord(recordToDelete.cedula_emprendedor); // Usar el servicio para eliminar
       setRecords(
-        records.filter((record) => record.cedula_emprendedor !== recordToDelete.cedula_emprendedor)
+        records.filter(
+          (record) =>
+            record.cedula_emprendedor !== recordToDelete.cedula_emprendedor
+        )
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
@@ -315,7 +336,7 @@ const Persona = () => {
       <Footer />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos Personales</h2>
+        <h2>Datos Aprobacionles</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -327,6 +348,15 @@ const Persona = () => {
                 onChange={handleInputChange}
                 className="form-control"
               />
+              <button
+                type="button"
+                className="submit-button indigo"
+                onClick={() => {
+                  /* Acción del botón */
+                }}
+              >
+                Buscar
+              </button>
               {errors.cedula && (
                 <span className="error-message">{errors.cedula}</span>
               )}
@@ -334,8 +364,8 @@ const Persona = () => {
             <div className="form-group input-col-12">
               <label className="form-label">Estatus:</label>
               <select
-                name="estatus"
-                value={newRecord.estatus}
+                name="condicion"
+                value={newRecord.condicion}
                 onChange={handleInputChange}
                 className="form-control"
               >
@@ -353,7 +383,7 @@ const Persona = () => {
       </Modal>
 
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Persona</h2>
+        <h2>Detalles de Aprobacion</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
@@ -361,20 +391,20 @@ const Persona = () => {
               {viewRecord.cedula_emprendedor}
             </p>
             <p>
-              <strong>Nombress:</strong> {viewRecord.nombres}
+              <strong>Nombres:</strong> {viewRecord.nombres}
             </p>
             <p>
               <strong>Apellidos:</strong> {viewRecord.apellidos}
             </p>
             <p>
-              <strong>Tipo de Persona:</strong> {viewRecord.estatus}
+              <strong>Tipo de Aprobacion:</strong> {viewRecord.condicion}
             </p>
           </div>
         )}
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos Personales</h2>
+        <h2>Actualizar Datos Aprobacionles</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -395,8 +425,8 @@ const Persona = () => {
             <div className="form-group input-col-12">
               <label className="form-label">Estatus:</label>
               <select
-                name="estatus"
-                value={newRecord.estatus}
+                name="condicion"
+                value={newRecord.condicion}
                 onChange={handleInputChange}
                 className="form-control"
               >
@@ -421,7 +451,8 @@ const Persona = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula_emprendedor}
+          <strong>Cédula de Identidad:</strong>{" "}
+          {recordToDelete?.cedula_emprendedor}
         </p>
         <p>
           <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
@@ -473,4 +504,4 @@ const Persona = () => {
   );
 };
 
-export default Persona;
+export default Aprobacion;

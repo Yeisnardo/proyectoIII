@@ -217,9 +217,8 @@ const Persona = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I</th>
+                <th>Cedula de Identidad</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de Persona</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -229,7 +228,6 @@ const Persona = () => {
                   <tr key={record.cedula}>
                     <td>{record.cedula}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
-                    <td>{record.tipo}</td>
                     <td>
                       <button
                         onClick={() => handleView(record.cedula)}
@@ -500,7 +498,7 @@ const Persona = () => {
               <strong>Cédula de Identidad:</strong> {viewRecord.cedula}
             </p>
             <p>
-              <strong>Nombress:</strong> {viewRecord.nombres}
+              <strong>Nombres:</strong> {viewRecord.nombres}
             </p>
             <p>
               <strong>Apellidos:</strong> {viewRecord.apellidos}

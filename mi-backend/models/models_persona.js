@@ -1,53 +1,44 @@
-// models/persona.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Asegúrate de que la ruta sea correcta
+const sequelize = require('../config/database');
 
-const Persona = sequelize.define('persona', { // Cambié 'personas' a 'persona' para seguir la convención singular
+const Persona = sequelize.define('persona', {
     cedula: {
-        type: DataTypes.STRING(20), // Especificar la longitud para coincidir con la definición SQL
-        primaryKey: true,
+        type: DataTypes.STRING(20),
         allowNull: false,
+        primaryKey: true,
     },
     nombres: {
-        type: DataTypes.STRING(50), // Especificar la longitud para coincidir con la definición SQL
+        type: DataTypes.STRING(50),
         allowNull: false,
     },
     apellidos: {
-        type: DataTypes.STRING(50), // Especificar la longitud para coincidir con la definición SQL
+        type: DataTypes.STRING(50),
         allowNull: false,
     },
     estado: {
-        type: DataTypes.STRING(10), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: true,
+        type: DataTypes.STRING(10),
     },
     municipio: {
-        type: DataTypes.STRING(50), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: true,
+        type: DataTypes.STRING(50),
     },
     parroquia: {
-        type: DataTypes.STRING(15), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: true,
+        type: DataTypes.STRING(15),
     },
     direccion: {
-        type: DataTypes.STRING(100), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: false,
+        type: DataTypes.STRING(100),
     },
     telefono1: {
-        type: DataTypes.STRING(15), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: false,
+        type: DataTypes.STRING(15),
     },
     telefono2: {
-        type: DataTypes.STRING(15), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: true,
+        type: DataTypes.STRING(15),
     },
     tipo: {
-        type: DataTypes.STRING(50), // Especificar la longitud para coincidir con la definición SQL
-        allowNull: false,
+        type: DataTypes.STRING(50),
     },
 }, {
-    tableName: 'personas', // Asegúrate de que el nombre coincida con el de tu tabla existente
-    timestamps: false, // Si tu tabla no tiene columnas createdAt o updatedAt
+    tableName: 'personas', // Asegúrate de que coincida con el nombre de tu tabla
+    timestamps: false,
 });
 
-// Exportamos el modelo
 module.exports = Persona;

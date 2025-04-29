@@ -383,7 +383,7 @@ const UbicacionActivEmprende = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">El espacio es?:</label>
+              <label className="form-label">El espacio es?:</label><br />
               <select
                 name="espacio"
                 value={newRecord.espacio}
@@ -450,7 +450,7 @@ const UbicacionActivEmprende = () => {
       </Modal>
 
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de UbicacionActivEmprende</h2>
+        <h2>Detalles de Ubicacion de Actividad Emprendedora</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
@@ -480,7 +480,7 @@ const UbicacionActivEmprende = () => {
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos UbicacionActivEmprendeles</h2>
+        <h2>Actualizar Ubicacion de Actividad Emprendedora</h2>
         <form onSubmit={handleUpdate} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
@@ -518,7 +518,7 @@ const UbicacionActivEmprende = () => {
               </select>
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">El espacio es?:</label>
+              <label className="form-label">El espacio es?:</label><br />
               <select
                 name="espacio"
                 value={newRecord.espacio }

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import {
   FaHome,
-  FaUser ,
+  FaUser,
   FaUsers,
   FaExchangeAlt,
-  FaClipboardCheck,
-  FaPlusCircle,
   FaFileContract,
   FaMoneyBillWave,
   FaBars,
   FaTimes,
-  FaBuilding,
   FaChevronUp,
   FaChevronDown,
+  FaUserTie, // Nuevo ícono para "Administración de Emprendedor"
+  FaClipboardList, // Nuevo ícono para "Administración de Emprendimiento"
+  FaStreetView, // Nuevo ícono para "Administración de Feria"
+  FaCheckCircle, // Nuevo ícono para "Aprobación de Crédito"
+  FaMoneyCheckAlt, // Nuevo ícono para "Administración de Crédito"
 } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import "../assets/styles/App.css";
@@ -32,7 +34,6 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
   };
 
   useEffect(() => {
-    // Verifica si la ruta actual corresponde a uno de los submenús de formalización
     const formalizacionPaths = [
       "/UbicacionActivEmprende",
       "/cadena-productiva",
@@ -40,7 +41,6 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
     ];
     setFormalizacionOpen(formalizacionPaths.includes(location.pathname));
 
-    // Verifica si la ruta actual corresponde a uno de los submenús de emprendedor
     const emprendedorPaths = [
       "/requerimientos",
       "/perfil-financiero",
@@ -58,22 +58,22 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
         <ul>
           <li>
             <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaHome className="menu-icon" /> Inicio
+              <FaHome className="menu-icon" /> Página Principal
             </NavLink>
           </li>
           <li>
             <NavLink to="/persona" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUser  className="menu-icon" /> Gestión de Persona
+              <FaUser className="menu-icon" /> Administración de Persona
             </NavLink>
           </li>
           <li>
             <NavLink to="/usuario" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUsers className="menu-icon" /> Gestión de Usuario
+              <FaUsers className="menu-icon" /> Administración de Usuario
             </NavLink>
           </li>
           <li>
             <button onClick={toggleEmprendedorMenu} className="dropdown-toggle">
-              <FaPlusCircle className="menu-icon" /> G. de Emprendedor
+              <FaUserTie className="menu-icon" /> Administración de Emprendedor
               {isEmprendedorOpen ? <FaChevronUp className="arrow-icon" /> : <FaChevronDown className="arrow-icon" />}
             </button>
             {isEmprendedorOpen && (
@@ -93,7 +93,7 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           </li>
           <li>
             <button onClick={toggleFormalizacionMenu} className="dropdown-toggle">
-              <FaClipboardCheck className="menu-icon" /> G. de Emprendimiento
+              <FaClipboardList className="menu-icon" /> Administración de Emprendimiento
               {isFormalizacionOpen ? <FaChevronUp className="arrow-icon" /> : <FaChevronDown className="arrow-icon" />}
             </button>
             {isFormalizacionOpen && (
@@ -118,32 +118,37 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           </li>
           <li>
             <NavLink to="/ferias" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUsers className="menu-icon" /> Gestión de Ferias
+              <FaStreetView className="menu-icon" /> Administración de Feria
             </NavLink>
           </li>
           <li>
             <NavLink to="/aprobacion" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaFileContract className="menu-icon" /> Aprobar de Credito
+              <FaCheckCircle className="menu-icon" /> Aprobación de Crédito
             </NavLink>
           </li>
           <li>
             <NavLink to="/contrato" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaFileContract className="menu-icon" /> Gestión de Contrato
+              <FaFileContract className="menu-icon" /> Administración de Contrato
             </NavLink>
           </li>
           <li>
             <NavLink to="/credito" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaBuilding className="menu-icon" /> Gestión de Crédito
+              <FaMoneyCheckAlt className="menu-icon" /> Administración de Crédito
             </NavLink>
           </li>
           <li>
             <NavLink to="/al-cambio" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaExchangeAlt className="menu-icon" /> Precio de Divisa
+              <FaExchangeAlt className="menu-icon" /> Cotización de Divisas
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/bancos" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUsers className="menu-icon" /> Administración de Cuenta Bancaria
             </NavLink>
           </li>
           <li>
             <NavLink to="/amortizacion" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaMoneyBillWave className="menu-icon" /> Gestión de Pago o Amortización
+              <FaMoneyBillWave className="menu-icon" /> Manejo de Amortizaciones
             </NavLink>
           </li>
         </ul>

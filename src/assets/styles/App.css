@@ -1550,3 +1550,40 @@ input[type="radio"] {
   margin-right: 5px;
   cursor: pointer;
 }
+
+.activo {
+  color: green; /* Color verde para activo */
+}
+
+.inactivo {
+  color: red; /* Color rojo para inactivo */
+}
+
+.alert {
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+}
+
+.alert-success {
+    background-color: #d4edda; /* Color de fondo verde claro */
+    color: #000000; /* Color del texto verde oscuro */
+    border: 1px solid #008f21; /* Borde verde */
+}
+
+.alert-success .alert-icon {
+    margin-right: 10px; /* Espacio entre el icono y el texto */
+}
+
+.alert-success .close-btn {
+    margin-left: auto; /* Mueve el botón de cerrar a la derecha */
+    background: none;
+    border: none;
+    color: #155724;
+    cursor: pointer;
+    font-size: 16px;
+}
