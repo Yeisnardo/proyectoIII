@@ -52,13 +52,13 @@ const Persona = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        const data = await fetchRecords(); // Servicio que obtiene los datos
         setRecords(data);
       } catch (error) {
         console.error("Error al obtener los registros:", error);
       }
     };
-
+  
     fetchData();
   }, []);
 

@@ -15,7 +15,6 @@ import Modal from "../components/Modal";
 import {
   fetchRecords,
   createRecord,
-  updateRecord,
   deleteRecord,
 } from "../services/CreditoService";
 import axios from "axios";
@@ -33,11 +32,13 @@ const Credito = () => {
   const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
   const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
   const [viewRecord, setViewRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
+    id: null, // Cambiado para ser asignado automáticamente
     n_contrato: "",
     euro: "",
     bolivares: "",
@@ -52,6 +53,7 @@ const Credito = () => {
 
   const [exchangeRate, setExchangeRate] = useState(0);
   const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+  const [nextId, setNextId] = useState(1); // Estado para el ID auto-incrementabl
 
   const fetchExchangeRate = async () => {
     try {
@@ -70,6 +72,12 @@ const Credito = () => {
         const data = await fetchRecords();
         setRecords(data);
         fetchExchangeRate();
+        // Establecer el siguiente ID basado en los registros existentes
+        const maxId = data.reduce(
+          (max, record) => Math.max(max, parseInt(record.id)),
+          0
+        );
+        setNextId(maxId + 1);
       } catch (error) {
         console.error("Error fetching records:", error);
       }
@@ -150,56 +158,33 @@ const Credito = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    if (records.some((record) => record.n_contrato === newRecord.n_contrato)) {
-      alert("El número de contrato ya existe.");
-      return;
-    }
+    newRecord.id = nextId; // Asignar el ID auto-incrementable
 
     try {
       const response = await createRecord(newRecord);
       setRecords([...records, response]);
+      setNextId(nextId + 1); // Incrementar el ID para el siguiente registro
       resetForm();
       setIsModalOpen(false);
       setIsCreatedModalOpen(true);
     } catch (error) {
-      console.error("Error creating record:", error);
+      console.error("Error creando registro:", error);
       alert(
         "Hubo un problema al registrar el nuevo registro. Inténtalo de nuevo."
       );
     }
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    try {
-      const response = await updateRecord(newRecord.n_contrato, newRecord);
-      const updatedRecords = records.map((record) =>
-        record.n_contrato === response.n_contrato ? response : record
-      );
-      setRecords(updatedRecords);
-      resetForm();
-      setIsEditModalOpen(false);
-      setIsUpdatedModalOpen(true);
-    } catch (error) {
-      console.error("Error updating record:", error);
-      alert("Hubo un problema al actualizar el registro. Inténtalo de nuevo.");
-    }
-  };
-
   const resetForm = () => {
     setNewRecord({
+      id: null,
       n_contrato: "",
       euro: "",
       bolivares: "",
@@ -217,7 +202,12 @@ const Credito = () => {
   const toggleMenu = () => setIsMenuVisible(!isMenuVisible);
 
   const renderDataTable = () => {
-    const filteredRecords = records.filter(
+    // Agrupar registros por n_contrato
+    const uniqueRecords = Array.from(
+      new Map(records.map((record) => [record.n_contrato, record])).values()
+    );
+
+    const filteredRecords = uniqueRecords.filter(
       (record) =>
         (record.nombres &&
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -300,12 +290,6 @@ const Credito = () => {
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.n_contrato)}
-                        title="Actualizar"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
                         onClick={() => handleDelete(record.n_contrato)}
                         title="Eliminar"
                       >
@@ -350,20 +334,13 @@ const Credito = () => {
     );
   };
 
-  const handleView = (id) => {
-    const recordToView = records.find((record) => record.n_contrato === id);
-    if (recordToView) {
-      setViewRecord(recordToView);
-      setIsViewModalOpen(true);
-    }
-  };
-
-  const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.n_contrato === id);
-    if (recordToEdit) {
-      setNewRecord(recordToEdit);
-      setIsEditModalOpen(true);
-    }
+  // Función para manejar la visualización
+  const handleView = (n_contrato) => {
+    const relatedRecords = records.filter(
+      (record) => record.n_contrato === n_contrato
+    );
+    setSelectedRecord(relatedRecords);
+    setIsViewModalOpen(true);
   };
 
   const handleDelete = (id) => {
@@ -407,6 +384,7 @@ const Credito = () => {
         <h2>Datos para la gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
+            <input type="hidden" name="id" />
             <div className="form-group input-col-12">
               <label className="form-label">N° de Contrato:</label>
               <input
@@ -544,187 +522,99 @@ const Credito = () => {
         </form>
       </Modal>
 
-      {/* Modales para visualizar, editar, y confirmar eliminación */}
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de crédito</h2>
-        {viewRecord && (
-          <div className="table-container">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Método de Pago</th>
-                  {viewRecord.payments.map((payment, index) => (
-                    <React.Fragment key={index}>
-                      {payment.accountType === "Transferencia" && (
-                        <>
-                          <th>Banco</th>
-                          <th>N° de Cuenta</th>
-                        </>
-                      )}
-                    </React.Fragment>
-                  ))}
-                  <th>Monto en Dólar</th>
-                  <th>Cambio en Bolívares</th>
-                </tr>
-              </thead>
-              <tbody>
-                {viewRecord.payments.map((payment, index) => (
-                  <tr key={index}>
-                    <td>{payment.accountType}</td>
-                    {payment.accountType === "Transferencia" && (
-                      <>
-                        <td>{payment.bank}</td>
-                        <td>{payment.accountNumber}</td>
-                      </>
-                    )}
-                    <td>{payment.amountInDollars}</td>
-                    <td>{payment.exchangeInBolivares || "-"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Modal>
+      <Modal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        className="view-modal"
+      >
+        <div className="modal-header">
+          <h2>Detalles del Crédito</h2>
+          <button
+            onClick={() => setIsViewModalOpen(false)}
+            className="close-button"
+          >
+            ×
+          </button>
+        </div>
 
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos Creditoles</h2>
-        <form onSubmit={handleUpdate} className="modal-form">
-          <div className="form-row">
-            <div className="form-group input-col-12">
-              <label className="form-label">Cédula de Identidad:</label>
-              <input
-                type="text"
-                name="n_contrato"
-                value={newRecord.n_contrato}
-                className="form-control"
-                readOnly
-              />
-              {errors.n_contrato && (
-                <span className="error-message">{errors.n_contrato}</span>
-              )}
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Metodo de Pago:</label>
-              <select
-                name="metodo_pago"
-                value={newRecord.metodo_pago}
-                onChange={handleInputChange}
-                className="form-control"
-              >
-                <option value="">Seleccionar...</option>
-                <option value="Divisas">Divisas</option>
-                <option value="Transferencia">Transferencia</option>
-              </select>
-              {errors.tipo && (
-                <span className="error-message">{errors.tipo}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Monto en Euros:</label>
-              <input
-                type="number"
-                name="euro"
-                value={newRecord.euro}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-              {errors.euro && (
-                <span className="error-message">{errors.euro}</span>
-              )}
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Monto en Bolívares:</label>
-              <input
-                type="text"
-                name="bolivares"
-                value={newRecord.bolivares}
-                readOnly
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-3">
-              <label className="form-label">5% FLAT:</label>
-              <input
-                type="text"
-                name="cincoflax"
-                value={newRecord.cincoflax}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-3">
-              <label className="form-label">10% de Interés:</label>
-              <input
-                type="text"
-                name="diezinteres"
-                value={newRecord.diezinteres}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-3">
-              <label className="form-label">Interés Semanal:</label>
-              <input
-                type="text"
-                name="interes_semanal"
-                value={newRecord.interes_semanal}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-3">
-              <label className="form-label">Semana Sin Interés:</label>
-              <input
-                type="text"
-                name="semanal_sin_interes"
-                value={newRecord.semanal_sin_interes}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Cuota a Cancelar:</label>
-              <input
-                type="text"
-                name="couta"
-                value={newRecord.couta}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Desde:</label>
-              <input
-                type="date"
-                name="desde"
-                value={newRecord.desde}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Hasta:</label>
-              <input
-                type="date"
-                name="hasta"
-                value={newRecord.hasta}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <button type="submit">Guardar</button>
-          </div>
-        </form>
+        <div className="modal-body">
+          {selectedRecord && selectedRecord.length > 0 ? (
+            <>
+              {/* Sección de detalles del beneficiado (toma datos del primer registro) */}
+              <h4>Detalles del beneficiado</h4>
+              <table className="details-table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>N° Contrato:</strong>
+                    </td>
+                    <td>{selectedRecord[0].n_contrato}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Nombres:</strong>
+                    </td>
+                    <td>{selectedRecord[0].nombres}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Apellidos:</strong>
+                    </td>
+                    <td>{selectedRecord[0].apellidos}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* Tabla de detalles del crédito */}
+              <h4>Detalles del Crédito</h4>
+              <table className="status-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Método de Pago</th>
+                    <th>Euros</th>
+                    <th>Bolívares</th>
+                    <th>5% FLAT</th>
+                    <th>10% de Interés</th>
+                    <th>Interés Semanal</th>
+                    <th>Semana Sin Interés</th>
+                    <th>Cuota a Cancelar</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedRecord.map((record, index) => (
+                    <tr key={index}>
+                      <td>{record.id || "N/A"}</td>
+                      <td>{record.metodo_pago || "N/A"}</td>
+                      <td>{record.euro || "N/A"}</td>
+                      <td>{record.bolivares || "N/A"}</td>
+                      <td>{record.cincoflax || "N/A"}</td>
+                      <td>{record.diezinteres || "N/A"}</td>
+                      <td>{record.interes_semanal || "N/A"}</td>
+                      <td>{record.semanal_sin_interes || "N/A"}</td>
+                      <td>{record.couta || "N/A"}</td>
+                      <td>{record.desde || "N/A"}</td>
+                      <td>{record.hasta || "N/A"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          ) : (
+            <p>No hay registros para mostrar.</p>
+          )}
+        </div>
+
+        <div className="modal-footer">
+          <button
+            onClick={() => setIsViewModalOpen(false)}
+            className="close-modal-button"
+          >
+            Cerrar
+          </button>
+        </div>
       </Modal>
 
       <Modal

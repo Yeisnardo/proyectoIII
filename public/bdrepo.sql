@@ -1,3 +1,4 @@
+-- Tabla de personas
 CREATE TABLE personas (
     cedula VARCHAR(20) NOT NULL PRIMARY KEY,
     nombres VARCHAR(50) NOT NULL,
@@ -11,6 +12,7 @@ CREATE TABLE personas (
     tipo VARCHAR(50)
 );
 
+-- Tabla de usuario
 CREATE TABLE usuario (
     id SERIAL PRIMARY KEY,
     cedula_usuario VARCHAR(20) NOT NULL,
@@ -20,6 +22,7 @@ CREATE TABLE usuario (
     FOREIGN KEY (cedula_usuario) REFERENCES personas(cedula)
 );
 
+-- Requerimientos
 CREATE TABLE requerimientos_e (
     cedula_requerimientos_e VARCHAR(20) NOT NULL PRIMARY KEY,
     solicitud_credito VARCHAR(2) NOT NULL,
@@ -30,11 +33,12 @@ CREATE TABLE requerimientos_e (
     rif_personal VARCHAR(2) NOT NULL,
     foto_e VARCHAR(2) NOT NULL,
     rif_e VARCHAR(2) NOT NULL,
-    certificado_ej VARCHAR (2),
+    certificado_ej VARCHAR(2),
     referencia_bancaria VARCHAR(2) NOT NULL,
     FOREIGN KEY (cedula_requerimientos_e) REFERENCES personas(cedula)
 );
 
+-- Datos financieros
 CREATE TABLE datos_financieros (
     cedula_datos_financieros VARCHAR(20) NOT NULL PRIMARY KEY,
     cuenta_bancaria VARCHAR(20) NOT NULL,
@@ -50,6 +54,7 @@ CREATE TABLE datos_financieros (
     FOREIGN KEY (cedula_datos_financieros) REFERENCES requerimientos_e(cedula_requerimientos_e)
 );
 
+-- Ubicación actividad
 CREATE TABLE ubicacion_actividad_e (
     cedula_ubicacion_actividad_e VARCHAR(20) NOT NULL PRIMARY KEY,
     donde_actividad_e VARCHAR(20),
@@ -61,6 +66,7 @@ CREATE TABLE ubicacion_actividad_e (
     FOREIGN KEY (cedula_ubicacion_actividad_e) REFERENCES datos_financieros(cedula_datos_financieros)
 );
 
+-- Datos cadena productiva
 CREATE TABLE datos_cadena_p (
     cedula_datos_cadena_p VARCHAR(20) NOT NULL PRIMARY KEY,
     actividad_e VARCHAR(100),
@@ -72,45 +78,52 @@ CREATE TABLE datos_cadena_p (
     FOREIGN KEY (cedula_datos_cadena_p) REFERENCES ubicacion_actividad_e(cedula_ubicacion_actividad_e)
 );
 
+-- Datos situación operativa
 CREATE TABLE datos_situacion_operativa (
     cedula_datos_situacion_operativa VARCHAR(20) NOT NULL PRIMARY KEY,
     operativo_e VARCHAR(20),
     n_trabajadores VARCHAR(20),
-    tiempo_opercional_e VARCHAR(50),
+    tiempo_operacional_e VARCHAR(50),
     muestra_producto_f VARCHAR(15),
     FOREIGN KEY (cedula_datos_situacion_operativa) REFERENCES datos_cadena_p(cedula_datos_cadena_p)
 );
 
+-- Feria
 CREATE TABLE feria (  
     id VARCHAR(20) NOT NULL PRIMARY KEY,
     nombre_f VARCHAR(20),
     fecha_r DATE
 );
 
+-- Asistencia feria
 CREATE TABLE asistencia_feria (
     cedula_asistencia_feria VARCHAR(20) PRIMARY KEY,
-    codigo_f VARCHAR(20) ,
+    codigo_f VARCHAR(20),
     descripcion TEXT,
     FOREIGN KEY (cedula_asistencia_feria) REFERENCES feria(id),
     FOREIGN KEY (codigo_f) REFERENCES personas(cedula)
 );
 
+-- Aprobacion
 CREATE TABLE aprobacion (
     cedula_emprendedor VARCHAR(20) NOT NULL PRIMARY KEY,
     condicion VARCHAR(20),
     FOREIGN KEY (cedula_emprendedor) REFERENCES requerimientos_e(cedula_requerimientos_e)
 );
 
+-- Contrato
 CREATE TABLE contrato (
-    contrato VARCHAR(20) NOT NULL PRIMARY KEY, 
+    contrato VARCHAR(20) NOT NULL PRIMARY KEY,
     cedula_contrato VARCHAR(20) NOT NULL,
     fecha_apertura VARCHAR(20),
-    estatus VARCHAR(20),    
+    estatus VARCHAR(20),
     FOREIGN KEY (cedula_contrato) REFERENCES aprobacion(cedula_emprendedor)
 );
 
+-- Crédito
 CREATE TABLE credito (
-    n_contrato VARCHAR(20) PRIMARY KEY,
+    id VARCHAR PRIMARY KEY,
+    n_contrato VARCHAR(20),
     metodo_pago VARCHAR(20),
     euro VARCHAR(20),
     bolivares VARCHAR(20),
@@ -125,6 +138,7 @@ CREATE TABLE credito (
     FOREIGN KEY (n_contrato) REFERENCES contrato(contrato)
 );
 
+-- Pago
 CREATE TABLE pago (
     id SERIAL PRIMARY KEY,
     contrato_e VARCHAR(20) NOT NULL,
@@ -132,10 +146,11 @@ CREATE TABLE pago (
     fecha VARCHAR(20),
     monto VARCHAR(20),
     dueda VARCHAR(20),
-    estatus VARCHAR(20),  
-    FOREIGN KEY (contrato_e) REFERENCES credito(n_contrato)
+    estatus VARCHAR(20),
+    FOREIGN KEY (contrato_e) REFERENCES credito(id)
 );
 
+-- Cuentas bancarias
 CREATE TABLE cuenta_bancaria (
     cedula_emprendedor VARCHAR(20) NOT NULL PRIMARY KEY,
     Banco VARCHAR(20),

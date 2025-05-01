@@ -1,195 +1,138 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEye,
   FaEdit,
+  FaTrash,
   FaPlus,
   FaChevronLeft,
   FaChevronRight,
   FaCheckCircle,
-  FaDollarSign,
-  FaEuroSign,
 } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import Modal from "../components/Modal";
+import {
+  fetchRecords,
+  createRecord,
+  deleteRecord,
+} from "../services/pagosService";
 import "../assets/styles/App.css";
 
-const Usuario = () => {
+const Credito = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [records, setRecords] = useState([
-    {
-      identityCard: "12345678",
-      firstName: "Juan",
-      lastName: "Pérez",
-      email: "juan.perez@example.com",
-      type: "Cliente",
-      gender: "Masculino",
-      birthDate: "1990-01-01",
-      phone: "0412-3456789",
-      contractNumber: "C123",
-      weeks: "4",
-      payments: [
-        {
-          week: "1",
-          paymentDate: "2023-10-01",
-          weeklyPayment: "100.00",
-          balance: "400.00",
-        },
-        {
-          week: "2",
-          paymentDate: "2023-10-08",
-          weeklyPayment: "100.00",
-          balance: "300.00",
-        },
-      ],
-    },
-    {
-      identityCard: "87654321",
-      firstName: "María",
-      lastName: "González",
-      email: "maria.gonzalez@example.com",
-      type: "Cliente",
-      gender: "Femenino",
-      birthDate: "1985-05-15",
-      phone: "0414-9876543",
-      contractNumber: "C456",
-      weeks: "4",
-      payments: [
-        {
-          week: "1",
-          paymentDate: "2023-10-02",
-          weeklyPayment: "150.00",
-          balance: "350.00",
-        },
-      ],
-    },
-    {
-      identityCard: "11223344",
-      firstName: "Carlos",
-      lastName: "Ramírez",
-      email: "carlos.ramirez@example.com",
-      type: "Cliente",
-      gender: "Masculino",
-      birthDate: "1992-03-20",
-      phone: "0416-1234567",
-      contractNumber: "C789",
-      weeks: "4",
-      payments: [],
-    },
-  ]);
+  const [records, setRecords] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
+  const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
+  const [viewRecord, setViewRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [recordToDelete, setRecordToDelete] = useState(null);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewRecord, setViewRecord] = useState(null);
-  const [recordToDelete, setRecordToDelete] = useState(null);
-  const [newRecord, setNewRecord] = useState({
-    identityCard: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    type: "",
-    gender: "",
-    birthDate: "",
-    phone: "",
-    contractNumber: "",
-    weeks: "",
-    payments: [],
-  });
-  const [newPayment, setNewPayment] = useState({
-    week: "",
-    paymentDate: "",
-    weeklyPayment: "",
-    balance: "",
+  const [errors, setErrors] = useState({});
+  const [pagos, setPagos] = useState([]);
+  const [newPago, setNewPago] = useState({
+    contrato_e: "",
+    referencia: "",
+    fecha: "",
+    monto: "",
+    dueda: "",
+    estatus: "",
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewRecord({ ...newRecord, [name]: value });
-  };
+  const [exchangeRate, setExchangeRate] = useState(0);
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
-  const handlePaymentInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewPayment({ ...newPayment, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setRecords([...records, newRecord]);
-    resetForm();
-    setIsModalOpen(false);
-  };
-
-  const handleAddPayment = (e) => {
-    e.preventDefault();
-    const updatedRecords = records.map((record) => {
-      if (record.identityCard === viewRecord.identityCard) {
-        return {
-          ...record,
-          payments: [...record.payments, newPayment],
-        };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchRecords();
+        setRecords(data);
+        fetchExchangeRate();
+        // Establecer el siguiente ID basado en los registros existentes
+        const maxId = data.reduce(
+          (max, record) => Math.max(max, parseInt(record.id)),
+          0
+        );
+        setNextId(maxId + 1);
+      } catch (error) {
+        console.error("Error fetching records:", error);
       }
-      return record;
-    });
-    setRecords(updatedRecords);
-    resetPaymentForm();
-    setIsPaymentModalOpen(false);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOnline(window.navigator.onLine);
+      if (window.navigator.onLine) fetchExchangeRate();
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
+
+  const validateForm = () => {
+    const errors = {};
+    if (!newRecord.contrato_e)
+      errors.contrato_e = "El número de contrato es obligatorio.";
+    if (!newRecord.euro) errors.euro = "El monto en euros es obligatorio.";
+    return errors;
   };
 
-  const handleUpdate = (e) => {
+  const handlePagoSubmit = async (e) => {
     e.preventDefault();
-    setRecords(
-      records.map((record) =>
-        record.identityCard === newRecord.identityCard ? newRecord : record
-      )
-    );
-    resetForm();
-    setIsEditModalOpen(false);
+    try {
+      const response = await createRecord(newPago);
+      setPagos([...pagos, response]);
+      resetPagoForm();
+      setIsCreatedModalOpen(true);
+    } catch (error) {
+      console.error("Error creando pago:", error);
+      alert("Hubo un problema al registrar el nuevo pago. Inténtalo de nuevo.");
+    }
   };
 
-  const resetForm = () => {
-    setNewRecord({
-      identityCard: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      type: "",
-      gender: "",
-      birthDate: "",
-      phone: "",
-      contractNumber: "",
-      weeks: "",
-      payments: [],
+  
+
+  const resetPagoForm = () => {
+    setNewPago({
+      contrato_e: "",
+      referencia: "",
+      fecha: "",
+      monto: "",
+      dueda: "",
+      estatus: "",
     });
   };
 
-  const resetPaymentForm = () => {
-    setNewPayment({
-      week: "",
-      paymentDate: "",
-      weeklyPayment: "",
-      balance: "",
-    });
-  };
-
-  const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible);
-  };
+  const toggleMenu = () => setIsMenuVisible(!isMenuVisible);
 
   const renderDataTable = () => {
-    const filteredRecords = records.filter((record) => {
-      return (
-        record.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.identityCard.includes(searchTerm)
-      );
-    });
+    // Agrupar registros por contrato_e
+    const uniqueRecords = Array.from(
+      new Map(records.map((record) => [record.contrato_e, record])).values()
+    );
+
+    const filteredRecords = uniqueRecords.filter(
+      (record) =>
+        (record.nombres &&
+          record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (record.apellidos &&
+          record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (record.contrato_e && record.contrato_e.includes(searchTerm))
+    );
 
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
@@ -200,10 +143,10 @@ const Usuario = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Amortización o pago</h2>
+        <h2>Catálogo de Crédito</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
-            Buscar usuario
+            Buscar persona
           </label>
           <input
             type="text"
@@ -213,13 +156,12 @@ const Usuario = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          &nbsp;
           <button
-            onClick={() => setIsPaymentModalOpen(true)}
+            onClick={() => setIsModalOpen(true)}
             className="add-button"
-            title="Agregar Pagos"
+            title="Agregar Nuevo Registro"
           >
-            <FaPlus /> Registra Pago
+            <FaPlus /> Nuevo
           </button>
         </div>
 
@@ -245,31 +187,29 @@ const Usuario = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I Emprendedor</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
+                <th>N° Contrato</th>
+                <th>Nombre y Apellido</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.identityCard}>
-                    <td>{record.identityCard}</td>
-                    <td>{`${record.firstName}`}</td>
-                    <td>{`${record.lastName}`}</td>
+                  <tr key={record.contrato_e}>
+                    <td>{record.contrato_e}</td>
+                    <td>{`${record.nombres} ${record.apellidos}`}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.identityCard)}
-                        title="Ver Pagos"
+                        onClick={() => handleView(record.contrato_e)}
+                        title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.identityCard)}
-                        title="Actualizar"
+                        onClick={() => handleDelete(record.contrato_e)}
+                        title="Eliminar"
                       >
-                        <FaEdit />
+                        <FaTrash />
                       </button>
                     </td>
                   </tr>
@@ -310,39 +250,38 @@ const Usuario = () => {
     );
   };
 
-  const handleView = (id) => {
-    const recordToView = records.find((record) => record.identityCard === id);
-    if (recordToView) {
-      setViewRecord(recordToView);
-      setIsViewModalOpen(true);
-    }
-  };
-
-  const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.identityCard === id);
-    if (recordToEdit) {
-      setNewRecord(recordToEdit);
-      setIsEditModalOpen(true);
-    }
+  // Función para manejar la visualización
+  const handleView = (contrato_e) => {
+    const relatedRecords = records.filter(
+      (record) => record.contrato_e === contrato_e
+    );
+    setSelectedRecord(relatedRecords);
+    setIsViewModalOpen(true);
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.identityCard === id);
+    const recordToDelete = records.find((record) => record.contrato_e === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
     }
   };
 
-  const confirmDelete = () => {
-    setRecords(
-      records.filter(
-        (record) => record.identityCard !== recordToDelete.identityCard
-      )
-    );
-    setRecordToDelete(null);
-    setIsDeleteModalOpen(false);
-    setIsDeletedModalOpen(true);
+  const confirmDelete = async () => {
+    try {
+      await deleteRecord(recordToDelete.contrato_e);
+      setRecords(
+        records.filter(
+          (record) => record.contrato_e !== recordToDelete.contrato_e
+        )
+      );
+      setRecordToDelete(null);
+      setIsDeleteModalOpen(false);
+      setIsDeletedModalOpen(true);
+    } catch (error) {
+      console.error("Error eliminando registro:", error);
+      alert("Hubo un problema al eliminar el registro. Inténtalo de nuevo.");
+    }
   };
 
   return (
@@ -356,174 +295,184 @@ const Usuario = () => {
       </div>
       <Footer />
 
-      {/* Modal para ver datos */}
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Usuario</h2>
-        {viewRecord && (
-          <div>
-            <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.identityCard}
-            </p>
-            <p>
-              <strong>Nombre:</strong> {viewRecord.firstName} {viewRecord.lastName}
-            </p>
-            <p>
-              <strong>Número de Contrato:</strong> {viewRecord.contractNumber}
-            </p>
-            <h3>Detalles de Pagos</h3>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Semana</th>
-                  <th>Fecha de Pago</th>
-                  <th>Monto Pagado</th>
-                  <th>Deuda</th>
-                </tr>
-              </thead>
-              <tbody>
-                {viewRecord.payments.length > 0 ? (
-                  viewRecord.payments.map((payment, index) => (
-                    <tr key={index}>
-                      <td>{payment.week}</td>
-                      <td>{payment.paymentDate}</td>
-                      <td>{payment.weeklyPayment}</td>
-                      <td>{payment.balance}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="no-results">
-                      No hay detalles de pagos disponibles.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Modal>
-
-      {/* Modal para editar datos */}
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Usuario</h2>
-        <form onSubmit={handleUpdate} className="modal-form">
+      {/* Modal para agregar nuevo registro */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2>Registrar Pago</h2>
+        <form onSubmit={handlePagoSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula de Identidad:</label>
+              <label className="form-label">Contrato:</label>
               <input
                 type="text"
-                name="identityCard"
-                value={newRecord.identityCard}
-                onChange={handleInputChange}
+                name="contrato_e"
+                value={newPago.contrato_e}
+                onChange={(e) =>
+                  setNewPago({ ...newPago, contrato_e: e.target.value })
+                }
                 className="form-control"
                 required
               />
             </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Nombre:</label>
+            <div className="form-group input-col-12">
+              <label className="form-label">Referencia:</label>
               <input
                 type="text"
-                name="firstName"
-                value={newRecord.firstName}
-                onChange={handleInputChange}
+                name="referencia"
+                value={newPago.referencia}
+                onChange={(e) =>
+                  setNewPago({ ...newPago, referencia: e.target.value })
+                }
                 className="form-control"
-                required
               />
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Apellido:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={newRecord.lastName}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={newRecord.email}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Teléfono:</label>
-              <input
-                type="text"
-                name="phone"
-                value={newRecord.phone}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Tipo:</label>
-              <input
-                type="text"
-                name="type"
-                value={newRecord.type}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Género:</label>
-              <input
-                type="text"
-                name="gender"
-                value={newRecord.gender}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Nacimiento:</label>
+              <label className="form-label">Fecha:</label>
               <input
                 type="date"
-                name="birthDate"
-                value={newRecord.birthDate}
-                onChange={handleInputChange}
+                name="fecha"
+                value={newPago.fecha}
+                onChange={(e) =>
+                  setNewPago({ ...newPago, fecha: e.target.value })
+                }
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Número de Contrato:</label>
+              <label className="form-label">Monto:</label>
               <input
                 type="text"
-                name="contractNumber"
-                value={newRecord.contractNumber}
-                onChange={handleInputChange}
+                name="monto"
+                value={newPago.monto}
+                onChange={(e) =>
+                  setNewPago({ ...newPago, monto: e.target.value })
+                }
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Semanas:</label>
+              <label className="form-label">Deuda:</label>
               <input
                 type="text"
-                name="weeks"
-                value={newRecord.weeks}
-                onChange={handleInputChange}
+                name="dueda"
+                value={newPago.dueda}
+                onChange={(e) =>
+                  setNewPago({ ...newPago, dueda: e.target.value })
+                }
                 className="form-control"
-                required
+              />
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Estatus:</label>
+              <input
+                type="text"
+                name="estatus"
+                value={newPago.estatus}
+                onChange={(e) =>
+                  setNewPago({ ...newPago, estatus: e.target.value })
+                }
+                className="form-control"
               />
             </div>
           </div>
-          <button type="submit">Actualizar</button>
+          <button type="submit">Registrar Pago</button>
         </form>
       </Modal>
 
-      {/* Modal para confirmar eliminación */}
+      <Modal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        className="view-modal"
+      >
+        <div className="modal-header">
+          <h2>Detalles del Crédito</h2>
+          <button
+            onClick={() => setIsViewModalOpen(false)}
+            className="close-button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="modal-body">
+          {selectedRecord && selectedRecord.length > 0 ? (
+            <>
+              {/* Sección de detalles del beneficiado (toma datos del primer registro) */}
+              <h4>Detalles del beneficiado</h4>
+              <table className="details-table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>N° Contrato:</strong>
+                    </td>
+                    <td>{selectedRecord[0].contrato_e}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Nombres:</strong>
+                    </td>
+                    <td>{selectedRecord[0].nombres}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Apellidos:</strong>
+                    </td>
+                    <td>{selectedRecord[0].apellidos}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* Tabla de detalles del crédito */}
+              <h4>Detalles del Crédito</h4>
+              <table className="status-table">
+                <thead>
+                  <tr>
+                    <th>Método de Pago</th>
+                    <th>Euros</th>
+                    <th>Bolívares</th>
+                    <th>5% FLAT</th>
+                    <th>10% de Interés</th>
+                    <th>Interés Semanal</th>
+                    <th>Semana Sin Interés</th>
+                    <th>Cuota a Cancelar</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedRecord.map((record, index) => (
+                    <tr key={index}>
+                      <td>{record.metodo_pago || "N/A"}</td>
+                      <td>{record.euro || "N/A"}</td>
+                      <td>{record.bolivares || "N/A"}</td>
+                      <td>{record.cincoflax || "N/A"}</td>
+                      <td>{record.diezinteres || "N/A"}</td>
+                      <td>{record.interes_semanal || "N/A"}</td>
+                      <td>{record.semanal_sin_interes || "N/A"}</td>
+                      <td>{record.couta || "N/A"}</td>
+                      <td>{record.desde || "N/A"}</td>
+                      <td>{record.hasta || "N/A"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          ) : (
+            <p>No hay registros para mostrar.</p>
+          )}
+        </div>
+
+        <div className="modal-footer">
+          <button
+            onClick={() => setIsViewModalOpen(false)}
+            className="close-modal-button"
+          >
+            Cerrar
+          </button>
+        </div>
+      </Modal>
+
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -531,10 +480,11 @@ const Usuario = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.identityCard}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.contrato_e}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.firstName} {recordToDelete?.lastName}
+          <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
+          {recordToDelete?.apellidos}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
@@ -542,7 +492,6 @@ const Usuario = () => {
         </div>
       </Modal>
 
-      {/* Modal para mostrar que el registro ha sido eliminado */}
       <Modal
         isOpen={isDeletedModalOpen}
         onClose={() => setIsDeletedModalOpen(false)}
@@ -554,75 +503,29 @@ const Usuario = () => {
         </div>
       </Modal>
 
-      {/* Modal para agregar pago */}
       <Modal
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
+        isOpen={isCreatedModalOpen}
+        onClose={() => setIsCreatedModalOpen(false)}
       >
-        <h2>Agregar Pago</h2>
-        <form onSubmit={handleAddPayment} className="modal-form">
-          <div className="form-row">
-          <div className="form-group input-col-12">
-              <label className="form-label">N° de Contrato:</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="contractNumber" // Cambié el nombre para que sea único
-                  value={newRecord.contractNumber} // Cambié para que use el valor correcto
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Referencia</label>
-              <input
-                type="text"
-                name="week"
-                value={newPayment.week}
-                onChange={handlePaymentInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Fecha de Pago</label>
-              <input
-                type="date"
-                name="paymentDate"
-                value={newPayment.paymentDate}
-                onChange={handlePaymentInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-4">
-              <label className="form-label">Monto Pagado</label>
-              <input
-                type="number"
-                name="weeklyPayment"
-                value={newPayment.weeklyPayment}
-                onChange={handlePaymentInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit">Guardar Pago</button>
-        </form>
+        <h2>Registro Creado</h2>
+        <div className="confirmation-modal">
+          <FaCheckCircle className="confirmation-icon" />
+          <p>El registro ha sido creado con éxito.</p>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isUpdatedModalOpen}
+        onClose={() => setIsUpdatedModalOpen(false)}
+      >
+        <h2>Registro Actualizado</h2>
+        <div className="confirmation-modal">
+          <FaCheckCircle className="confirmation-icon" />
+          <p>El registro ha sido actualizado con éxito.</p>
+        </div>
       </Modal>
     </div>
   );
 };
 
-export default Usuario;
+export default Credito;

@@ -1,63 +1,61 @@
 // routes/pago.js
 const express = require('express');
-const pago = require('../models/models_pago'); // Asegúrate de que la ruta esté correcta
+const Pago = require('../models/models_pago'); // Asegúrate que la ruta sea correcta
 const router = express.Router();
 
-// Obtener todos los registros
+// Obtener todos los pagos
 router.get('/', async (req, res) => {
-    try {
-        const pago = await pago.findAll();
-        res.json(pago);
-    } catch (error) {
-        console.error('Error al obtener los pago:', error);
-        res.status(500).json({ error: 'Error al obtener los pago' });
-    }
+  try {
+    const pagos = await Pago.findAll();
+    res.json(pagos);
+  } catch (error) {
+    console.error('Error al obtener los pagos:', error);
+    res.status(500).json({ error: 'Error al obtener los pagos' });
+  }
 });
 
-// Crear un nuevo registro
+// Crear un pago
 router.post('/', async (req, res) => {
-    try {
-        const nuevopago = await pago.create(req.body);
-        res.status(201).json(nuevopago);
-    } catch (error) {
-        console.error('Error al crear el pago:', error);
-        res.status(500).json({ error: 'Error al crear el pago' });
-    }
+  try {
+    const nuevoPago = await Pago.create(req.body);
+    res.status(201).json(nuevoPago);
+  } catch (error) {
+    console.error('Error al crear el pago:', error);
+    res.status(500).json({ error: 'Error al crear el pago' });
+  }
 });
 
-// Actualizar un registro
+// Actualizar un pago
 router.put('/:contrato_e', async (req, res) => {
-    try {
-        const [updated] = await pago.update(req.body, {
-            where: { contrato_e: req.params.contrato_e }
-        });
-        if (updated) {
-            const updatedpago = await pago.findOne({ where: { contrato_e: req.params.contrato_e } });
-            res.json(updatedpago);
-        } else {
-            res.status(404).json({ error: 'pago no encontrada' });
-        }
-    } catch (error) {
-        console.error('Error al actualizar la pago:', error);
-        res.status(500).json({ error: 'Error al actualizar la pago' });
+  try {
+    const [updated] = await Pago.update(req.body, {
+      where: { contrato_e: req.params.contrato_e },
+    });
+    if (updated) {
+      const updatedPago = await Pago.findOne({ where: { contrato_e: req.params.contrato_e } });
+      res.json(updatedPago);
+    } else {
+      res.status(404).json({ error: 'Pago no encontrado' });
     }
+  } catch (error) {
+    console.error('Error al actualizar el pago:', error);
+    res.status(500).json({ error: 'Error al actualizar el pago' });
+  }
 });
 
-// Eliminar un registro
+// Eliminar un pago
 router.delete('/:contrato_e', async (req, res) => {
-    try {
-        const deleted = await pago.destroy({
-            where: { contrato_e: req.params.contrato_e }
-        });
-        if (deleted) {
-            res.status(204).json({ message: 'pago eliminado' });
-        } else {
-            res.status(404).json({ error: 'pago no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al eliminar la pago:', error);
-        res.status(500).json({ error: 'Error al eliminar la pago' });
+  try {
+    const deleted = await Pago.destroy({ where: { contrato_e: req.params.contrato_e } });
+    if (deleted) {
+      res.status(204).json({ message: 'Pago eliminado' });
+    } else {
+      res.status(404).json({ error: 'Pago no encontrado' });
     }
+  } catch (error) {
+    console.error('Error al eliminar el pago:', error);
+    res.status(500).json({ error: 'Error al eliminar el pago' });
+  }
 });
 
 module.exports = router;

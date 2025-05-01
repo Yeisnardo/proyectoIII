@@ -1587,3 +1587,109 @@ input[type="radio"] {
     cursor: pointer;
     font-size: 16px;
 }
+
+.date-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.date-table th,
+.date-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.date-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.details-table, .status-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.details-table td, .status-table td {
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.details-table td:first-child, .status-table td:first-child {
+  font-weight: bold;
+  width: 30%; /* Ajusta el ancho según sea necesario */
+}
+
+.details-table tr:nth-child(even), .status-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Color de fondo alternativo para filas */
+}
+
+.status-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  margin-top: 10px;
+  overflow-x: auto; /* Permite el desplazamiento horizontal */
+  display: block; /* Hace que la tabla sea un bloque para el desplazamiento */
+}
+
+.status-table thead tr {
+  background: linear-gradient(
+    to right,
+    var(--primary-color),
+    #006699
+  );
+  color: white;
+  text-align: left;
+}
+
+.status-table th,
+.status-table td {
+  padding: 10px;
+  border: 1px solid #000000;
+  text-align: center; /* Centra el texto en las celdas */
+}
+
+.status-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.status-table tbody tr:hover {
+  background-color: #f1f1f1;
+  cursor: default;
+}
+
+.status-table td:first-child {
+  font-weight: bold;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+  .status-table {
+    display: block; /* Cambia a bloque para permitir desplazamiento */
+    overflow-x: auto; /* Permite el desplazamiento horizontal */
+  }
+
+  .status-table thead {
+    display: none; /* Oculta el encabezado en pantallas pequeñas */
+  }
+
+  .status-table tr {
+    display: flex;
+    flex-direction: column; /* Cambia a columna para apilar las celdas */
+    margin-bottom: 10px; /* Espacio entre filas */
+    border: 1px solid #ddd; /* Agrega borde a cada fila */
+  }
+
+  .status-table td {
+    text-align: left; /* Alinea el texto a la izquierda */
+    padding: 8px; /* Espaciado interno */
+    border: none; /* Elimina el borde de las celdas */
+    background-color: #f9f9f9; /* Color de fondo para las celdas */
+  }
+
+  .status-table td:first-child {
+    font-weight: bold; /* Resalta la primera celda */
+  }
+}

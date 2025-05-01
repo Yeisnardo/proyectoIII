@@ -3,34 +3,42 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Pago = sequelize.define('pago', {
-    id: {
-        type: DataTypes.INTEGER, // Usar INTEGER para el campo SERIAL
-        primaryKey: true,
-        autoIncrement: true, // Para que se incremente automáticamente
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  contrato_e: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    references: {
+      model: 'credito', // Nombre de la tabla relacionada
+      key: 'n_contrato', // Clave foránea en la tabla credito
     },
-    contrato_e: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-        references: {
-            model: 'credito', // Asegúrate de que este modelo esté definido
-            key: 'n_contrato',
-        },
-    },
-    referencia: {
-        type: DataTypes.STRING(20),
-        allowNull: true, // Suponiendo que puede ser nulo según la definición SQL
-    },
-    fecha: {
-        type: DataTypes.STRING(20), // Puedes cambiar a DATE si prefieres manejar fechas
-        allowNull: true, // Suponiendo que puede ser nulo según la definición SQL
-    },
-    monto: {
-        type: DataTypes.STRING(20), // Puedes cambiar a DECIMAL o FLOAT si prefieres manejar montos
-        allowNull: true, // Suponiendo que puede ser nulo según la definición SQL
-    },
+  },
+  referencia: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
+  fecha: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
+  monto: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
+  dueda: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
+  estatus: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
 }, {
-    tableName: 'pago', // Asegúrate de que coincida con el nombre de tu tabla existente
-    timestamps: false, // Si tu tabla no tiene columnas createdAt o updatedAt
+  tableName: 'pago', // Nombre exacto de la tabla en la BD
+  timestamps: false,
 });
 
 module.exports = Pago;
