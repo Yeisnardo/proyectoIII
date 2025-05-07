@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
 import Login from './pages/Login';
-import Registro from './pages/Registro';
+import Registro from "./pages/Registro";
 import Registro2 from './pages/registro2'; // Ensure correct import name
 import Dashboard from './pages/Dashboard';
 import Persona from './pages/Persona';
