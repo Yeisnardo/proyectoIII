@@ -14,6 +14,7 @@ const aprobacion = require('./routes/routes_aprobacion');
 const asistencia = require('./routes/routes_asistencia_feria');
 const contrato = require('./routes/routes_contrato');
 const Credito = require('./routes/routes_credito');
+const Banco = require('./routes/routes_banco');
 const pago = require('./routes/routes_pago');
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/CadenaProductiva', cadenaProductiva);
 app.use('/api/situacionOperativa', situacionOperativa);
 app.use('/api/contrato', contrato);
 app.use('/api/ferias', ferias);
+app.use('/api/Banco', Banco)
 app.use('/api/aprobacion', aprobacion);
 app.use('/api/asistencia', asistencia);
 app.use('/api/Credito', Credito);

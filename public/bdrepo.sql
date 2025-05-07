@@ -153,7 +153,7 @@ CREATE TABLE pago (
 -- Cuentas bancarias
 CREATE TABLE cuenta_bancaria (
     cedula_emprendedor VARCHAR(20) NOT NULL PRIMARY KEY,
-    Banco VARCHAR(20),
+    Banco VARCHAR (20),
     numero_cuenta VARCHAR(20),
     FOREIGN KEY (cedula_emprendedor) REFERENCES personas(cedula)
 );

@@ -389,7 +389,7 @@ const ferias = () => {
             <div className="form-group input-col-6">
               <label className="form-label">Cédula de Identidad del Emprendedor:</label>
               <input
-                type="text"
+                type="number"
                 name="cedula_asistencia_feria"
                 value={newRecord.cedula_asistencia_feria}
                 onChange={handleAsistenciaInputChange}

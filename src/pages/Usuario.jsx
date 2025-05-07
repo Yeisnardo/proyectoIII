@@ -380,7 +380,7 @@ const Usuario = () => {
             <div className="form-group input-col-12">
                 <label className="form-label">Cédula de Identidad:</label>
                 <input
-                    type="text"
+                    type="number"
                     name="cedula_usuario"
                     value={newRecord.cedula_usuario}
                     onChange={handleInputChange}

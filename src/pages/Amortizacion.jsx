@@ -35,6 +35,7 @@ const Credito = () => {
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [creditoEncontrado, setCreditoEncontrado] = useState(null);
   const [errors, setErrors] = useState({});
   const [pagos, setPagos] = useState([]);
   const [newPago, setNewPago] = useState({
@@ -68,6 +69,18 @@ const Credito = () => {
     fetchData();
   }, []);
 
+  const handleBuscarCredito = () => {
+    const credito = records.find(
+      (rec) => rec.contrato_e === newPago.contrato_e
+    );
+    if (credito) {
+      setCreditoEncontrado(credito);
+    } else {
+      alert("Crédito no encontrado");
+      setCreditoEncontrado(null);
+    }
+  };
+
   useEffect(() => {
     const updateOnlineStatus = () => {
       setIsOnline(window.navigator.onLine);
@@ -91,20 +104,76 @@ const Credito = () => {
     return errors;
   };
 
+  // Función para registrar pago y actualizar crédito
   const handlePagoSubmit = async (e) => {
     e.preventDefault();
+
+    // Convertir monto a número
+    const montoPagoEuro = parseFloat(newPago.monto);
+    if (isNaN(montoPagoEuro) || montoPagoEuro <= 0) {
+      alert("Monto inválido");
+      return;
+    }
+
     try {
-      const response = await createRecord(newPago);
-      setPagos([...pagos, response]);
+      // Buscar el crédito asociado al contrato
+      const credito = records.find(
+        (rec) => rec.contrato_e === newPago.contrato_e
+      );
+      if (!credito) {
+        alert("Crédito no encontrado");
+        return;
+      }
+
+      // Calcular la nueva deuda
+      const deudaActual = parseFloat(credito.deuda || credito.euro); // si no tiene deuda, usar total
+      const nuevaDeuda = Math.max(deudaActual - montoPagoEuro, 0);
+
+      // Actualizar el crédito con la nueva deuda y el estado
+      const nuevoEstatus =
+        nuevaDeuda === 0
+          ? "Pagado"
+          : credito.estatus === "Mora"
+          ? "Mora"
+          : "Activo";
+
+      // Actualizar crédito en backend
+      await axios.put(
+        `http://localhost:5000/api/contrato/${credito.contrato_e}`,
+        {
+          ...credito,
+          deuda: nuevaDeuda,
+          estatus: nuevoEstatus,
+        }
+      );
+
+      // Registrar el pago
+      const responsePago = await createRecord({
+        contrato_e: newPago.contrato_e,
+        referencia: newPago.referencia,
+        fecha: newPago.fecha,
+        monto: newPago.monto,
+        dueda: nuevaDeuda.toFixed(2),
+        estatus: nuevoEstatus,
+        euro: montoPagoEuro, // Añadimos el monto en euros
+      });
+
+      // Actualizar estado en la interfaz
+      setRecords((prev) => {
+        return prev.map((rec) =>
+          rec.contrato_e === newPago.contrato_e
+            ? { ...rec, deuda: nuevaDeuda, estatus: nuevoEstatus }
+            : rec
+        );
+      });
+
       resetPagoForm();
       setIsCreatedModalOpen(true);
     } catch (error) {
-      console.error("Error creando pago:", error);
-      alert("Hubo un problema al registrar el nuevo pago. Inténtalo de nuevo.");
+      console.error("Error registrando pago:", error);
+      alert("Hubo un problema al registrar el pago");
     }
   };
-
-  
 
   const resetPagoForm = () => {
     setNewPago({
@@ -143,7 +212,7 @@ const Credito = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Crédito</h2>
+        <h2>Catálogo de Amortizacion</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -187,7 +256,7 @@ const Credito = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>N° Contrato</th>
+                <th>N° de Credito</th>
                 <th>Nombre y Apellido</th>
                 <th>Acciones</th>
               </tr>
@@ -253,7 +322,7 @@ const Credito = () => {
   // Función para manejar la visualización
   const handleView = (contrato_e) => {
     const relatedRecords = records.filter(
-      (record) => record.contrato_e === contrato_e
+      (rec) => rec.contrato_e === contrato_e
     );
     setSelectedRecord(relatedRecords);
     setIsViewModalOpen(true);
@@ -301,7 +370,7 @@ const Credito = () => {
         <form onSubmit={handlePagoSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Contrato:</label>
+              <label className="form-label">ID:</label>
               <input
                 type="text"
                 name="contrato_e"
@@ -312,7 +381,25 @@ const Credito = () => {
                 className="form-control"
                 required
               />
+              <button
+                type="button"
+                className="submit-button indigo"
+                onClick={handleBuscarCredito}
+              >
+                Buscar
+              </button>
             </div>
+            {creditoEncontrado && (
+              <div className="credito-info">
+                <h4>Datos del Crédito Encontrado</h4>
+                <p>
+                  <strong>Cuota EUR:</strong> {creditoEncontrado.cuota}
+                </p>
+                <p>
+                  <strong>Deuda EUR:</strong> {creditoEncontrado.deuda}
+                </p>
+              </div>
+            )}
             <div className="form-group input-col-12">
               <label className="form-label">Referencia:</label>
               <input
@@ -404,7 +491,7 @@ const Credito = () => {
                 <tbody>
                   <tr>
                     <td>
-                      <strong>N° Contrato:</strong>
+                      <strong>Credito N°:</strong>
                     </td>
                     <td>{selectedRecord[0].contrato_e}</td>
                   </tr>
@@ -428,31 +515,21 @@ const Credito = () => {
               <table className="status-table">
                 <thead>
                   <tr>
-                    <th>Método de Pago</th>
-                    <th>Euros</th>
-                    <th>Bolívares</th>
-                    <th>5% FLAT</th>
-                    <th>10% de Interés</th>
-                    <th>Interés Semanal</th>
-                    <th>Semana Sin Interés</th>
-                    <th>Cuota a Cancelar</th>
-                    <th>Desde</th>
-                    <th>Hasta</th>
+                    <th>Referencia Bancaria</th>
+                    <th>Fecha de Pago</th>
+                    <th>Monto Pagado</th>
+                    <th>Dueda Pendiente</th>
+                    <th>Estatus</th>
                   </tr>
                 </thead>
                 <tbody>
                   {selectedRecord.map((record, index) => (
                     <tr key={index}>
-                      <td>{record.metodo_pago || "N/A"}</td>
-                      <td>{record.euro || "N/A"}</td>
-                      <td>{record.bolivares || "N/A"}</td>
-                      <td>{record.cincoflax || "N/A"}</td>
-                      <td>{record.diezinteres || "N/A"}</td>
-                      <td>{record.interes_semanal || "N/A"}</td>
-                      <td>{record.semanal_sin_interes || "N/A"}</td>
-                      <td>{record.couta || "N/A"}</td>
-                      <td>{record.desde || "N/A"}</td>
-                      <td>{record.hasta || "N/A"}</td>
+                      <td>{record.referencia || "N/A"}</td>
+                      <td>{record.fecha || "N/A"}</td>
+                      <td>{record.monto || "N/A"}</td>
+                      <td>{record.dueda || "N/A"}</td>
+                      <td>{record.estatus || "N/A"}</td>
                     </tr>
                   ))}
                 </tbody>

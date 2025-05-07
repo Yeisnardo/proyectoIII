@@ -271,7 +271,6 @@ const Credito = () => {
               <tr>
                 <th>N° Contrato</th>
                 <th>Nombre y Apellido</th>
-                <th>Tipo de Crédito</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -281,7 +280,6 @@ const Credito = () => {
                   <tr key={record.n_contrato}>
                     <td>{record.n_contrato}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
-                    <td>{record.tipo}</td>
                     <td>
                       <button
                         onClick={() => handleView(record.n_contrato)}

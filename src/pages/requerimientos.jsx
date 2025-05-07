@@ -1109,7 +1109,7 @@ const Requerimientos = () => {
             <li className="form-item input-col-12">
               <label className="form-label">Cédula de Identidad:</label>
               <input
-                type="text"
+                type="number"
                 name="cedula_requerimientos_e"
                 value={newRecord.cedula_requerimientos_e}
                 onChange={handleInputChange}

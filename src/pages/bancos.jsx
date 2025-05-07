@@ -17,10 +17,10 @@ import {
   createRecord,
   updateRecord,
   deleteRecord,
-} from "../services/contratoService"; // Importa las funciones del servicio
+} from "../services/bancoService"; // Importa las funciones del servicio
 import "../assets/styles/App.css";
 
-const Persona = () => {
+const Banco = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -37,22 +37,21 @@ const Persona = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
-    cedula_contrato: "",
-    contrato: "",
-    fecha_apertura: "",
-    estatus: ""
+    cedula_emprendedor: "",
+    banco: "",
+    numero_cuenta: ""
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        const data = await fetchRecords(); // Servicio que obtiene los datos
         setRecords(data);
       } catch (error) {
         console.error("Error al obtener los registros:", error);
       }
     };
-
+  
     fetchData();
   }, []);
 
@@ -66,24 +65,11 @@ const Persona = () => {
 
   const validateForm = () => {
     const errors = {};
-    
-    // Example validation rules
-    if (!newRecord.cedula_contrato) {
-      errors.cedula_contrato = "La cédula del contrato es requerida.";
-    }
-    if (!newRecord.contrato) {
-      errors.contrato = "El número de contrato es requerido.";
-    }
-    if (!newRecord.fecha_apertura) {
-      errors.fecha_apertura = "La fecha de apertura es requerida.";
-    }
-    if (!newRecord.estatus) {
-      errors.estatus = "El estatus es requerido.";
-    }
-  
+    if (!newRecord.cedula_emprendedor) errors.cedula_emprendedor = "La cédula es requerida";
+    if (!newRecord.banco) errors.Banco = "Los Banco son requeridos";
+    if (!newRecord.numero_cuenta) errors.numero_cuenta = "Los numero_cuenta son requeridos";
     return errors;
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +79,7 @@ const Persona = () => {
       return;
     }
 
-    if (records.some((record) => record.cedula_contrato === newRecord.cedula_contrato)) {
+    if (records.some((record) => record.cedula_emprendedor === newRecord.cedula_emprendedor)) {
       alert("La cédula ya existe.");
       return;
     }
@@ -119,9 +105,9 @@ const Persona = () => {
     }
 
     try {
-      const response = await updateRecord(newRecord.cedula_contrato, newRecord); // Usar el servicio para actualizar
+      const response = await updateRecord(newRecord.cedula_emprendedor, newRecord); // Usar el servicio para actualizar
       const updatedRecords = records.map((record) =>
-        record.cedula_contrato === response.cedula_contrato ? response : record
+        record.cedula_emprendedor === response.cedula_emprendedor ? response : record
       );
       setRecords(updatedRecords);
       resetForm();
@@ -135,10 +121,9 @@ const Persona = () => {
 
   const resetForm = () => {
     setNewRecord({
-          cedula_contrato: "",
-          contrato: "",
-          fecha_apertura: "",
-          estatus: ""
+      cedula_emprendedor: "",
+      banco: "",
+      numero_cuenta: ""
     });
     setErrors({});
   };
@@ -150,11 +135,11 @@ const Persona = () => {
   const renderDataTable = () => {
     const filteredRecords = records.filter((record) => {
       return (
-        (record.nombres &&
-          record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.apellidos &&
-          record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.cedula_contrato && record.cedula_contrato.includes(searchTerm))
+        (record.Banco &&
+          record.Banco.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (record.numero_cuenta &&
+          record.numero_cuenta.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (record.cedula_emprendedor && record.cedula_emprendedor.includes(searchTerm))
       );
     });
 
@@ -167,7 +152,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Contrato</h2>
+        <h2>Catálogo de Cuentas Bancarias</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -211,7 +196,7 @@ const Persona = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I</th>
+                <th>Cedula de Identidad</th>
                 <th>Nombre y Apellido</th>
                 <th>Acciones</th>
               </tr>
@@ -219,24 +204,24 @@ const Persona = () => {
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.cedula_contrato}>
-                    <td>{record.cedula_contrato}</td>
+                  <tr key={record.cedula_emprendedor}>
+                    <td>{record.cedula_emprendedor}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.cedula_contrato)}
+                        onClick={() => handleView(record.cedula_emprendedor)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.cedula_contrato)}
+                        onClick={() => handleEdit(record.cedula_emprendedor)}
                         title="Actualizar"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(record.cedula_contrato)}
+                        onClick={() => handleDelete(record.cedula_emprendedor)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -281,7 +266,7 @@ const Persona = () => {
   };
 
   const handleView = (id) => {
-    const recordToView = records.find((record) => record.cedula_contrato === id);
+    const recordToView = records.find((record) => record.cedula_emprendedor === id);
     if (recordToView) {
       setViewRecord(recordToView);
       setIsViewModalOpen(true);
@@ -289,7 +274,7 @@ const Persona = () => {
   };
 
   const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.cedula_contrato === id);
+    const recordToEdit = records.find((record) => record.cedula_emprendedor === id);
     if (recordToEdit) {
       setNewRecord(recordToEdit);
       setIsEditModalOpen(true);
@@ -297,7 +282,7 @@ const Persona = () => {
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.cedula_contrato === id);
+    const recordToDelete = records.find((record) => record.cedula_emprendedor === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -306,9 +291,9 @@ const Persona = () => {
 
   const confirmDelete = async () => {
     try {
-      await deleteRecord(recordToDelete.cedula_contrato); // Usar el servicio para eliminar
+      await deleteRecord(recordToDelete.cedula_emprendedor); // Usar el servicio para eliminar
       setRecords(
-        records.filter((record) => record.cedula_contrato !== recordToDelete.cedula_contrato)
+        records.filter((record) => record.cedula_emprendedor !== recordToDelete.cedula_emprendedor)
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
@@ -331,153 +316,123 @@ const Persona = () => {
       <Footer />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      <h2>Datos del Contrato</h2>
+        <h2>Datos de la Cuenta Bancaria</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="cedula_contrato"
-                  value={newRecord.cedula_contrato}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
+              <label className="form-label">Cédula de Identidad:</label>
+              <input
+                type="number"
+                name="cedula_emprendedor"
+                value={newRecord.cedula_emprendedor}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.cedula_emprendedor && (
+                <span className="error-message">{errors.cedula_emprendedor}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">N° Contrato:</label>
+              <label className="form-label">Banco:</label>
               <input
                 type="text"
-                name="contrato"
-                value={newRecord.contrato}
+                name="banco"
+                value={newRecord.banco}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.Banco && (
+                <span className="error-message">{errors.Banco}</span>
+              )}
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Apertura:</label>
-              <input
-                type="date"
-                name="fecha_apertura"
-                value={newRecord.fecha_apertura}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Estatus</label>
+              <label className="form-label">Numero de Cuenta:</label>
               <input
                 type="text"
-                name="estatus"
-                value={newRecord.estatus}
+                name="numero_cuenta"
+                value={newRecord.numero_cuenta}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.numero_cuenta && (
+                <span className="error-message">{errors.numero_cuenta}</span>
+              )}
             </div>
+            
           </div>
-          <button type="submit" className="submit-button">
-            Registrar
-          </button>
+          <button type="submit">Guardar</button>
         </form>
       </Modal>
 
       <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Contrato</h2>
+        <h2>Detalles de Banco</h2>
         {viewRecord && (
           <div className="view-record-details">
             <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_contrato}
+              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_emprendedor}
             </p>
             <p>
-              <strong>contrato:</strong> {viewRecord.contrato}
+              <strong>Nombres :</strong> {viewRecord.nombres}
             </p>
             <p>
-              <strong>Fecha de Apertura:</strong> {viewRecord.fecha_apertura}
+              <strong>Apellidos:</strong> {viewRecord.Apellidos}
             </p>
             <p>
-              <strong>Estatus:</strong> {viewRecord.estatus}
+              <strong>Nombre del Banco:</strong> {viewRecord.banco}
+            </p>
+            <p>
+              <strong>Numero de Cuenta:</strong> {viewRecord.numero_cuenta}
             </p>
           </div>
         )}
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Contrato</h2>
+        <h2>Actualizar Datos Bancoles</h2>
         <form onSubmit={handleUpdate} className="modal-form">
-        <div className="form-row">
+          <div className="form-row">
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <div className="input-group">
-                <input
-                  type="number"
-                  name="cedula_contrato"
-                  value={newRecord.cedula_contrato}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">N° Contrato:</label>
+              <label className="form-label">Cédula de Identidad:</label>
               <input
                 type="text"
-                name="contrato"
-                value={newRecord.contrato}
+                name="cedula_emprendedor"
+                value={newRecord.cedula_emprendedor}
                 onChange={handleInputChange}
                 className="form-control"
-                required
+                readOnly // Campo de solo lectura
               />
+              {errors.cedula_emprendedor && (
+                <span className="error-message">{errors.cedula_emprendedor}</span>
+              )}
             </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Apertura:</label>
-              <input
-                type="date"
-                name="fecha_apertura"
-                value={newRecord.fecha_apertura}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Estatus</label>
+            <div className="form-group input-col-2">
+              <label className="form-label">Banco:</label>
               <input
                 type="text"
-                name="estatus"
-                value={newRecord.estatus}
+                name="Banco"
+                value={newRecord.banco}
                 onChange={handleInputChange}
                 className="form-control"
-                required
               />
+              {errors.Banco && (
+                <span className="error-message">{errors.Banco}</span>
+              )}
+            </div>
+            <div className="form-group input-col-2">
+              <label className="form-label">Apellidos:</label>
+              <input
+                type="text"
+                name="numero_cuenta"
+                value={newRecord.numero_cuenta}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.numero_cuenta && (
+                <span className="error-message">{errors.numero_cuenta}</span>
+              )}
             </div>
           </div>
-
-          <button type="submit">Actualizar</button>
+          <button type="submit">Guardar</button>
         </form>
       </Modal>
 
@@ -488,11 +443,11 @@ const Persona = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula_emprendedor}
         </p>
         <p>
-          <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
-          {recordToDelete?.apellidos}
+          <strong>Nombre:</strong> {recordToDelete?.Banco}{" "}
+          {recordToDelete?.numero_cuenta}
         </p>
         <div className="modal-actions">
           <button onClick={confirmDelete}>Eliminar</button>
@@ -540,4 +495,4 @@ const Persona = () => {
   );
 };
 
-export default Persona;
+export default Banco;

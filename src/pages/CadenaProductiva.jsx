@@ -735,7 +735,7 @@ const CadenaProductiva = () => {
             <div className="form-group input-col-12">
               <label className="form-label">Cédula de Identidad:</label>
               <input
-                type="text"
+                type="number"
                 name="cedula_datos_cadena_p"
                 value={newRecord.cedula_datos_cadena_p}
                 onChange={handleInputChange}
