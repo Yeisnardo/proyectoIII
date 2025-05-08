@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
 import Login from './pages/Login';
-import Registro from "./pages/registro";
 import Registro2 from './pages/registro2'; // Ensure correct import name
 import Dashboard from './pages/Dashboard';
 import Persona from './pages/Persona';
@@ -26,9 +25,6 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Login />} />
-          {/* Initial Registration Page */}
-          <Route path="/registro" element={<Registro />} />
-
           {/* Subsequent Registration/Information Pages (in sequence) */}
           <Route path="/registro2" element={<Registro2 />} />
           <Route path="/persona" element={<Persona />} />

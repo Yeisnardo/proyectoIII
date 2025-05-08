@@ -16,7 +16,7 @@ import {
   fetchRecords,
   createRecord,
   deleteRecord,
-} from "../services/CreditoService";
+} from "../services/CreditoService.js";
 import axios from "axios";
 import "../assets/styles/App.css";
 

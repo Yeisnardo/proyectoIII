@@ -1199,6 +1199,47 @@ input::placeholder {
   transform: scale(1.1);
 }
 
+/* Estilo para la sección adicional de opciones fuera del perfil */
+.extra-menu {
+  display: flex;
+  gap: 15px; /* Espacio entre las opciones */
+  padding: 10px 20px; /* Espaciado interno */
+  background-gradient: linear-gradient(
+    to right,
+    #1d00a0,
+    #060879
+  ); /* Color de fondo opcional */
+  align-items: center;
+}
+
+/* Estilo para cada opción del menú adicional */
+.extra-menu-item {
+  text-decoration: none;
+  color: #f3f3f3; /* Color del texto */
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Cambio de estilo al pasar el cursor */
+.extra-menu-item:hover {
+  background-color: #bbbbbb;
+  color: #000;
+}
+
+/* Opcional: estilo para mostrar en dispositivos pequeños */
+@media (max-width: 768px) {
+  .extra-menu {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .extra-menu-item {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
 .profile-icon {
   width: 40px;
   height: 40px;
@@ -2498,9 +2539,6 @@ input[type="radio"] {
     margin-left: 0;
     width: 100%;
     padding: 10px;
-  }
-
-  .menu {
   }
 }
 

@@ -67,6 +67,11 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/persona" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUser className="menu-icon" /> Administración de Emprededor
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/usuario" className={({ isActive }) => (isActive ? "active" : "")}>
               <FaUsers className="menu-icon" /> Administración de Usuario
             </NavLink>
