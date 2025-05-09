@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaBell, FaUser, FaLock, FaSignOutAlt } from "react-icons/fa"; // Importa los íconos necesarios
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
-import "../assets/styles/App.css"; // Asegúrate de que los estilos estén importados
+import { FaBell, FaUser , FaLock, FaSignOutAlt } from "react-icons/fa"; 
+import { useNavigate } from "react-router-dom"; 
+import "../assets/styles/App.css"; 
 
 const Header = ({ userName, userType }) => {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ const Header = ({ userName, userType }) => {
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isNotificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isCharacterizationOpen, setCharacterizationOpen] = useState(false); // Nuevo estado
 
   const profileDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -18,7 +19,6 @@ const Header = ({ userName, userType }) => {
     { id: 2, message: "Nueva notificación 2" },
   ]);
 
-  // Funciones para cerrar todos los dropdowns
   const closeAllDropdowns = () => {
     setProfileDropdownOpen(false);
     setNotificationDropdownOpen(false);
@@ -67,12 +67,15 @@ const Header = ({ userName, userType }) => {
     navigate("/");
   };
 
+  // Nueva función para manejar el clic en "Caracterización"
+  const handleCharacterizationClick = () => {
+    setCharacterizationOpen(!isCharacterizationOpen);
+  };
+
   return (
     <header className="header">
-      {/* Aquí agregamos un menú adicional fuera del perfil */}
       <div className="extra-menu">
-        {/* Puedes cambiar la ubicación y estilo según tu diseño */}
-        <a href="/caracterización" className="extra-menu-item">
+        <a href="/Caracterizacion" className="extra-menu-item" onClick={handleCharacterizationClick}>
           Caracterización
         </a>
         <a href="/emprendimiento" className="extra-menu-item">
@@ -83,8 +86,54 @@ const Header = ({ userName, userType }) => {
         </a>
       </div>
 
+      {/* Aquí se renderizan los submenús según el estado */}
+      {isCharacterizationOpen && (
+        <ul>
+          <li>
+            <NavLink to="/informacion-personal" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUser  className="menu-icon" /> Información Personal
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/perfil-financiero" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUser  className="menu-icon" /> Perfil Financiero
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/requerimientos" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaClipboardList className="menu-icon" /> Requerimientos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/cuenta-bancaria" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUniversity className="menu-icon" /> Cuenta Bancaria
+            </NavLink>
+          </li>
+        </ul>
+      )}
+
+      {/* Sección de Emprendimiento */}
+      {isCharacterizationOpen && (
+        <ul>
+          <li>
+            <NavLink to="/ubicacion-actividad-emprendedora" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUniversity className="menu-icon" /> Ubicación de Actividad Emprendedora
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/cadena-productiva" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUniversity className="menu-icon" /> Cadena Productiva
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/situacion-operativa" className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUniversity className="menu-icon" /> Situación Operativa
+            </NavLink>
+          </li>
+        </ul>
+      )}
+
       <div className="header-icons">
-        {/* Icono y Dropdown de Notificaciones */}
         <div className="dropdown notification-icon" ref={notificationDropdownRef}>
           <FaBell
             aria-label="Notificaciones"
@@ -116,7 +165,6 @@ const Header = ({ userName, userType }) => {
           </div>
         </div>
 
-        {/* Icono y Dropdown de Perfil */}
         <div className="dropdown profile" ref={profileDropdownRef}>
           <div
             className="profile-icon"
@@ -131,7 +179,6 @@ const Header = ({ userName, userType }) => {
             className={`dropdown-menu ${isProfileDropdownOpen ? "visible" : ""}`}
             aria-hidden={!isProfileDropdownOpen}
           >
-            {/* Información del Perfil */}
             <ul className="menu-list">
               <li className="menu-list-item profile-info">
                 <div>
@@ -139,14 +186,12 @@ const Header = ({ userName, userType }) => {
                   <span className="user-type">{userType || "Tipo Desconocido"}</span>
                 </div>
               </li>
-              {/* Opciones del perfil */}
               <li className="menu-list-item">
                 <a href="/change-password" onClick={closeAllDropdowns}>
                   <FaLock className="menu-icon" aria-hidden="true" />
                   Configuración
                 </a>
               </li>
-              {/* Cerrar sesión */}
               <li
                 className="menu-list-item"
                 onClick={handleLogout}
@@ -161,7 +206,6 @@ const Header = ({ userName, userType }) => {
         </div>
       </div>
 
-      {/* Modal de confirmación de cierre de sesión */}
       {isLogoutModalOpen && (
         <div
           className="logout-modal"

@@ -1,46 +1,66 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
+
+// Pages Import
+
 import Login from './pages/Login';
-import Registro2 from './pages/registro2'; // Ensure correct import name
-import Dashboard from './pages/Dashboard';
+import Caracterizacion from './pages/Caracterizacion';
+import Informacion_personal from './pages/Informacion_personal';
+import Emprendimiento from './pages/Emprendimiento';
+import Reportar_pago from './pages/Reportar_pago';
+import Registro2 from './pages/registro2';
 import Persona from './pages/Persona';
+
+import Dashboard from './pages/Dashboard';
 import Usuario from './pages/Usuario';
+import Requerimientos from './pages/requerimientos';
 import Ferias from './pages/Ferias';
 import Aprobacion from './pages/Aprobacion';
-import Requerimientos from './pages/requerimientos';
+
 import Cambio from './pages/AlCambio';
-import Credito from './pages/Credito';
 import Bancos from './pages/bancos';
+import Credito from './pages/Credito';
 import Contrato from './pages/Contrato';
 import Amortizacion from './pages/Amortizacion';
+
 import PerfilFinanciero from './pages/PerfilFinanciero';
 import UbicacionActivEmprende from './pages/UbicacionActivEmprende';
 import CadenaProductiva from './pages/CadenaProductiva';
 import SituacionOperativa from './pages/SituacionOperativa';
+
+
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
         <Routes>
+          {/* Login Route */}
           <Route path="/" element={<Login />} />
-          {/* Subsequent Registration/Information Pages (in sequence) */}
+
+          {/* Información y Registro */}
+          <Route path="/Caracterizacion" element={<Caracterizacion />} />
+          <Route path="/Informacion_personal" element={<Informacion_personal />} />
+          <Route path="/Emprendimiento" element={<Emprendimiento />} />
+          <Route path="/Reportar_pago" element={<Reportar_pago />} />
           <Route path="/registro2" element={<Registro2 />} />
           <Route path="/persona" element={<Persona />} />
-          {/* Add other forms in the desired order */}
+
+          {/* Formas de Información adicional */}
           <Route path="/perfil-financiero" element={<PerfilFinanciero />} />
           <Route path="/UbicacionActivEmprende" element={<UbicacionActivEmprende />} />
           <Route path="/cadena-productiva" element={<CadenaProductiva />} />
           <Route path="/situacion-operativa" element={<SituacionOperativa />} />
 
-
-          {/* Other Application Routes */}
+          {/* Dashboard y Gestión */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/usuario" element={<Usuario />} />
           <Route path="/requerimientos" element={<Requerimientos />} />
           <Route path="/ferias" element={<Ferias />} />
           <Route path="/Aprobacion" element={<Aprobacion />} />
+
+          {/* Otros módulos */}
           <Route path="/al-cambio" element={<Cambio />} />
           <Route path="/bancos" element={<Bancos />} />
           <Route path="/credito" element={<Credito />} />

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react"; // Agregar useEffect aquí
-import {
-  FaEye,
-  FaEdit,
-  FaTrash,
-  FaPlus,
-  FaChevronLeft,
-  FaChevronRight,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaPlus, FaCheckCircle } from "react-icons/fa";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
@@ -69,6 +61,11 @@ const Requerimientos = () => {
       ...prevRecord,
       [name]: value,
     }));
+  };
+
+  // Función para toggle
+  const toggleSolicitudCredito = () => {
+    setSolicitudCredito((prev) => (prev === "si" ? "no" : "si"));
   };
 
   const validateForm = () => {
@@ -224,153 +221,398 @@ const Requerimientos = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Requerimientos de Emprendedor</h2>
+        <h2>Mis Requerimientos</h2>
         <div className="search-container">
-          <label htmlFor="search" className="search-label">
-            Buscar persona
-          </label>
-          <input
-            type="text"
-            id="search"
-            placeholder="Buscar por la cédula o nombre..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
           <button
             onClick={() => setIsModalOpen(true)}
             className="add-button"
             title="Agregar Nuevo Registro"
           >
             <FaPlus />
+            Agregas los Requerimientos
           </button>
         </div>
-
-        <div className="limit-container">
-          <label htmlFor="limit">Entradas de registros:</label>
-          <select
-            id="limit"
-            value={limit}
-            onChange={(e) => {
-              setLimit(Number(e.target.value));
-              setCurrentPage(1);
-            }}
-            className="limit-select"
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </select>
-        </div>
-
-        <div className="table-container">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>C.I</th>
-                <th>Nombre y Apellido</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentRecords.length > 0 ? (
-                currentRecords.map((record) => (
-                  <tr key={record.cedula_requerimientos_e}>
-                    <td>{record.cedula_requerimientos_e}</td>
-                    <td>{`${record.nombres} ${record.apellidos}`}</td>
-                    <td>
-                      <button
-                        onClick={() =>
-                          handleView(record.cedula_requerimientos_e)
-                        }
-                        title="Ver Datos"
-                      >
-                        <FaEye />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleEdit(record.cedula_requerimientos_e)
-                        }
-                        title="Actualizar"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDelete(record.cedula_requerimientos_e)
-                        }
-                        title="Eliminar"
-                      >
-                        <FaTrash />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="no-results">
-                    No se encontraron registros.
-                  </td>
-                </tr>
+        <form onSubmit={handleSubmit} className="modal-form">
+          <ul className="form-row form-list form-group">
+            {/* Cédula de Identidad */}
+            <li className="form-item input-col-12">
+              <input
+                type="hidden"
+                name="cedula_requerimientos_e"
+                value={newRecord.cedula_requerimientos_e}
+                onChange={handleInputChange}
+                className="form-control"
+              />
+              {errors.cedula_requerimientos_e && (
+                <span className="error-message">
+                  {errors.cedula_requerimientos_e}
+                </span>
               )}
-            </tbody>
-          </table>
-        </div>
+            </li>
 
-        <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="pagination-button"
-          >
-            <FaChevronLeft />
-          </button>
-          <span>
-            Página {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
-            <FaChevronRight />
-          </button>
-        </div>
+            {/* Solicitud de Crédito */}
+            <li className="form-item input-col-4">
+              <label className="form-label">Solicitud de Crédito:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="solicitud_credito"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.solicitud_credito === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="solicitud_credito"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.solicitud_credito === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.solicitud_credito && (
+                <span className="error-message">
+                  {errors.solicitud_credito}
+                </span>
+              )}
+            </li>
+
+            {/* Postulación UBCH */}
+            <li className="form-item input-col-3">
+              <label className="form-label">Postulación UBCH:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="postulacion_ubch"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.postulacion_ubch === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="postulacion_ubch"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.postulacion_ubch === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.postulacion_ubch && (
+                <span className="error-message">{errors.postulacion_ubch}</span>
+              )}
+            </li>
+
+            {/* Inspección de Emprendimiento */}
+            <li className="form-item input-col-5">
+              <label className="form-label">
+                Inspección de Emprendimiento:
+              </label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="inspeccion_emprendimiento"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.inspeccion_emprendimiento === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="inspeccion_emprendimiento"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.inspeccion_emprendimiento === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.inspeccion_emprendimiento && (
+                <span className="error-message">
+                  {errors.inspeccion_emprendimiento}
+                </span>
+              )}
+            </li>
+
+            {/* Carta de Aval o Residencia */}
+            <li className="form-item input-col-5">
+              <label className="form-label">Carta de Aval o Residencia:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="carta_residencia"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.carta_residencia === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="carta_residencia"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.carta_residencia === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.carta_residencia && (
+                <span className="error-message">{errors.carta_residencia}</span>
+              )}
+            </li>
+
+            {/* Copia de Cédula */}
+            <li className="form-item input-col-4">
+              <label className="form-label">Copia de Cédula:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="copia_cedula"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.copia_cedula === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="copia_cedula"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.copia_cedula === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.copia_cedula && (
+                <span className="error-message">{errors.copia_cedula}</span>
+              )}
+            </li>
+
+            {/* RIF Personal */}
+            <li className="form-item input-col-2">
+              <label className="form-label">RIF Personal:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="rif_personal"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.rif_personal === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="rif_personal"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.rif_personal === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.rif_personal && (
+                <span className="error-message">{errors.rif_personal}</span>
+              )}
+            </li>
+
+            {/* Fotos del Emprendimiento */}
+            <li className="form-item input-col-4">
+              <label className="form-label">Fotos del Emprendimiento:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="foto_e"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.foto_e === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="foto_e"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.foto_e === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.foto_e && (
+                <span className="error-message">{errors.foto_e}</span>
+              )}
+            </li>
+
+            {/* RIF de Emprendimiento */}
+            <li className="form-item input-col-4">
+              <label className="form-label">RIF de Emprendimiento:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="rif_e"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.rif_e === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="rif_e"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.rif_e === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.rif_e && (
+                <span className="error-message">{errors.rif_e}</span>
+              )}
+            </li>
+
+            {/* Certificado de Emprender Juntos */}
+            <li className="form-item input-col-4">
+              <label className="form-label">
+                Certificado de Emprender Juntos:
+              </label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="certificado_ej"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.certificado_ej === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="certificado_ej"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.certificado_ej === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.certificado_ej && (
+                <span className="error-message">{errors.certificado_ej}</span>
+              )}
+            </li>
+
+            {/* Referencia Bancaria */}
+            <li className="form-item input-col-4">
+              <label className="form-label">Referencia Bancaria:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="referencia_bancaria"
+                    value="si"
+                    onChange={handleInputChange}
+                    checked={newRecord.referencia_bancaria === "si"}
+                  />
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="referencia_bancaria"
+                    value="no"
+                    onChange={handleInputChange}
+                    checked={newRecord.referencia_bancaria === "no"}
+                  />
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
+                </label>
+              </div>
+              {errors.referencia_bancaria && (
+                <span className="error-message">
+                  {errors.referencia_bancaria}
+                </span>
+              )}
+            </li>
+          </ul>
+        </form>
       </div>
     );
-  };
-
-  const handleView = (id) => {
-    const recordToView = records.find(
-      (record) => record.cedula_requerimientos_e === id
-    );
-    if (recordToView) {
-      setViewRecord(recordToView); // Asegúrate de que esto esté configurado correctamente
-      setIsViewModalOpen(true);
-    }
-  };
-
-  const handleEdit = (id) => {
-    const recordToEdit = records.find(
-      (record) => record.cedula_requerimientos_e === id
-    );
-    if (recordToEdit) {
-      setNewRecord(recordToEdit);
-      setIsEditModalOpen(true);
-    }
-  };
-
-  const handleDelete = (id) => {
-    const recordToDelete = records.find(
-      (record) => record.cedula_requerimientos_e === id
-    );
-    if (recordToDelete) {
-      setRecordToDelete(recordToDelete);
-      setIsDeleteModalOpen(true);
-    }
   };
 
   const confirmDelete = async () => {
@@ -404,28 +646,18 @@ const Requerimientos = () => {
       <Footer />
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 style={{ textAlign: "center" }}>Requerimientos del Emprendedor</h2>
+        <h2 style={{ textAlign: "center" }}>Registrar Requerimientos</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <ul className="form-row form-list form-group">
             {/* Cédula de Identidad */}
             <li className="form-item input-col-12">
-              <label className="form-label">Cédula de Identidad:</label>
               <input
-                type="text"
+                type="hidden"
                 name="cedula_requerimientos_e"
                 value={newRecord.cedula_requerimientos_e}
                 onChange={handleInputChange}
                 className="form-control"
               />
-              <button
-                type="button"
-                className="submit-button indigo"
-                onClick={() => {
-                  /* Acción del botón */
-                }}
-              >
-                Buscar
-              </button>
               {errors.cedula_requerimientos_e && (
                 <span className="error-message">
                   {errors.cedula_requerimientos_e}
@@ -433,93 +665,72 @@ const Requerimientos = () => {
               )}
             </li>
 
-            {/* Solicitud de Crédito */}
-            <li className="form-item input-col-4">
-              <label className="form-label">Solicitud de Crédito:</label>
-              <div className="radio-group">
-                <label>
-                  <input
-                    type="radio"
-                    name="solicitud_credito"
-                    value="si"
-                    onChange={handleInputChange}
-                    className="form-control"
-                  />
-                  Sí
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="solicitud_credito"
-                    value="no"
-                    onChange={handleInputChange}
-                    className="form-control"
-                  />
-                  No
-                </label>
-              </div>
-              {errors.solicitud_credito && (
-                <span className="error-message">
-                  {errors.solicitud_credito}
-                </span>
-              )}
-            </li>
 
             {/* Postulación UBCH */}
-            <li className="form-item input-col-3">
+            <li className="form-item input-col-4">
               <label className="form-label">Postulación UBCH:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="postulacion_ubch"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.postulacion_ubch === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="postulacion_ubch"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.postulacion_ubch === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.postulacion_ubch && (
                 <span className="error-message">{errors.postulacion_ubch}</span>
               )}
             </li>
-
+            &nbsp;
             {/* Inspección de Emprendimiento */}
-            <li className="form-item input-col-5">
+            <li className="form-item input-col-7">
               <label className="form-label">
                 Inspección de Emprendimiento:
               </label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="inspeccion_emprendimiento"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.inspeccion_emprendimiento === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="inspeccion_emprendimiento"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.inspeccion_emprendimiento === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.inspeccion_emprendimiento && (
@@ -530,28 +741,33 @@ const Requerimientos = () => {
             </li>
 
             {/* Carta de Aval o Residencia */}
-            <li className="form-item input-col-5">
+            <li className="form-item input-col-7">
               <label className="form-label">Carta de Aval o Residencia:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="carta_residencia"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.carta_residencia === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="carta_residencia"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.carta_residencia === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.carta_residencia && (
@@ -563,25 +779,30 @@ const Requerimientos = () => {
             <li className="form-item input-col-4">
               <label className="form-label">Copia de Cédula:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="copia_cedula"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.copia_cedula === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="copia_cedula"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.copia_cedula === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.copia_cedula && (
@@ -590,28 +811,33 @@ const Requerimientos = () => {
             </li>
 
             {/* RIF Personal */}
-            <li className="form-item input-col-2">
+            <li className="form-item input-col-5">
               <label className="form-label">RIF Personal:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="rif_personal"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.rif_personal === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="rif_personal"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.rif_personal === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.rif_personal && (
@@ -620,28 +846,33 @@ const Requerimientos = () => {
             </li>
 
             {/* Fotos del Emprendimiento */}
-            <li className="form-item input-col-4">
+            <li className="form-item input-col-7">
               <label className="form-label">Fotos del Emprendimiento:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="foto_e"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.foto_e === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="foto_e"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.foto_e === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.foto_e && (
@@ -653,25 +884,30 @@ const Requerimientos = () => {
             <li className="form-item input-col-4">
               <label className="form-label">RIF de Emprendimiento:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="rif_e"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.rif_e === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="rif_e"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.rif_e === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.rif_e && (
@@ -681,27 +917,34 @@ const Requerimientos = () => {
 
             {/* Certificado de Emprender Juntos */}
             <li className="form-item input-col-4">
-              <label className="form-label">Certificado de Emprender Juntos:</label>
+              <label className="form-label">
+                Certificado de Emprender Juntos:
+              </label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="certificado_ej"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.certificado_ej === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="certificado_ej"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.certificado_ej === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.certificado_ej && (
@@ -713,25 +956,30 @@ const Requerimientos = () => {
             <li className="form-item input-col-4">
               <label className="form-label">Referencia Bancaria:</label>
               <div className="radio-group">
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="referencia_bancaria"
                     value="si"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.referencia_bancaria === "si"}
                   />
-                  Sí
+                  <span className="custom-radio">
+                    <span className="icon-left icon"></span> Sí
+                  </span>
                 </label>
-                <label>
+                <label className="radio-label">
                   <input
                     type="radio"
                     name="referencia_bancaria"
                     value="no"
                     onChange={handleInputChange}
-                    className="form-control"
+                    checked={newRecord.referencia_bancaria === "no"}
                   />
-                  No
+                  <span className="custom-radio">
+                    No
+                    <span className="icon-right icon"></span>
+                  </span>
                 </label>
               </div>
               {errors.referencia_bancaria && (
@@ -1040,7 +1288,8 @@ const Requerimientos = () => {
                     checked={viewRecord.certificado_ej === "si"}
                     readOnly
                     style={{
-                      accentColor: viewRecord.certificado_ej === "si" ? "green" : "red",
+                      accentColor:
+                        viewRecord.certificado_ej === "si" ? "green" : "red",
                     }}
                   />
                   Sí
@@ -1053,7 +1302,8 @@ const Requerimientos = () => {
                     checked={viewRecord.certificado_ej === "no"}
                     readOnly
                     style={{
-                      accentColor: viewRecord.certificado_ej === "no" ? "red" : "green",
+                      accentColor:
+                        viewRecord.certificado_ej === "no" ? "red" : "green",
                     }}
                   />
                   No
@@ -1395,7 +1645,9 @@ const Requerimientos = () => {
 
             {/* Certificado de Emprender Juntos */}
             <li className="form-item input-col-4">
-              <label className="form-label">Certificado de Emprender Juntos:</label>
+              <label className="form-label">
+                Certificado de Emprender Juntos:
+              </label>
               <div className="radio-group">
                 <label>
                   <input
