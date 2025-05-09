@@ -18,7 +18,7 @@ import Requerimientos from './pages/requerimientos';
 import Ferias from './pages/Ferias';
 import Aprobacion from './pages/Aprobacion';
 
-import Cambio from './pages/AlCambio';
+import AlCambio from './pages/AlCambio';
 import Bancos from './pages/bancos';
 import Credito from './pages/Credito';
 import Contrato from './pages/Contrato';
@@ -61,9 +61,9 @@ function App() {
           <Route path="/Aprobacion" element={<Aprobacion />} />
 
           {/* Otros módulos */}
-          <Route path="/al-cambio" element={<Cambio />} />
+          <Route path="/AlCambio" element={<AlCambio />} />
           <Route path="/bancos" element={<Bancos />} />
-          <Route path="/credito" element={<Credito />} />
+          <Route path="/Credito" element={<Credito />} />
           <Route path="/contrato" element={<Contrato />} />
           <Route path="/amortizacion" element={<Amortizacion />} />
         </Routes>

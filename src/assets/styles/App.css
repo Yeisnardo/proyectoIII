@@ -6,7 +6,7 @@
   ========================================
 */
 :root {
-  --primary-color: #000c79; /* Azul más vibrante */
+  --primary-color: #07142A; /* Azul más vibrante */
   --primary-hover-color: #004085; /* Azul oscuro para hover */
   --form-background: #ffffff; /* Fondo blanco limpio */
   --border-color: #030d29; /* Borde gris muy sutil */
@@ -252,9 +252,8 @@ h2 {
 }
 
 .form-control:focus {
-  border-color: #80bdff;
+  border-color: #1a60aa;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .input-wrapper {
@@ -341,8 +340,7 @@ h2 {
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
-  background-color: #007bff;
-  border: 1px solid #007bff;
+  background-color: #6b94b2;
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -353,18 +351,7 @@ h2 {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-.submit-button.indigo {
-  background-color: #6610f2;
-  border-color: #6610f2;
-}
-
-.submit-button.indigo:hover {
-  background-color: #520ace;
-  border-color: #520ace;
+  background-color: #10538a;
 }
 
 button[type="button"] {
@@ -494,7 +481,7 @@ button[type="button"] {
 }
 
 .logo-container {
-  flex: 1.5;
+  flex: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -638,7 +625,7 @@ input::placeholder {
 
 .auth-form .submit-button:active {
   transform: translateY(0);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 8px rgba(172, 27, 27, 0.2);
 }
 
 .error-message {
@@ -1137,7 +1124,7 @@ input::placeholder {
   ========================================
 */
 .header {
-  background: var(--header-gradient);
+  background: #092142;
   color: rgb(252, 252, 252);
   padding: 7px 20px;
   width: 100vw;
@@ -1215,7 +1202,7 @@ input::placeholder {
 /* Estilo para cada opción del menú adicional */
 .extra-menu-item {
   text-decoration: none;
-  color: #f3f3f3; /* Color del texto */
+  color: #ffffff; /* Color del texto */
   font-weight: 500;
   padding: 8px 12px;
   border-radius: 4px;
@@ -1224,8 +1211,8 @@ input::placeholder {
 
 /* Cambio de estilo al pasar el cursor */
 .extra-menu-item:hover {
-  background-color: #bbbbbb;
-  color: #000;
+  background-color: #6b94b2;
+  color: #ffffff;
 }
 
 /* Opcional: estilo para mostrar en dispositivos pequeños */
@@ -1372,7 +1359,7 @@ input::placeholder {
   ========================================
 */
 .menu {
-  background: var(--header-gradient);
+  background: var(--primary-color);
   width: 235px;
   height: 100vh;
   position: fixed;
@@ -1391,8 +1378,6 @@ input::placeholder {
   justify-content: center;
   align-items: center;
   padding: 10px 20px;
-  background-color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
   margin-top: -40px;
 }
 
@@ -1455,20 +1440,16 @@ input::placeholder {
   color: blue;
 }
 
-.menu-icon {
-  color: #d3d3d3;
+.menu-icon.active {
+  color: #fffbfb;
   font-size: 22px;
   margin-right: 8px;
   transition: color 0.3s;
 }
 
-.menu-icon:hover {
-  color: #56a8fa;
-}
-
 .menu a.active {
-  background-color: #858585;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   border-radius: 5px;
 }
 
@@ -1546,7 +1527,6 @@ input::placeholder {
 }
 
 .menu a:hover {
-  background-color: var(--primary-hover-color);
   border-radius: 5px;
 }
 
@@ -1795,8 +1775,8 @@ input::placeholder {
   ========================================
 */
 .footer {
-  background: var(--header-gradient);
-  color: white;
+  background: #f3f3f3;
+  color: #000;
   text-align: center;
   padding: 10px 0;
   position: fixed;
@@ -2046,7 +2026,7 @@ button[type="submit"]:hover {
 }
 
 .table th {
-  background: var(--header-gradient);
+  background: #07142a;
   color: white;
   font-weight: bold;
 }
@@ -2213,17 +2193,18 @@ button[type="submit"]:hover {
 }
 
 .add-button {
-  background-color: #28a745;
+  background-color: #6B94B2;
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 10px 16px; /* Increased padding */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+  font-size: 16px; /* Adjust font size */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Added box shadow */
 }
-
 .add-button:hover {
-  background-color: #218838;
+  background-color: #10538A;
 }
 
 .pagination {
@@ -2234,7 +2215,7 @@ button[type="submit"]:hover {
 }
 
 .pagination-button {
-  background-color: #007bff;
+  background-color: #092142;
   color: white;
   border: none;
   border-radius: 4px;
@@ -2245,7 +2226,7 @@ button[type="submit"]:hover {
 }
 
 .pagination-button:hover {
-  background-color: #0056b3;
+  background-color: #10538a;
 }
 
 .pagination span {

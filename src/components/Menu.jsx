@@ -14,68 +14,71 @@ import {
   FaStreetView,
   FaCheckCircle,
   FaMoneyCheckAlt,
-  FaUniversity, // reemplazamos FaBank por FaUniversity
+  FaUniversity,
 } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import "../assets/styles/App.css";
 import logo from "../assets/images/logo.jpg";
 
 const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
-  // Estados para manejar submenus
+  // State to control submenu open/close
   const [isEmprendedorOpen, setEmprendedorOpen] = useState(false);
   const [isFormalizacionOpen, setFormalizacionOpen] = useState(false);
-  
-  // Estado para determinar la sección activa, si se requiere
-  const [activeSection, setActiveSection] = useState(null);
-  
+
   const location = useLocation();
 
-  // Funciones para toggle de submenus
+  // Determine if current path belongs to Emprendedor submenu items
+  const emprendedorPaths = ["/requerimientos", "/perfil-financiero"];
+  // Determine if current path belongs to Formalizacion submenu items
+  const formalizacionPaths = [
+    "/ubicacion-actividad-emprendedora",
+    "/cadena-productiva",
+    "/situacion-operativa",
+  ];
+
+  // Update submenu open states according to current route so menu stays open on active section
+  useEffect(() => {
+    if (emprendedorPaths.includes(location.pathname)) {
+      setEmprendedorOpen(true);
+    } else {
+      setEmprendedorOpen(false);
+    }
+    if (formalizacionPaths.includes(location.pathname)) {
+      setFormalizacionOpen(true);
+    } else {
+      setFormalizacionOpen(false);
+    }
+  }, [location.pathname]);
+
+  // Toggle handlers to manually open/close submenu on click
   const toggleEmprendedorMenu = () => {
-    setEmprendedorOpen(!isEmprendedorOpen);
+    setEmprendedorOpen((prev) => !prev);
   };
 
   const toggleFormalizacionMenu = () => {
-    setFormalizacionOpen(!isFormalizacionOpen);
+    setFormalizacionOpen((prev) => !prev);
   };
-
-  // Effect para abrir automáticamente los submenus según la ruta
-  useEffect(() => {
-    const formalizacionPaths = [
-      "/ubicacion-actividad-emprendedora",
-      "/cadena-productiva",
-      "/situacion-operativa",
-    ];
-    setFormalizacionOpen(formalizacionPaths.includes(location.pathname));
-
-    const emprendedorPaths = [
-      "/requerimientos",
-      "/perfil-financiero",
-    ];
-    setEmprendedorOpen(emprendedorPaths.includes(location.pathname));
-  }, [location.pathname]);
 
   return (
     <div className="menu-container">
-      {/* Menú lateral */}
       <nav className={`menu ${isMenuVisible ? "visible" : "hidden"}`}>
         {/* Logo */}
         <div className="menu-header">
           <img src={logo} alt="Logo Institucional" className="menu-logo" />
         </div>
-        <h2 className="menu-title">Menú Principal</h2>
         <ul>
-          {/* Página de Inicio */}
+          {/* Main Items */}
           <li>
             <NavLink
               to="/dashboard"
               className={({ isActive }) => (isActive ? "active" : "")}
+              end
             >
               <FaHome className="menu-icon" /> Inicio
             </NavLink>
           </li>
 
-          {/* Datos Personales y Perfil */}
+          {/* Personal Info */}
           <li>
             <NavLink
               to="/Informacion_personal"
@@ -84,6 +87,8 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
               <FaUser className="menu-icon" /> Información Personal
             </NavLink>
           </li>
+
+          {/* Emprendedor submenu items standalone visible in main list */}
           <li>
             <NavLink
               to="/perfil-financiero"
@@ -101,6 +106,7 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
             </NavLink>
           </li>
 
+          {/* Banks */}
           <li>
             <NavLink
               to="/bancos"
@@ -110,13 +116,13 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
             </NavLink>
           </li>
 
-          {/* Emprendimiento */}
+          {/* Emprendimiento / Formalizacion submenu items shown standalone */}
           <li>
             <NavLink
               to="/ubicacion-actividad-emprendedora"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
-              <FaUniversity className="menu-icon" /> Ubicación de Actividad Emprededora
+              <FaUniversity className="menu-icon" /> Ubicación de Actividad Emprendedora
             </NavLink>
           </li>
           <li>
@@ -127,17 +133,16 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
               <FaUniversity className="menu-icon" /> Cadena Productiva
             </NavLink>
           </li>
-
           <li>
             <NavLink
               to="/situacion-operativa"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
-              <FaUniversity className="menu-icon" /> Situacion Operativa
+              <FaUniversity className="menu-icon" /> Situación Operativa
             </NavLink>
           </li>
 
-          {/* Aciministrativo */}
+          {/* Administración de Usuarios */}
           <li>
             <NavLink
               to="/administracion-persona"
@@ -146,78 +151,15 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
               <FaUser className="menu-icon" /> Administración de Usuarios
             </NavLink>
           </li>
-
-          {/* Administración de Emprendedor (con submenu) */}
           <li>
-            <button onClick={toggleEmprendedorMenu} className="dropdown-toggle">
-              <FaUserTie className="menu-icon" /> Administración de Emprendedor
-              {isEmprendedorOpen ? (
-                <FaChevronUp className="arrow-icon" />
-              ) : (
-                <FaChevronDown className="arrow-icon" />
-              )}
-            </button>
-            {isEmprendedorOpen && (
-              <ul className="submenu">
-                <li>
-                  <NavLink
-                    to="/requerimientos"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                  >
-                    Registrar Requerimientos
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/perfil-financiero"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                  >
-                    Perfil Financiero
-                  </NavLink>
-                </li>
-              </ul>
-            )}
+            <NavLink
+              to="/administracion-persona"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <FaUser className="menu-icon" /> Administración de Emprededor
+            </NavLink>
           </li>
 
-          {/* Gestión Emprendedora */}
-          <li>
-            <button onClick={toggleFormalizacionMenu} className="dropdown-toggle">
-              <FaClipboardList className="menu-icon" /> Gestión Emprendedora
-              {isFormalizacionOpen ? (
-                <FaChevronUp className="arrow-icon" />
-              ) : (
-                <FaChevronDown className="arrow-icon" />
-              )}
-            </button>
-            {isFormalizacionOpen && (
-              <ul className="submenu">
-                <li>
-                  <NavLink
-                    to="/ubicacion-actividad-emprendedora"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                  >
-                    Ubicación de Actividad
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/cadena-productiva"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                  >
-                    Cadena Productiva
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/situacion-operativa"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                  >
-                    Situación Operativa
-                  </NavLink>
-                </li>
-              </ul>
-            )}
-          </li>
 
           {/* Otros módulos */}
           <li>
@@ -246,7 +188,7 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           </li>
           <li>
             <NavLink
-              to="/administracion-credito"
+              to="/Credito"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               <FaMoneyCheckAlt className="menu-icon" /> Administración de Crédito
@@ -254,18 +196,10 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           </li>
           <li>
             <NavLink
-              to="/cambio-divisas"
+              to="/AlCambio"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               <FaExchangeAlt className="menu-icon" /> Cotización Divisas
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/bancos"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUniversity className="menu-icon" /> Banca y Cuentas
             </NavLink>
           </li>
           <li>
@@ -279,7 +213,7 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
         </ul>
       </nav>
 
-      {/* Botón para mostrar/ocultar menú */}
+      {/* Toggle button for mobile and small screens */}
       <button
         className={`menu-toggle ${isMenuVisible ? "active" : ""}`}
         onClick={toggleMenu}
@@ -287,11 +221,17 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
           transform: isMenuVisible ? "translateX(220px)" : "translateX(0)",
           transition: "transform 0.3s ease",
         }}
+        aria-label="Toggle menu"
       >
-        {isMenuVisible ? <FaTimes className="menu-icon" /> : <FaBars className="menu-icon" />}
+        {isMenuVisible ? (
+          <FaTimes className="menu-icon" />
+        ) : (
+          <FaBars className="menu-icon" />
+        )}
       </button>
     </div>
   );
 };
 
 export default NavigationMenu;
+

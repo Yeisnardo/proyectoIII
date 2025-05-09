@@ -367,7 +367,7 @@ const Caraterizacion = () => {
               )}
             </div>
           </div>
-          <button type="submit">Guardar</button>
+          <button className="add-button"  type="submit">Guardar</button>
         </form>
       </Modal>
 

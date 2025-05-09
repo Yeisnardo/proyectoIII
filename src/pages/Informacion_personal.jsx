@@ -167,7 +167,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <button type="submit" className="update-button">
+        <button type="submit" className="add-button">
           Actualizar
         </button>
         <h2>Informacion Personal</h2>

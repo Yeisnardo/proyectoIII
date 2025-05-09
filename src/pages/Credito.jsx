@@ -379,7 +379,7 @@ const Credito = () => {
 
       {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Datos para la gestión de crédito</h2>
+        <h2>Gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
             <input type="hidden" name="id" />
