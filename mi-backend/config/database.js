@@ -2,7 +2,7 @@
 const { Sequelize } = require('sequelize');
 
 // Configura la conexión a tu base de datos
-const sequelize = new Sequelize('bdifemi', 'postgres', 'Dios0618*', {
+const sequelize = new Sequelize('bdifemi', 'postgres', 'angel18', {
     host: 'localhost',
     dialect: 'postgres', // Cambiar si usas otra base de datos (mysql, sqlite, etc.)
     logging: false, // Cambia a console.log si necesitas ver las consultas SQL
