@@ -1373,17 +1373,10 @@ input::placeholder {
 
 .menu-header {
   display: flex;
-<<<<<<< HEAD
   justify-content: center; /* Alinear a la izquierda */
   align-items: left;
   padding: 10px 49%;
   margin-top: -10px;
-=======
-  justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  margin-top: -40px;
->>>>>>> 27d2ea7fd0166dd3a9c5aeb5bbb1bd09f0cc426e
 }
 
 .menu-menu {
@@ -1768,14 +1761,9 @@ input::placeholder {
   ========================================
 */
 .footer {
-<<<<<<< HEAD
   background: #ffffff;
   color: #000;
   font-size: 80px;
-=======
-  background: #f3f3f3;
-  color: #000;
->>>>>>> 27d2ea7fd0166dd3a9c5aeb5bbb1bd09f0cc426e
   text-align: center;
   padding: 3px 0;
   position: fixed;
