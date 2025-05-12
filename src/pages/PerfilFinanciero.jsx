@@ -260,7 +260,7 @@ const Persona = () => {
                 ))}
               </div>
             </div>
-            <div className="form-group input-col-12">
+            <div className=" input-wrapper checkbox-group-wrapper input-col-12">
               <label className="form-label">Métodos de Pagos:</label>
               <div style={{ display: "flex" }}>
                 {["Pago Movil", "Punto de Venta", "Efectivo", "Biopago"].map(

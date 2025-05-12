@@ -7,7 +7,7 @@ import {
   FaChevronRight,
   FaCheckCircle,
 } from "react-icons/fa";
-import Header from "../components/Header";
+
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import Modal from "../components/Modal";

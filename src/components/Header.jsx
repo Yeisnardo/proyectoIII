@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaBell, FaUser , FaLock, FaSignOutAlt } from "react-icons/fa"; 
 import { useNavigate } from "react-router-dom"; 
+import logo from "../assets/images/logo.jpg";
 import "../assets/styles/App.css"; 
 
 const Header = ({ userName, userType }) => {
@@ -74,6 +75,9 @@ const Header = ({ userName, userType }) => {
 
   return (
     <header className="header">
+      <div className="menu-header">
+          <img src={logo} alt="Logo Institucional" className="menu-logo" />
+        </div>
       <div className="extra-menu">
         <a href="/Caracterizacion" className="extra-menu-item" onClick={handleCharacterizationClick}>
           Caracterización

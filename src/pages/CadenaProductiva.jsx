@@ -744,7 +744,7 @@ const CadenaProductiva = () => {
               />
               <button
                 type="button"
-                className="submit-button indigo"
+                className="add-button"
                 onClick={() => {
                   /* Acción del botón */
                 }}
@@ -855,7 +855,7 @@ const CadenaProductiva = () => {
               )}
             </div>
           </div>
-          <button type="submit">Registrar</button>
+          <button className="add-button" type="submit">Registrar</button>
         </form>
       </Modal>
 
@@ -909,7 +909,7 @@ const CadenaProductiva = () => {
               />
               <button
                 type="button"
-                className="submit-button indigo"
+                className="add-button"
                 onClick={() => {
                   /* Acción del botón */
                 }}

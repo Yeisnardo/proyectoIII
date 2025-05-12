@@ -15,12 +15,12 @@ import Modal from "../components/Modal";
 import {
   fetchRecords,
   createRecord,
-  updateRecord,
   deleteRecord,
-} from "../services/contratoService"; // Importa las funciones del servicio
+} from "../services/CreditoService.js";
+import axios from "axios";
 import "../assets/styles/App.css";
 
-const Persona = () => {
+const Credito = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [records, setRecords] = useState([]);
@@ -32,131 +32,189 @@ const Persona = () => {
   const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
   const [isUpdatedModalOpen, setIsUpdatedModalOpen] = useState(false);
   const [viewRecord, setViewRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [errors, setErrors] = useState({});
   const [newRecord, setNewRecord] = useState({
-    cedula_contrato: "",
-    contrato: "",
-    fecha_apertura: "",
-    estatus: ""
+    id: null, // Cambiado para ser asignado automáticamente
+    n_contrato: "",
+    euro: "",
+    bolivares: "",
+    cincoflax: "",
+    diezinteres: "",
+    interes_semanal: "",
+    semanal_sin_interes: "",
+    couta: "",
+    desde: "",
+    hasta: "",
   });
+
+  const [exchangeRate, setExchangeRate] = useState(0);
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+  const [nextId, setNextId] = useState(1); // Estado para el ID auto-incrementabl
+
+  const fetchExchangeRate = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.exchangerate-api.com/v4/latest/EUR"
+      );
+      setExchangeRate(response.data.rates.VES);
+    } catch (error) {
+      console.error("Error fetching exchange rate:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRecords(); // Usar el servicio para obtener registros
+        const data = await fetchRecords();
         setRecords(data);
+        fetchExchangeRate();
+        // Establecer el siguiente ID basado en los registros existentes
+        const maxId = data.reduce(
+          (max, record) => Math.max(max, parseInt(record.id)),
+          0
+        );
+        setNextId(maxId + 1);
       } catch (error) {
-        console.error("Error al obtener los registros:", error);
+        console.error("Error fetching records:", error);
       }
     };
-
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOnline(window.navigator.onLine);
+      if (window.navigator.onLine) fetchExchangeRate();
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
   }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRecord((prevRecord) => ({
-      ...prevRecord,
-      [name]: value,
-    }));
+
+    setNewRecord((prevRecord) => {
+      const updatedRecord = {
+        ...prevRecord,
+        [name]: value,
+      };
+
+      // Realizar cálculos automáticos
+      if (name === "euro") {
+        const euroAmount = parseFloat(value) || 0;
+        const bolivaresAmount = (euroAmount * exchangeRate).toFixed(2);
+
+        // Actualizar el monto en bolívares
+        updatedRecord.bolivares = bolivaresAmount;
+
+        // Calcular el 5% flat
+        updatedRecord.cincoflax = (parseFloat(bolivaresAmount) * 0.05).toFixed(
+          2
+        );
+        // Calcular el 10% de interés
+        updatedRecord.diezinteres = (euroAmount * 0.1).toFixed(2);
+        // Calcular el interés semanal
+        const diezInteres = parseFloat(updatedRecord.diezinteres) || 0;
+        updatedRecord.interes_semanal = (diezInteres / 14).toFixed(2);
+        // Calcular la semana sin interés
+        updatedRecord.semanal_sin_interes = (euroAmount / 14).toFixed(2);
+        // Calcular la cuota a cancelar
+        const semanalSinInteres =
+          parseFloat(updatedRecord.semanal_sin_interes) || 0;
+        updatedRecord.couta = (
+          semanalSinInteres + parseFloat(updatedRecord.interes_semanal)
+        ).toFixed(2);
+      }
+
+      // Actualizar la fecha "hasta" en función de la fecha "desde"
+      if (name === "desde") {
+        const startDate = new Date(value);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 98); // Agregar 14 semanas
+        updatedRecord.hasta = endDate.toISOString().split("T")[0]; // Formato para el input de tipo date
+      }
+
+      return updatedRecord;
+    });
   };
 
   const validateForm = () => {
     const errors = {};
-    
-    // Example validation rules
-    if (!newRecord.cedula_contrato) {
-      errors.cedula_contrato = "La cédula del contrato es requerida.";
-    }
-    if (!newRecord.contrato) {
-      errors.contrato = "El número de contrato es requerido.";
-    }
-    if (!newRecord.fecha_apertura) {
-      errors.fecha_apertura = "La fecha de apertura es requerida.";
-    }
-    if (!newRecord.estatus) {
-      errors.estatus = "El estatus es requerido.";
-    }
-  
+    if (!newRecord.n_contrato)
+      errors.n_contrato = "El número de contrato es obligatorio.";
+    if (!newRecord.euro) errors.euro = "El monto en euros es obligatorio.";
     return errors;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    if (records.some((record) => record.cedula_contrato === newRecord.cedula_contrato)) {
-      alert("La cédula ya existe.");
-      return;
-    }
+    newRecord.id = nextId; // Asignar el ID auto-incrementable
 
     try {
-      const response = await createRecord(newRecord); // Usar el servicio para crear un registro
+      const response = await createRecord(newRecord);
       setRecords([...records, response]);
+      setNextId(nextId + 1); // Incrementar el ID para el siguiente registro
       resetForm();
       setIsModalOpen(false);
       setIsCreatedModalOpen(true);
     } catch (error) {
-      console.error("Error al registrar la persona:", error);
-      alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
-    }
-  };
-
-  const handleUpdate = async (event) => {
-    event.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    try {
-      const response = await updateRecord(newRecord.cedula_contrato, newRecord); // Usar el servicio para actualizar
-      const updatedRecords = records.map((record) =>
-        record.cedula_contrato === response.cedula_contrato ? response : record
+      console.error("Error creando registro:", error);
+      alert(
+        "Hubo un problema al registrar el nuevo registro. Inténtalo de nuevo."
       );
-      setRecords(updatedRecords);
-      resetForm();
-      setIsEditModalOpen(false);
-      setIsUpdatedModalOpen(true);
-    } catch (error) {
-      console.error("Error al actualizar la persona:", error);
-      alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
     }
   };
 
   const resetForm = () => {
     setNewRecord({
-          cedula_contrato: "",
-          contrato: "",
-          fecha_apertura: "",
-          estatus: ""
+      id: null,
+      n_contrato: "",
+      euro: "",
+      bolivares: "",
+      cincoflax: "",
+      diezinteres: "",
+      interes_semanal: "",
+      semanal_sin_interes: "",
+      couta: "",
+      desde: "",
+      hasta: "",
     });
     setErrors({});
   };
 
-  const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible);
-  };
+  const toggleMenu = () => setIsMenuVisible(!isMenuVisible);
 
   const renderDataTable = () => {
-    const filteredRecords = records.filter((record) => {
-      return (
+    // Agrupar registros por n_contrato
+    const uniqueRecords = Array.from(
+      new Map(records.map((record) => [record.n_contrato, record])).values()
+    );
+
+    const filteredRecords = uniqueRecords.filter(
+      (record) =>
         (record.nombres &&
           record.nombres.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (record.apellidos &&
           record.apellidos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (record.cedula_contrato && record.cedula_contrato.includes(searchTerm))
-      );
-    });
+        (record.n_contrato && record.n_contrato.includes(searchTerm))
+    );
 
     const totalPages = Math.ceil(filteredRecords.length / limit);
     const startIndex = (currentPage - 1) * limit;
@@ -167,7 +225,7 @@ const Persona = () => {
 
     return (
       <div className="records-container">
-        <h2>Catálogo de Contrato</h2>
+        <h2>Catálogo de Crédito</h2>
         <div className="search-container">
           <label htmlFor="search" className="search-label">
             Buscar persona
@@ -211,7 +269,7 @@ const Persona = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>C.I</th>
+                <th>N° Contrato</th>
                 <th>Nombre y Apellido</th>
                 <th>Acciones</th>
               </tr>
@@ -219,24 +277,18 @@ const Persona = () => {
             <tbody>
               {currentRecords.length > 0 ? (
                 currentRecords.map((record) => (
-                  <tr key={record.cedula_contrato}>
-                    <td>{record.cedula_contrato}</td>
+                  <tr key={record.n_contrato}>
+                    <td>{record.n_contrato}</td>
                     <td>{`${record.nombres} ${record.apellidos}`}</td>
                     <td>
                       <button
-                        onClick={() => handleView(record.cedula_contrato)}
+                        onClick={() => handleView(record.n_contrato)}
                         title="Ver Datos"
                       >
                         <FaEye />
                       </button>
                       <button
-                        onClick={() => handleEdit(record.cedula_contrato)}
-                        title="Actualizar"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(record.cedula_contrato)}
+                        onClick={() => handleDelete(record.n_contrato)}
                         title="Eliminar"
                       >
                         <FaTrash />
@@ -280,24 +332,17 @@ const Persona = () => {
     );
   };
 
-  const handleView = (id) => {
-    const recordToView = records.find((record) => record.cedula_contrato === id);
-    if (recordToView) {
-      setViewRecord(recordToView);
-      setIsViewModalOpen(true);
-    }
-  };
-
-  const handleEdit = (id) => {
-    const recordToEdit = records.find((record) => record.cedula_contrato === id);
-    if (recordToEdit) {
-      setNewRecord(recordToEdit);
-      setIsEditModalOpen(true);
-    }
+  // Función para manejar la visualización
+  const handleView = (n_contrato) => {
+    const relatedRecords = records.filter(
+      (record) => record.n_contrato === n_contrato
+    );
+    setSelectedRecord(relatedRecords);
+    setIsViewModalOpen(true);
   };
 
   const handleDelete = (id) => {
-    const recordToDelete = records.find((record) => record.cedula_contrato === id);
+    const recordToDelete = records.find((record) => record.n_contrato === id);
     if (recordToDelete) {
       setRecordToDelete(recordToDelete);
       setIsDeleteModalOpen(true);
@@ -306,15 +351,17 @@ const Persona = () => {
 
   const confirmDelete = async () => {
     try {
-      await deleteRecord(recordToDelete.cedula_contrato); // Usar el servicio para eliminar
+      await deleteRecord(recordToDelete.n_contrato);
       setRecords(
-        records.filter((record) => record.cedula_contrato !== recordToDelete.cedula_contrato)
+        records.filter(
+          (record) => record.n_contrato !== recordToDelete.n_contrato
+        )
       );
       setRecordToDelete(null);
       setIsDeleteModalOpen(false);
       setIsDeletedModalOpen(true);
     } catch (error) {
-      console.error("Error al eliminar el registro:", error);
+      console.error("Error deleting record:", error);
       alert("Hubo un problema al eliminar el registro. Inténtalo de nuevo.");
     }
   };
@@ -330,155 +377,242 @@ const Persona = () => {
       </div>
       <Footer />
 
+      {/* Modal para agregar nuevo registro */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      <h2>Datos del Contrato</h2>
+        <h2>Gestión de crédito</h2>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-row">
+            <input type="hidden" name="id" />
             <div className="form-group input-col-12">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="cedula_contrato"
-                  value={newRecord.cedula_contrato}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">N° Contrato:</label>
+              <label className="form-label">N° de Contrato:</label>
               <input
                 type="text"
-                name="contrato"
-                value={newRecord.contrato}
+                name="n_contrato"
+                value={newRecord.n_contrato}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+              {errors.n_contrato && (
+                <span className="error-message">{errors.n_contrato}</span>
+              )}
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Metodo de Pago:</label>
+              <select
+                name="metodo_pago"
+                value={newRecord.metodo_pago}
+                onChange={handleInputChange}
+                className="form-control"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Divisas">Divisas</option>
+                <option value="Transferencia">Transferencia</option>
+              </select>
+              {errors.tipo && (
+                <span className="error-message">{errors.tipo}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Euros:</label>
+              <input
+                type="number"
+                name="euro"
+                value={newRecord.euro}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+              {errors.euro && (
+                <span className="error-message">{errors.euro}</span>
+              )}
+            </div>
+            <div className="form-group input-col-6">
+              <label className="form-label">Monto en Bolívares:</label>
+              <input
+                type="text"
+                name="bolivares"
+                value={newRecord.bolivares}
+                readOnly
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">5% FLAT:</label>
+              <input
+                type="text"
+                name="cincoflax"
+                value={newRecord.cincoflax}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">10% de Interés:</label>
+              <input
+                type="text"
+                name="diezinteres"
+                value={newRecord.diezinteres}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">Interés Semanal:</label>
+              <input
+                type="text"
+                name="interes_semanal"
+                value={newRecord.interes_semanal}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-3">
+              <label className="form-label">Semana Sin Interés:</label>
+              <input
+                type="text"
+                name="semanal_sin_interes"
+                value={newRecord.semanal_sin_interes}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="form-group input-col-12">
+              <label className="form-label">Cuota a Cancelar:</label>
+              <input
+                type="text"
+                name="couta"
+                value={newRecord.couta}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Apertura:</label>
+              <label className="form-label">Desde:</label>
               <input
                 type="date"
-                name="fecha_apertura"
-                value={newRecord.fecha_apertura}
+                name="desde"
+                value={newRecord.desde}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Estatus</label>
+            <div className="form-group input-col-6">
+              <label className="form-label">Hasta:</label>
               <input
-                type="text"
-                name="estatus"
-                value={newRecord.estatus}
+                type="date"
+                name="hasta"
+                value={newRecord.hasta}
                 onChange={handleInputChange}
                 className="form-control"
                 required
               />
             </div>
           </div>
-          <button type="submit" className="submit-button">
-            Registrar
+          <button type="submit">Registrar</button>
+        </form>
+      </Modal>
+
+      <Modal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        className="view-modal"
+      >
+        <div className="modal-header">
+          <h2>Detalles del Crédito</h2>
+          <button
+            onClick={() => setIsViewModalOpen(false)}
+            className="close-button"
+          >
+            ×
           </button>
-        </form>
-      </Modal>
+        </div>
 
-      <Modal isOpen={isViewModalOpen} onClose={() => setIsViewModalOpen(false)}>
-        <h2>Detalles de Contrato</h2>
-        {viewRecord && (
-          <div className="view-record-details">
-            <p>
-              <strong>Cédula de Identidad:</strong> {viewRecord.cedula_contrato}
-            </p>
-            <p>
-              <strong>contrato:</strong> {viewRecord.contrato}
-            </p>
-            <p>
-              <strong>Fecha de Apertura:</strong> {viewRecord.fecha_apertura}
-            </p>
-            <p>
-              <strong>Estatus:</strong> {viewRecord.estatus}
-            </p>
-          </div>
-        )}
-      </Modal>
+        <div className="modal-body">
+          {selectedRecord && selectedRecord.length > 0 ? (
+            <>
+              {/* Sección de detalles del beneficiado (toma datos del primer registro) */}
+              <h4>Detalles del beneficiado</h4>
+              <table className="details-table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>N° Contrato:</strong>
+                    </td>
+                    <td>{selectedRecord[0].n_contrato}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Nombres:</strong>
+                    </td>
+                    <td>{selectedRecord[0].nombres}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Apellidos:</strong>
+                    </td>
+                    <td>{selectedRecord[0].apellidos}</td>
+                  </tr>
+                </tbody>
+              </table>
 
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <h2>Actualizar Datos de Contrato</h2>
-        <form onSubmit={handleUpdate} className="modal-form">
-        <div className="form-row">
-            <div className="form-group input-col-12">
-              <label className="form-label">Cédula del Emprendedor</label>
-              <div className="input-group">
-                <input
-                  type="number"
-                  name="cedula_contrato"
-                  value={newRecord.cedula_contrato}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  className="submit-button indigo"
-                  onClick={() => {
-                    /* Acción del botón */
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">N° Contrato:</label>
-              <input
-                type="text"
-                name="contrato"
-                value={newRecord.contrato}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-6">
-              <label className="form-label">Fecha de Apertura:</label>
-              <input
-                type="date"
-                name="fecha_apertura"
-                value={newRecord.fecha_apertura}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className="form-group input-col-12">
-              <label className="form-label">Estatus</label>
-              <input
-                type="text"
-                name="estatus"
-                value={newRecord.estatus}
-                onChange={handleInputChange}
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
+              {/* Tabla de detalles del crédito */}
+              <h4>Detalles del Crédito</h4>
+              <table className="status-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Método de Pago</th>
+                    <th>Euros</th>
+                    <th>Bolívares</th>
+                    <th>5% FLAT</th>
+                    <th>10% de Interés</th>
+                    <th>Interés Semanal</th>
+                    <th>Semana Sin Interés</th>
+                    <th>Cuota a Cancelar</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedRecord.map((record, index) => (
+                    <tr key={index}>
+                      <td>{record.id || "N/A"}</td>
+                      <td>{record.metodo_pago || "N/A"}</td>
+                      <td>{record.euro || "N/A"}</td>
+                      <td>{record.bolivares || "N/A"}</td>
+                      <td>{record.cincoflax || "N/A"}</td>
+                      <td>{record.diezinteres || "N/A"}</td>
+                      <td>{record.interes_semanal || "N/A"}</td>
+                      <td>{record.semanal_sin_interes || "N/A"}</td>
+                      <td>{record.couta || "N/A"}</td>
+                      <td>{record.desde || "N/A"}</td>
+                      <td>{record.hasta || "N/A"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          ) : (
+            <p>No hay registros para mostrar.</p>
+          )}
+        </div>
 
-          <button type="submit">Actualizar</button>
-        </form>
+        <div className="modal-footer">
+          <button
+            onClick={() => setIsViewModalOpen(false)}
+            className="close-modal-button"
+          >
+            Cerrar
+          </button>
+        </div>
       </Modal>
 
       <Modal
@@ -488,7 +622,7 @@ const Persona = () => {
         <h2>Confirmar Eliminación</h2>
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
         <p>
-          <strong>Cédula de Identidad:</strong> {recordToDelete?.cedula}
+          <strong>Cédula de Identidad:</strong> {recordToDelete?.n_contrato}
         </p>
         <p>
           <strong>Nombre:</strong> {recordToDelete?.nombres}{" "}
@@ -517,10 +651,8 @@ const Persona = () => {
       >
         <h2>Registro Creado</h2>
         <div className="confirmation-modal">
-          <div className="confirmation-message">
-            <FaCheckCircle className="confirmation-icon" />
-            <p>El registro ha sido creado con éxito.</p>
-          </div>
+          <FaCheckCircle className="confirmation-icon" />
+          <p>El registro ha sido creado con éxito.</p>
         </div>
       </Modal>
 
@@ -530,14 +662,12 @@ const Persona = () => {
       >
         <h2>Registro Actualizado</h2>
         <div className="confirmation-modal">
-          <div className="confirmation-message">
-            <FaCheckCircle className="confirmation-icon" />
-            <p>El registro ha sido actualizado con éxito.</p>
-          </div>
+          <FaCheckCircle className="confirmation-icon" />
+          <p>El registro ha sido actualizado con éxito.</p>
         </div>
       </Modal>
     </div>
   );
 };
 
-export default Persona;
+export default Credito;
