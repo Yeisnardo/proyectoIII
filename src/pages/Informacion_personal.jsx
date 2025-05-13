@@ -171,7 +171,7 @@ const Persona = () => {
           Actualizar
         </button>
         <h2>Informacion Personal</h2>
-        <form onSubmit={handleSubmit} className="modal-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group input-col-12">
               <label className="form-label">Cédula de Identidad:</label>

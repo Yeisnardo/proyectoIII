@@ -9,7 +9,7 @@ import {
   createRecord,
   updateRecord,
   deleteRecord,
-} from "../services/finacieroService"; // Importa las funciones del servicio
+} from "../services/finacieroService"; // Import service functions
 import "../assets/styles/App.css";
 
 const Persona = () => {
@@ -31,8 +31,8 @@ const Persona = () => {
   const [newRecord, setNewRecord] = useState({
     cedula_datos_financieros: "",
     cuenta_bancaria: "",
-    banco_seleccionado: "",
-    metodo_pago: "",
+    banco_seleccionado: [],
+    metodo_pago: [],
     emprendimiento_credito: "",
     numero_clientes_semanal: "",
     declara_iva: "",
@@ -45,10 +45,10 @@ const Persona = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRecords(); // Servicio que obtiene los datos
+        const data = await fetchRecords(); // Fetch records from service
         setRecords(data);
       } catch (error) {
-        console.error("Error al obtener los registros:", error);
+        console.error("Error fetching records:", error);
       }
     };
 
@@ -84,8 +84,6 @@ const Persona = () => {
         newSelected = newSelected.filter((item) => item !== value);
       }
       setNewRecord({ ...newRecord, banco_seleccionado: newSelected });
-    } else {
-      // otros manejos
     }
   };
 
@@ -112,19 +110,19 @@ const Persona = () => {
       return;
     }
 
-    if (records.some((record) => record.cedula === newRecord.cedula)) {
+    if (records.some ((record) => record.cedula === newRecord.cedula)) {
       alert("La cédula ya existe.");
       return;
     }
 
     try {
-      const response = await createRecord(newRecord); // Usar el servicio para crear un registro
+      const response = await createRecord(newRecord); // Create a new record using the service
       setRecords([...records, response]);
       resetForm();
       setIsModalOpen(false);
       setIsCreatedModalOpen(true);
     } catch (error) {
-      console.error("Error al registrar la persona:", error);
+      console.error("Error registering the person:", error);
       alert("Hubo un problema al registrar la persona. Inténtalo de nuevo.");
     }
   };
@@ -138,7 +136,7 @@ const Persona = () => {
     }
 
     try {
-      const response = await updateRecord(newRecord.cedula, newRecord); // Usar el servicio para actualizar
+      const response = await updateRecord(newRecord.cedula, newRecord); // Update the record using the service
       const updatedRecords = records.map((record) =>
         record.cedula === response.cedula ? response : record
       );
@@ -147,7 +145,7 @@ const Persona = () => {
       setIsEditModalOpen(false);
       setIsUpdatedModalOpen(true);
     } catch (error) {
-      console.error("Error al actualizar la persona:", error);
+      console.error("Error updating the person:", error);
       alert("Hubo un problema al actualizar la persona. Inténtalo de nuevo.");
     }
   };
@@ -228,55 +226,60 @@ const Persona = () => {
                 <span className="error-message">{errors.cuenta_bancaria}</span>
               )}
             </div>
-            <div style={{ marginBottom: "20px" }}>
-              <label
-                style={{
-                  fontSize: "1.2em",
-                  fontWeight: "bold",
-                  display: "block",
-                  marginBottom: "10px",
-                }}
-              >
-                Seleccionar el Banco:
-              </label>
-              <div className="checkbox-container">
+            <div className="input-group input-col-12">
+              <label className="form-label">Seleccionar el Banco:</label>
+              <div className="checkbox-group-wrapper flex-wrap-gap">
                 {bancos.map((banco) => (
-                  <div key={banco} className="checkbox-card">
+                  <div key={banco} className="checkbox-item">
                     <input
                       type="checkbox"
-                      id={`banco-${banco}`}
+                      id={`reg-banco-${banco.toLowerCase().replace(/\s/g, "-")}`}
                       name="banco_seleccionado"
                       value={banco}
-                      checked={newRecord.banco_seleccionado.includes(banco)}
                       onChange={handleInputChange}
+                      checked={newRecord.banco_seleccionado.includes(banco)}
                     />
                     <label
-                      htmlFor={`banco-${banco}`}
-                      style={{ marginLeft: "8px" }}
+                      htmlFor={`reg-banco-${banco
+                        .toLowerCase()
+                        .replace(/\s/g, "-")}`}
                     >
                       {banco}
                     </label>
                   </div>
                 ))}
               </div>
-            </div>
-            <div className=" input-wrapper checkbox-group-wrapper input-col-12">
+            </ div>
+            <div className="input-group input-col-12">
               <label className="form-label">Métodos de Pagos:</label>
-              <div style={{ display: "flex" }}>
-                {["Pago Movil", "Punto de Venta", "Efectivo", "Biopago"].map(
-                  (metodo) => (
-                    <div key={metodo}>
-                      <input
-                        type="checkbox"
-                        name="metodo_pago"
-                        className="form-control"
-                        value={metodo}
-                        onChange={handleInputChange}
-                      />
-                      <label htmlFor="">{metodo}</label>
-                    </div>
-                  )
-                )}
+              <div className="checkbox-group-wrapper flex-wrap-gap">
+                {[
+                  "Pago Movil",
+                  "Puntos de Venta",
+                  "Efectivo",
+                  "BiopagoBDV",
+                  "Criptomonedas",
+                  "Zelle",
+                  "Transferencias Bancarias",
+                ].map((metodo) => (
+                  <div key={metodo} className="checkbox-item">
+                    <input
+                      type="checkbox"
+                      id={`reg-metodo-pago-${metodo.toLowerCase().replace(/\s/g, "-")}`}
+                      name="metodo_pago"
+                      value={metodo}
+                      onChange={handleInputChange}
+                      checked={newRecord.metodo_pago.includes(metodo)}
+                    />
+                    <label
+                      htmlFor={`reg-metodo-pago-${metodo
+                        .toLowerCase()
+                        .replace(/\s/g, "-")}`}
+                    >
+                      {metodo}
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="form-group input-col-7">
@@ -416,7 +419,7 @@ const Persona = () => {
 
   const confirmDelete = async () => {
     try {
-      await deleteRecord(recordToDelete.cedula); // Usar el servicio para eliminar
+      await deleteRecord(recordToDelete.cedula); // Delete the record using the service
       setRecords(
         records.filter((record) => record.cedula !== recordToDelete.cedula)
       );
@@ -424,7 +427,7 @@ const Persona = () => {
       setIsDeleteModalOpen(false);
       setIsDeletedModalOpen(true);
     } catch (error) {
-      console.error("Error al eliminar el registro:", error);
+      console.error("Error deleting the record:", error);
       alert("Hubo un problema al eliminar el registro. Inténtalo de nuevo.");
     }
   };
@@ -452,7 +455,7 @@ const Persona = () => {
                 value={newRecord.cedula}
                 onChange={handleInputChange}
                 className="form-control"
-                readOnly // Campo de solo lectura
+                readOnly // Read-only field
               />
               {errors.cedula && (
                 <span className="error-message">{errors.cedula}</span>

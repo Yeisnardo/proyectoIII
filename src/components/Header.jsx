@@ -79,19 +79,15 @@ const Header = ({ userName, userType }) => {
 
   return (
     <header className="header">
-
-      {/* Botón menú */}
-      
-
       {/* Logo */}
       <div className="menu-header">
         <img src={logo} alt="Logo Institucional" className="menu-logo" />
-        <button className="menu-icon-button" onClick={toggleMenu} aria-label="Abrir menú">
+      </div>
+      <div className="menu-header-boton">
+              <button className="menu-icon-button" onClick={toggleMenu} aria-label="Abrir menú">
         <FaBars />
       </button>
-      </div>
-
-      
+    </div>
 
       {/* Enlaces adicionales */}
       <div className="extra-menu">

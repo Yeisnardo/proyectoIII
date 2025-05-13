@@ -59,8 +59,6 @@ const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
   return (
     <div className="menu-container">
       <nav className={`menu ${isMenuVisible ? "visible" : "hidden"}`}>
-        <br />
-        <br />
         <ul>
           {/* Main Items */}
           <li>

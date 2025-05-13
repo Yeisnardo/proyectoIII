@@ -1121,116 +1121,127 @@ input::placeholder {
   Estilos para la barra superior de navegación.
   ========================================
 */
+/* Estilo del header principal más pequeño y compacto */
 .header {
   background: #092142;
   color: rgb(252, 252, 252);
-  padding: 7px 10px;
+  padding: 4px 10px; /* Más pequeño */
   width: 100vw;
   position: fixed;
   top: 0;
   left: 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Cambia si prefieres otro alineamiento */
   align-items: center;
   margin: 0;
   z-index: 2000;
 }
 
+/* Contenedor del logo, ajusta tamaño si es necesario */
+.menu-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  object-fit: contain;
+  margin-top: -10px;
+}
+
+/* Encabezado del menú (puede ajustarse) */
+.menu-header {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 12px 0;
+  margin-top: -10px;
+}
+
+/* Contenedor del botón en el menú */
+.menu-header-boton {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0 15%;
+  margin-top: -10px;
+}
+
+/* Botones con ícono más pequeños */
+.menu-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px; /* tamaño reducido */
+  margin-right: 10px;
+}
+
+/* Ajuste del encabezado principal de la app */
 .app-header {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px 60px; /* menos padding para ser más compacto */
   width: 100%;
 }
 
+/* Logo dentro del header */
 .app-header-logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 10px;
 }
 
+/* Logo de la institución, tamaño reducido */
 .app-header-institution-logo {
-  height: 100%;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 50px; /* más pequeño */
+  height: auto;
   object-fit: contain;
 }
 
+/* Íconos en header */
 .header-icons {
   display: flex;
   align-items: center;
+  margin-left: auto; /* Para separar de la izquierda */
 }
 
+/* Ícono de notificación */
 .header-icons .notification-icon {
   position: relative;
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 18px; /* tamaño menor */
+  transition: color 0.3s, transform 0.3s;
 }
 
-.header-icons .notification-icon,
+/* Perfil */
 .header-icons .profile {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 25px;
+  margin-left: 20px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   transition: color 0.3s, transform 0.3s;
 }
 
+/* Efecto hover en íconos y perfil */
 .header-icons .notification-icon:hover,
 .header-icons .profile:hover {
   color: #fdaf06;
   transform: scale(1.1);
 }
 
-/* Estilo para la sección adicional de opciones fuera del perfil */
-.extra-menu {
-  display: flex;
-  gap: 15px; /* Espacio entre las opciones */
-  padding: 10px 20px; /* Espaciado interno */
-  --background-gradient: linear-gradient(
-    to right,
-    #1d00a0,
-    #060879
-  ); /* Color de fondo opcional */
-  align-items: center;
-}
-
-/* Estilo para cada opción del menú adicional */
-.extra-menu-item {
-  text-decoration: none;
-  color: #ffffff; /* Color del texto */
-  font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-/* Cambio de estilo al pasar el cursor */
-.extra-menu-item:hover {
-  background-color: #6b94b2;
-  color: #ffffff;
-}
-
-/* Opcional: estilo para mostrar en dispositivos pequeños */
-@media (max-width: 768px) {
-  .extra-menu {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .extra-menu-item {
-    width: 100%;
-    padding: 10px;
-  }
-}
-
+/* Icono de perfil (más pequeño) */
 .profile-icon {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background-color: white;
-  color: var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1242,6 +1253,7 @@ input::placeholder {
   transform: scale(1.1);
 }
 
+/* Badge de notificación */
 .notification-badge {
   position: absolute;
   top: -5px;
@@ -1257,62 +1269,51 @@ input::placeholder {
   align-items: center;
 }
 
-/*
-  ========================================
-  Estilos de Dropdowns (Header)
-  Estilos para menús desplegables como notificaciones y perfil.
-  ========================================
-*/
+/* Menús desplegables (dropdowns) */
 .dropdown {
   position: relative;
 }
-
 .dropdown-menu {
   position: absolute;
   right: 0;
   top: 50px;
   background-color: #ffffff;
   color: #333;
-  border: 1px solid var(--border-color);
+  border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   width: 200px;
-  display: none;
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 }
-
 .dropdown-menu.visible {
-  display: block;
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
-
 .dropdown-menu ul {
-  list-style-type: none;
-  padding: 10px;
+  list-style: none;
+  padding: 10px 0;
   margin: 0;
 }
-
 .dropdown-menu li {
   margin: 5px 0;
 }
-
 .dropdown-menu a {
+  display: block;
+  padding: 10px 15px;
   text-decoration: none;
   color: black;
-  padding: 10px 15px;
-  display: block;
-  transition: background-color 0.3s;
   font-size: 16px;
+  transition: background-color 0.3s;
 }
-
 .dropdown-menu a:hover {
   background-color: #f0f0f0;
 }
-
+/* Flecha decorativa del dropdown (opcional) */
 .notification-arrow {
   position: absolute;
   right: 10px;
@@ -1324,30 +1325,97 @@ input::placeholder {
   border-bottom: 10px solid #ffffff;
   z-index: 1001;
 }
-
+/* Información del perfil en el dropdown */
 .profile-info {
   padding: 15px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid #ccc;
   background-color: #f9f9f9;
   transition: background-color 0.3s;
 }
-
 .profile-info:hover {
   background-color: #e0e0e0;
 }
-
 .user-name {
   font-weight: bold;
   font-size: 16px;
   color: #333;
   display: block;
 }
-
 .user-type {
   color: #666;
   font-size: 14px;
   display: block;
   margin-top: 5px;
+}
+/* Opciones adicionales en menú externo */
+.extra-menu {
+  display: flex;
+  gap: 15px; /* Espacio entre opciones */
+  padding: 10px 20px;
+  align-items: center;
+  /* Puedes agregar un fondo o gradiente si deseas */
+  /* background: linear-gradient(to right, #1d00a0, #060879); */
+}
+.extra-menu-item {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+.extra-menu-item:hover {
+  background-color: #6b94b2;
+  color: #ffffff;
+}
+
+/* --- Estilos para pantallas pequeñas --- */
+@media (max-width: 768px) {
+  /* Reducir paddings y tamaños en header */
+  .header {
+    padding: 4px 8px;
+    justify-content: space-between; /* mejor distribución en móvil */
+  }
+
+  /* Logo más pequeño */
+  .menu-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Ajustar tamaño de iconos y textos en header */
+  .header-icons .notification-icon,
+  .header-icons .profile {
+    font-size: 16px;
+    margin-left: 15px;
+  }
+
+  /* Ajustar padding en app-header y reducir tamaño */
+  .app-header {
+    padding: 8px 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Logo en app-header */
+  .app-header-logo-container {
+    padding: 5px;
+  }
+
+  /* Hacer menú en columna y ancho completo */
+  .extra-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .extra-menu-item {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+  }
 }
 
 /*
@@ -1358,26 +1426,19 @@ input::placeholder {
 */
 .menu {
   background: var(--primary-color);
-  width: 235px;
+  width: 295px;
   height: 92.4%;
   position: fixed;
-  top: 2;
+  top: 1;
   left: 0;
-  padding-top: 10px;
+  padding-top: 20px;
   z-index: 1500;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   max-height: calc(100vh - 10px);
   overflow-y: auto;
 }
 
-.menu-header {
-  display: flex;
-  justify-content: center; /* Alinear a la izquierda */
-  align-items: left;
-  padding: 10px 49%;
-  margin-top: -10px;
-}
 
 .menu-menu {
   display: flex;
@@ -1395,12 +1456,7 @@ input::placeholder {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.menu-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
+
 
 .menu-label-container {
   display: flex;
@@ -1458,7 +1514,7 @@ input::placeholder {
   text-align: left;
   cursor: pointer;
   padding: 10px 15px;
-  color: #ffffff;
+  color: #302f2f;
   transition: background-color 0.3s;
   font-size: 15px;
 }
@@ -1533,7 +1589,7 @@ input::placeholder {
   background: transparent;
   top: 10px;
   left: 25px;
-  background-color: #000000b0;
+  background-color: #852b2bb0;
   border: none;
   border-radius: 5px;
   padding: 5px;
@@ -1557,8 +1613,8 @@ input::placeholder {
 .dashboard-container {
   display: flex;
   height: calc(100vh - 50px);
-  width: 100vw;
-  background-color: #ffffff;
+  width: 100svw;
+  background-color: #5a5151;
   margin: 0;
   padding: 0;
   margin-top: 50px;
@@ -1573,10 +1629,20 @@ input::placeholder {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 20px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-  margin-left: 235px;
-  height: calc(100vh - 50px);
+  margin-left: 285px;
+  height: calc(100vh - 85px);
   overflow-y: auto;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.1s ease;
+}
+
+.records-container {
+  padding: 60px;
+  background-color: #fdfdfd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 20px; /* Centrado horizontal */
+  min-width: 800px; /* Limita el ancho máximo */
+  width: 98%; /* Usa el 90% del contenedor padre para mayor flexibilidad */
 }
 
 .menu-hidden .dashboard-content {
@@ -2318,13 +2384,7 @@ button[type="submit"] {
   background-color: #e0e0e0;
 }
 
-.records-container {
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 20px 0;
-}
+
 
 .styled-link {
   display: inline-block;
@@ -2740,10 +2800,122 @@ input[type="radio"] {
   border-color: #007bff;
 }
 
-.menu-icon-button {
-  background: none;
-  border: none;
+
+
+
+
+
+
+
+
+/* Estilo profesional para el formulario */
+/* Estilo minimalista para la lista de checkboxes */
+.modal-form {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Lista de campos */
+.form-row {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Cada item del formulario */
+.form-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiqueta del campo */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Contenedor de checkboxes */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Checkbox personalizado y texto */
+.checkbox-label {
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  font-size: 24px; /* ajustar tamaño */
-  margin-right: 10px; /* espacio si quieres */
+  font-size: 14px;
+  position: relative;
+  padding-left: 30px;
+  user-select: none;
+  flex: 1;
+}
+
+/* Ocultar checkbox nativo */
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Estilo del checkbox personalizado */
+.checkbox-custom {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Marca cuando está checked */
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: #007bff;
+  border-radius: 2px;
+  display: block;
+}
+
+/* Cambio de borde al hover */
+.checkbox-label:hover .checkbox-custom {
+  border-color: #999;
+}
+
+/* Texto "Sí" a la derecha del checkbox */
+.checkbox-text {
+  margin-left: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Estilo para mensajes de error */
+.error-message {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #d9534f;
+  font-weight: 500;
 }
