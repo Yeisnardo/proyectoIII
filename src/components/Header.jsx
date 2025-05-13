@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaBell, FaUser , FaLock, FaSignOutAlt } from "react-icons/fa"; 
-import { useNavigate } from "react-router-dom"; 
+import { FaBell, FaUser, FaLock, FaSignOutAlt, FaBars } from "react-icons/fa"; 
+import { useNavigate, NavLink } from "react-router-dom"; 
 import logo from "../assets/images/logo.jpg";
 import "../assets/styles/App.css"; 
 
@@ -10,7 +10,8 @@ const Header = ({ userName, userType }) => {
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isNotificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [isCharacterizationOpen, setCharacterizationOpen] = useState(false); // Nuevo estado
+  const [isCharacterizationOpen, setCharacterizationOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const profileDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -19,6 +20,10 @@ const Header = ({ userName, userType }) => {
     { id: 1, message: "Nueva notificación 1" },
     { id: 2, message: "Nueva notificación 2" },
   ]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(prev => !prev);
+  };
 
   const closeAllDropdowns = () => {
     setProfileDropdownOpen(false);
@@ -68,17 +73,29 @@ const Header = ({ userName, userType }) => {
     navigate("/");
   };
 
-  // Nueva función para manejar el clic en "Caracterización"
   const handleCharacterizationClick = () => {
     setCharacterizationOpen(!isCharacterizationOpen);
   };
 
   return (
     <header className="header">
+
+      {/* Botón menú */}
+      
+
+      {/* Logo */}
       <div className="menu-header">
-          <img src={logo} alt="Logo Institucional" className="menu-logo" />
-        </div>
+        <img src={logo} alt="Logo Institucional" className="menu-logo" />
+        <button className="menu-icon-button" onClick={toggleMenu} aria-label="Abrir menú">
+        <FaBars />
+      </button>
+      </div>
+
+      
+
+      {/* Enlaces adicionales */}
       <div className="extra-menu">
+
         <a href="/Caracterizacion" className="extra-menu-item" onClick={handleCharacterizationClick}>
           Caracterización
         </a>
@@ -90,60 +107,35 @@ const Header = ({ userName, userType }) => {
         </a>
       </div>
 
-      {/* Aquí se renderizan los submenús según el estado */}
-      {isCharacterizationOpen && (
-        <ul>
-          <li>
-            <NavLink to="/informacion-personal" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUser  className="menu-icon" /> Información Personal
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/perfil-financiero" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUser  className="menu-icon" /> Perfil Financiero
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/requerimientos" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaClipboardList className="menu-icon" /> Requerimientos
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/cuenta-bancaria" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity className="menu-icon" /> Cuenta Bancaria
-            </NavLink>
-          </li>
-        </ul>
-      )}
-
-      {/* Sección de Emprendimiento */}
+      {/* Submenú */}
       {isCharacterizationOpen && (
         <ul>
           <li>
             <NavLink to="/ubicacion-actividad-emprendedora" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity className="menu-icon" /> Ubicación de Actividad Emprendedora
+              <FaUniversity /> Ubicación de Actividad Emprendedora
             </NavLink>
           </li>
           <li>
             <NavLink to="/cadena-productiva" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity className="menu-icon" /> Cadena Productiva
+              <FaUniversity /> Cadena Productiva
             </NavLink>
           </li>
           <li>
             <NavLink to="/situacion-operativa" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity className="menu-icon" /> Situación Operativa
+              <FaUniversity /> Situación Operativa
             </NavLink>
           </li>
         </ul>
       )}
 
+      {/* Iconos de notificaciones y perfil */}
       <div className="header-icons">
+        {/* Notificaciones */}
         <div className="dropdown notification-icon" ref={notificationDropdownRef}>
           <FaBell
             aria-label="Notificaciones"
             onClick={toggleNotificationDropdown}
             aria-expanded={isNotificationDropdownOpen}
-            style={{ cursor: "pointer" }}
           />
           {notifications.length > 0 && (
             <span className="notification-badge" aria-live="polite">
@@ -151,9 +143,7 @@ const Header = ({ userName, userType }) => {
             </span>
           )}
           <div
-            className={`dropdown-menu notification-menu ${
-              isNotificationDropdownOpen ? "visible" : ""
-            }`}
+            className={`dropdown-menu notification-menu ${isNotificationDropdownOpen ? "visible" : ""}`}
             aria-hidden={!isNotificationDropdownOpen}
           >
             <div className="notification-arrow" />
@@ -169,64 +159,68 @@ const Header = ({ userName, userType }) => {
           </div>
         </div>
 
+        {/* Perfil */}
         <div className="dropdown profile" ref={profileDropdownRef}>
           <div
             className="profile-icon"
             onClick={toggleProfileDropdown}
             aria-label="Menú de perfil de usuario"
             aria-expanded={isProfileDropdownOpen}
-            style={{ cursor: "pointer" }}
           >
-            <FaUser aria-hidden="true" />
+            <FaUser />
           </div>
           <div
             className={`dropdown-menu ${isProfileDropdownOpen ? "visible" : ""}`}
             aria-hidden={!isProfileDropdownOpen}
           >
             <ul className="menu-list">
-              <li className="menu-list-item profile-info">
+              <li className="profile-info">
                 <div>
                   <span className="user-name">{userName || "Usuario Desconocido"}</span>
+                  <br />
                   <span className="user-type">{userType || "Tipo Desconocido"}</span>
                 </div>
               </li>
-              <li className="menu-list-item">
+              <li>
                 <a href="/change-password" onClick={closeAllDropdowns}>
-                  <FaLock className="menu-icon" aria-hidden="true" />
-                  Configuración
+                  <FaLock /> Configuración
                 </a>
               </li>
               <li
-                className="menu-list-item"
                 onClick={handleLogout}
                 role="button"
                 tabIndex="0"
               >
-                <FaSignOutAlt className="menu-icon" aria-hidden="true" />
-                <span>Cerrar sesión</span>
+                <FaSignOutAlt /> Cerrar sesión
               </li>
             </ul>
           </div>
         </div>
       </div>
 
+      {/* Modal logout */}
       {isLogoutModalOpen && (
-        <div
-          className="logout-modal"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="logout-modal-title"
-        >
+        <div className="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
           <div className="modal-content">
             <h2 id="logout-modal-title">Confirmar Cierre de Sesión</h2>
             <p>¿Estás seguro de que deseas cerrar sesión?</p>
             <div className="modal-actions">
               <button onClick={confirmLogout}>Sí, cerrar sesión</button>
-              <button onClick={() => setLogoutModalOpen(false)}>
-                Cancelar
-              </button>
+              <button onClick={() => setLogoutModalOpen(false)}>Cancelar</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Menú lateral controlado por isMenuOpen */}
+      {isMenuOpen && (
+        <div className="menu-lateral">
+          {/* contenido del menu */}
+          <h3>Menú lateral</h3>
+          <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            {/* más items */}
+          </ul>
         </div>
       )}
     </header>
