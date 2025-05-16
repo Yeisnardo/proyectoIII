@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   FaHome,
   FaUser,
   FaExchangeAlt,
-  FaFileContract,
   FaMoneyBillWave,
   FaBars,
   FaTimes,
@@ -13,215 +12,187 @@ import {
   FaMoneyCheckAlt,
   FaUniversity,
 } from "react-icons/fa";
+import { MenuContext } from '../contexts/MenuContext';
 import { NavLink, useLocation } from "react-router-dom";
 import "../assets/styles/App.css";
 
-
 const NavigationMenu = ({ isMenuVisible, toggleMenu }) => {
-  // State to control submenu open/close
+  const { isMenuOpen, toggleMenu: toggleMenuContext } = useContext(MenuContext);
   const [isEmprendedorOpen, setEmprendedorOpen] = useState(false);
   const [isFormalizacionOpen, setFormalizacionOpen] = useState(false);
 
   const location = useLocation();
 
-  // Determine if current path belongs to Emprendedor submenu items
   const emprendedorPaths = ["/requerimientos", "/perfil-financiero"];
-  // Determine if current path belongs to Formalizacion submenu items
   const formalizacionPaths = [
     "/ubicacion-actividad-emprendedora",
     "/cadena-productiva",
     "/situacion-operativa",
   ];
 
-  // Update submenu open states according to current route so menu stays open on active section
   useEffect(() => {
-    if (emprendedorPaths.includes(location.pathname)) {
-      setEmprendedorOpen(true);
-    } else {
-      setEmprendedorOpen(false);
-    }
-    if (formalizacionPaths.includes(location.pathname)) {
-      setFormalizacionOpen(true);
-    } else {
-      setFormalizacionOpen(false);
-    }
+    setEmprendedorOpen(emprendedorPaths.includes(location.pathname));
+    setFormalizacionOpen(formalizacionPaths.includes(location.pathname));
   }, [location.pathname]);
-
-  // Toggle handlers to manually open/close submenu on click
-  const toggleEmprendedorMenu = () => {
-    setEmprendedorOpen((prev) => !prev);
-  };
-
-  const toggleFormalizacionMenu = () => {
-    setFormalizacionOpen((prev) => !prev);
-  };
 
   return (
     <div className="menu-container">
-      <nav className={`menu ${isMenuVisible ? "visible" : "hidden"}`}>
+      <nav className={`menu ${isMenuOpen ? 'visible' : 'hidden'}`}>
         <ul>
-          {/* Main Items */}
+          {/* Inicio */}
           <li>
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) => (isActive ? "active" : "")}
-              end
-            >
-              <FaHome className="menu-icon" /> Inicio
+            <NavLink to="/dashboard" end className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaHome className="menu-icon" />
+                <span className="link-text">Inicio</span>
+              </span>
             </NavLink>
           </li>
-
-          {/* Personal Info */}
+          {/* Información Personal */}
           <li>
-            <NavLink
-              to="/Informacion_personal"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUser className="menu-icon" /> Información Personal
+            <NavLink to="/Informacion_personal" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUser className="menu-icon" />
+                <span className="link-text">Información Personal</span>
+              </span>
             </NavLink>
           </li>
-
-          {/* Emprendedor submenu items standalone visible in main list */}
+          {/* Perfil Financiero */}
           <li>
-            <NavLink
-              to="/perfil-financiero"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUser className="menu-icon" /> Perfil Financiero
+            <NavLink to="/perfil-financiero" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUser className="menu-icon" />
+                <span className="link-text">Perfil Financiero</span>
+              </span>
             </NavLink>
           </li>
+          {/* Requerimientos */}
           <li>
-            <NavLink
-              to="/requerimientos"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaClipboardList className="menu-icon" /> Requerimientos
+            <NavLink to="/requerimientos" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaClipboardList className="menu-icon" />
+                <span className="link-text">Requerimientos</span>
+              </span>
             </NavLink>
           </li>
-
-          {/* Banks */}
+          {/* Banca */}
           <li>
-            <NavLink
-              to="/bancos"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUniversity className="menu-icon" /> Banca
+            <NavLink to="/bancos" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUniversity className="menu-icon" />
+                <span className="link-text">Banca</span>
+              </span>
             </NavLink>
           </li>
-
-          {/* Emprendimiento / Formalizacion submenu items shown standalone */}
+          {/* Ubicación de Actividad Emprendedora */}
           <li>
-            <NavLink
-              to="/ubicacion-actividad-emprendedora"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUniversity className="menu-icon" /> Ubicación de Actividad Emprendedora
+            <NavLink to="/ubicacion-actividad-emprendedora" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUniversity className="menu-icon" />
+                <span className="link-text">Ubicación de Actividad Emprendedora</span>
+              </span>
             </NavLink>
           </li>
+          {/* Cadena Productiva */}
           <li>
-            <NavLink
-              to="/cadena-productiva"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUniversity className="menu-icon" /> Cadena Productiva
+            <NavLink to="/cadena-productiva" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUniversity className="menu-icon" />
+                <span className="link-text">Cadena Productiva</span>
+              </span>
             </NavLink>
           </li>
+          {/* Situación Operativa */}
           <li>
-            <NavLink
-              to="/situacion-operativa"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUniversity className="menu-icon" /> Situación Operativa
+            <NavLink to="/situacion-operativa" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUniversity className="menu-icon" />
+                <span className="link-text">Situación Operativa</span>
+              </span>
             </NavLink>
           </li>
-
-          {/* Administración de Usuarios */}
+          {/* Solicitud de Crédito */}
           <li>
-            <NavLink
-              to="/administracion-persona"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUser className="menu-icon" /> Administración de Usuarios
+            <NavLink to="/amortizacion" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaMoneyBillWave className="menu-icon" />
+                <span className="link-text">Solicitud de Crédito</span>
+              </span>
             </NavLink>
           </li>
+          {/* Amortización */}
           <li>
-            <NavLink
-              to="/administracion-persona"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUser className="menu-icon" /> Administración de Emprededor
+            <NavLink to="/amortizacion" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaMoneyBillWave className="menu-icon" />
+                <span className="link-text">Amortización</span>
+              </span>
             </NavLink>
           </li>
-
-
+          {/* Administración de Persona */}
+          <li>
+            <NavLink to="/usuario" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUser className="menu-icon" />
+                <span className="link-text">Administración de Persona</span>
+              </span>
+            </NavLink>
+          </li>
+          {/* Administración de Usuario */}
+          <li>
+            <NavLink to="/usuario" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUser className="menu-icon" />
+                <span className="link-text">Administración de Usuario</span>
+              </span>
+            </NavLink>
+          </li>
+          {/* Buscar de Emprendedor */}
+          <li>
+            <NavLink to="/administracion-persona" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaUser className="menu-icon" />
+                <span className="link-text">Buscar de Emprendedor</span>
+              </span>
+            </NavLink>
+          </li>
           {/* Otros módulos */}
           <li>
-            <NavLink
-              to="/ferias"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaStreetView className="menu-icon" /> Ferias y Eventos
+            <NavLink to="/aprobacion-credito" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaCheckCircle className="menu-icon" />
+                <span className="link-text">Aprobación de solicitud</span>
+              </span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/aprobacion-credito"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaCheckCircle className="menu-icon" /> Aprobación de Crédito
+            <NavLink to="/Credito" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaMoneyCheckAlt className="menu-icon" />
+                <span className="link-text">Administración de Crédito</span>
+              </span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/contrato"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaFileContract className="menu-icon" /> Contratos
+            <NavLink to="/ferias" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaStreetView className="menu-icon" />
+                <span className="link-text">Ferias y Eventos</span>
+              </span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/Credito"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaMoneyCheckAlt className="menu-icon" /> Administración de Crédito
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/AlCambio"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaExchangeAlt className="menu-icon" /> Cotización Divisas
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/amortizacion"
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaMoneyBillWave className="menu-icon" /> Amortizaciones
+            <NavLink to="/AlCambio" className={({ isActive }) => (isActive ? "active" : "")}>
+              <span className="icon-text">
+                <FaExchangeAlt className="menu-icon" />
+                <span className="link-text">Cotización Divisas</span>
+              </span>
             </NavLink>
           </li>
         </ul>
       </nav>
 
-      {/* Toggle button for mobile and small screens */}
-      <button
-        className={`menu-toggle ${isMenuVisible ? "active" : ""}`}
-        onClick={toggleMenu}
-        style={{
-          transform: isMenuVisible ? "translateX(220px)" : "translateX(0)",
-          transition: "transform 0.3s ease",
-        }}
-        aria-label="Toggle menu"
-      >
-        {isMenuVisible ? (
-          <FaTimes className="menu-icon" />
-        ) : (
-          <FaBars className="menu-icon" />
-        )}
-      </button>
+
     </div>
   );
 };

@@ -5,6 +5,8 @@
   reutilizables para mantener consistencia.
   ========================================
 */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 :root {
   --primary-color: #07142A; /* Azul más vibrante */
   --primary-hover-color: #004085; /* Azul oscuro para hover */
@@ -61,7 +63,7 @@ body {
 
 body {
   font-size: 1rem;
-  font-family: "Open Sans", sans-serif; /* Usar Open Sans como fuente principal */
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1148,6 +1150,28 @@ input::placeholder {
   margin-top: -10px;
 }
 
+
+/* Estilo alternativo para el texto IFEMI al lado del logo */
+.logo-text {
+  font-family: 'Montserrat', sans-serif; /* Fuente moderna y elegante */
+  font-weight: 900;
+  font-size: 2rem;
+  color: #afafaf; /* Un rosa vibrante */
+  margin-left: 12px;
+  align-self: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+  user-select: none;
+  cursor: default;
+  transition: color 0.25s ease;
+}
+
+/* Efecto hover suave (opcional) */
+.logo-text:hover {
+  color: #2980b9; /* Un azul más brillante al pasar el mouse */
+}
+
 /* Encabezado del menú (puede ajustarse) */
 .menu-header {
   width: 35px;
@@ -1232,16 +1256,16 @@ input::placeholder {
 /* Efecto hover en íconos y perfil */
 .header-icons .notification-icon:hover,
 .header-icons .profile:hover {
-  color: #fdaf06;
+  color: #002ab3;
   transform: scale(1.1);
 }
 
 /* Icono de perfil (más pequeño) */
 .profile-icon {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: white;
+  background-color: rgb(105, 105, 105);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1350,11 +1374,10 @@ input::placeholder {
 /* Opciones adicionales en menú externo */
 .extra-menu {
   display: flex;
+  margin-left: auto;
   gap: 15px; /* Espacio entre opciones */
-  padding: 10px 20px;
+  padding: 10px 50px;
   align-items: center;
-  /* Puedes agregar un fondo o gradiente si deseas */
-  /* background: linear-gradient(to right, #1d00a0, #060879); */
 }
 .extra-menu-item {
   text-decoration: none;
@@ -1588,20 +1611,20 @@ input::placeholder {
   position: fixed;
   background: transparent;
   top: 10px;
-  left: 25px;
-  background-color: #852b2bb0;
-  border: none;
-  border-radius: 5px;
+  left: 25%;
   padding: 5px;
   cursor: pointer;
-  z-index: 3000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: transform 0.3s ease;
+}
+
+.menu-toggle-container {
+  position: absolute;
+  left: 20%;
 }
 
 /*
@@ -1618,6 +1641,7 @@ input::placeholder {
   margin: 0;
   padding: 0;
   margin-top: 50px;
+  transition: margin-left 0.1s ease;
 }
 
 .dashboard-content {
@@ -2808,28 +2832,6 @@ input[type="radio"] {
 
 
 
-/* Estilo profesional para el formulario */
-/* Estilo minimalista para la lista de checkboxes */
-.modal-form {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 30px;
-  background-color: #fafafa;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  font-family: 'Arial', sans-serif;
-  color: #333;
-}
-
-/* Lista de campos */
-.form-row {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 
 /* Cada item del formulario */
 .form-item {
@@ -2919,3 +2921,30 @@ input[type="radio"] {
   color: #d9534f;
   font-weight: 500;
 }
+.extra-menu-item .material-icons {
+  font-size: 20px; /* Tamaño del icono */
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+  transition: transform 0.3s; /* Transición para el efecto hover */
+}
+/* Efecto hover en los iconos */
+.extra-menu-item:hover .material-icons {
+  transform: scale(1.1); /* Aumentar el tamaño del icono al pasar el mouse */
+}
+
+.menu {
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* Oculto por defecto */
+}
+
+.menu.visible {
+  transform: translateX(0); /* Mostrar menú */
+}
+
+.menu.hidden {
+  transform: translateX(-100%); /* Ocultar menú */
+}
+
+
+
+
+

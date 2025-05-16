@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  FaEye,
-  FaEdit,
   FaTrash,
   FaPlus,
   FaChevronLeft,

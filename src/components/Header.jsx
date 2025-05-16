@@ -1,67 +1,64 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaBell, FaUser, FaLock, FaSignOutAlt, FaBars } from "react-icons/fa"; 
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { FaBell, FaUser, FaLock, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa"; 
 import { useNavigate, NavLink } from "react-router-dom"; 
 import logo from "../assets/images/logo.jpg";
+import { MenuContext } from '../contexts/MenuContext';
 import "../assets/styles/App.css"; 
 
 const Header = ({ userName, userType }) => {
   const navigate = useNavigate();
+  const { isMenuOpen, toggleMenu } = useContext(MenuContext);
 
+  // Estados para dropdowns y modales
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isNotificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isCharacterizationOpen, setCharacterizationOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const profileDropdownRef = useRef(null);
-  const notificationDropdownRef = useRef(null);
+  // Referencias para detectar clics fuera
+  const profileRef = useRef(null);
+  const notificationRef = useRef(null);
 
+  // Estado de notificaciones
   const [notifications, setNotifications] = useState([
     { id: 1, message: "Nueva notificación 1" },
     { id: 2, message: "Nueva notificación 2" },
   ]);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev);
+  // Funciones para manejar dropdowns
+  const toggleProfileDropdown = () => {
+    if (isNotificationDropdownOpen) setNotificationDropdownOpen(false);
+    setProfileDropdownOpen(prev => !prev);
   };
 
+  const toggleNotificationDropdown = () => {
+    if (isProfileDropdownOpen) setProfileDropdownOpen(false);
+    setNotificationDropdownOpen(prev => !prev);
+  };
+
+  // Cerrar todos los dropdowns
   const closeAllDropdowns = () => {
     setProfileDropdownOpen(false);
     setNotificationDropdownOpen(false);
   };
 
-  const toggleProfileDropdown = () => {
-    if (isNotificationDropdownOpen) {
-      setNotificationDropdownOpen(false);
-    }
-    setProfileDropdownOpen(!isProfileDropdownOpen);
-  };
-
-  const toggleNotificationDropdown = () => {
-    if (isProfileDropdownOpen) {
-      setProfileDropdownOpen(false);
-    }
-    setNotificationDropdownOpen(!isNotificationDropdownOpen);
-  };
-
-  const handleClickOutside = (event) => {
-    if (
-      profileDropdownRef.current &&
-      !profileDropdownRef.current.contains(event.target) &&
-      notificationDropdownRef.current &&
-      !notificationDropdownRef.current.contains(event.target)
-    ) {
-      closeAllDropdowns();
-    }
-  };
-
+  // Detectar clics fuera
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current && !profileRef.current.contains(event.target) &&
+        notificationRef.current && !notificationRef.current.contains(event.target)
+      ) {
+        closeAllDropdowns();
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isProfileDropdownOpen, isNotificationDropdownOpen]);
+  }, []);
 
+  // Logout
   const handleLogout = () => {
     closeAllDropdowns();
     setLogoutModalOpen(true);
@@ -73,71 +70,77 @@ const Header = ({ userName, userType }) => {
     navigate("/");
   };
 
+  // Caracterización
   const handleCharacterizationClick = () => {
-    setCharacterizationOpen(!isCharacterizationOpen);
+    setCharacterizationOpen(prev => !prev);
   };
 
   return (
     <header className="header">
-      {/* Logo */}
+      {/* Logo y título */}
       <div className="menu-header">
         <img src={logo} alt="Logo Institucional" className="menu-logo" />
+        <span className="logo-text">IFEMI</span>
       </div>
-      <div className="menu-header-boton">
-              <button className="menu-icon-button" onClick={toggleMenu} aria-label="Abrir menú">
-        <FaBars />
-      </button>
-    </div>
+
+{/* Div contenedor para mover el botón */}
+<div className="menu-toggle-container">
+  {/* Botón para toggle de menú */}
+<div
+  onClick={toggleMenu}
+  role="button"
+  tabIndex={0}
+  aria-label="Toggle menu"
+  style={{ display: 'inline-block', cursor: 'pointer' }}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleMenu();
+    }
+  }}
+>
+  {isMenuOpen ? <FaTimes /> : <FaBars />}
+</div>
+</div>
 
       {/* Enlaces adicionales */}
       <div className="extra-menu">
 
-        <a href="/Caracterizacion" className="extra-menu-item" onClick={handleCharacterizationClick}>
+        <a
+          href="#"
+          className="extra-menu-item"
+          onClick={(e) => {
+            e.preventDefault();
+            handleCharacterizationClick();
+          }}
+        >
           Caracterización
         </a>
         <a href="/emprendimiento" className="extra-menu-item">
           Emprendimiento
         </a>
         <a href="/reportar-pagos" className="extra-menu-item">
-          Reportar pagos
+          Creditos
         </a>
       </div>
-
-      {/* Submenú */}
-      {isCharacterizationOpen && (
-        <ul>
-          <li>
-            <NavLink to="/ubicacion-actividad-emprendedora" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity /> Ubicación de Actividad Emprendedora
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/cadena-productiva" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity /> Cadena Productiva
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/situacion-operativa" className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUniversity /> Situación Operativa
-            </NavLink>
-          </li>
-        </ul>
-      )}
 
       {/* Iconos de notificaciones y perfil */}
       <div className="header-icons">
         {/* Notificaciones */}
-        <div className="dropdown notification-icon" ref={notificationDropdownRef}>
+        <div className="dropdown notification-icon" ref={notificationRef}>
           <FaBell
             aria-label="Notificaciones"
             onClick={toggleNotificationDropdown}
             aria-expanded={isNotificationDropdownOpen}
+            tabIndex={0}
+            role="button"
           />
           {notifications.length > 0 && (
             <span className="notification-badge" aria-live="polite">
               {notifications.length}
             </span>
           )}
+          {/* Lista de notificaciones */}
           <div
             className={`dropdown-menu notification-menu ${isNotificationDropdownOpen ? "visible" : ""}`}
             aria-hidden={!isNotificationDropdownOpen}
@@ -156,15 +159,18 @@ const Header = ({ userName, userType }) => {
         </div>
 
         {/* Perfil */}
-        <div className="dropdown profile" ref={profileDropdownRef}>
+        <div className="dropdown profile" ref={profileRef}>
           <div
             className="profile-icon"
             onClick={toggleProfileDropdown}
             aria-label="Menú de perfil de usuario"
             aria-expanded={isProfileDropdownOpen}
+            tabIndex={0}
+            role="button"
           >
             <FaUser />
           </div>
+          {/* Menú desplegable de perfil */}
           <div
             className={`dropdown-menu ${isProfileDropdownOpen ? "visible" : ""}`}
             aria-hidden={!isProfileDropdownOpen}
@@ -182,11 +188,7 @@ const Header = ({ userName, userType }) => {
                   <FaLock /> Configuración
                 </a>
               </li>
-              <li
-                onClick={handleLogout}
-                role="button"
-                tabIndex="0"
-              >
+              <li role="button" tabIndex={0} onClick={handleLogout}>
                 <FaSignOutAlt /> Cerrar sesión
               </li>
             </ul>
@@ -194,7 +196,7 @@ const Header = ({ userName, userType }) => {
         </div>
       </div>
 
-      {/* Modal logout */}
+      {/* Modal de confirmación para logout */}
       {isLogoutModalOpen && (
         <div className="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
           <div className="modal-content">
@@ -208,17 +210,7 @@ const Header = ({ userName, userType }) => {
         </div>
       )}
 
-      {/* Menú lateral controlado por isMenuOpen */}
-      {isMenuOpen && (
-        <div className="menu-lateral">
-          {/* contenido del menu */}
-          <h3>Menú lateral</h3>
-          <ul>
-            <li><a href="/dashboard">Dashboard</a></li>
-            {/* más items */}
-          </ul>
-        </div>
-      )}
+
     </header>
   );
 };
